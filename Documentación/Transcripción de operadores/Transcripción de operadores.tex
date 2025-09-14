@@ -1,0 +1,87 @@
+\documentclass[a4paper,10pt]{article}
+
+%%%%%%%%%%%% PREÁMBULO %%%%%%%%%%%%%%%%%%%%%
+
+% Paquetes
+
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{listings}
+
+% Comandos
+
+% Opciones
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+	
+	%Introducción al documento
+	\title{Transcripción de operadores}
+	\author{Clara Rodriguez, Alejandro Hernandez y Lucía Martínez}
+	\date{\today}  
+	\maketitle 
+	
+	\begin{abstract}
+		\begin{center}
+			Este documento está destinado para la transcripción de operadores C a su equivalente en lenguaje circom.
+			
+		\end{center}
+	\end{abstract}
+	
+	\section*{Guía de contenidos}
+	
+	\begin{enumerate}
+		\item Operadores Lógicos
+		\item Operadores de Comparación
+	\end{enumerate}
+
+	
+	\section *{Operadores Lógicos}
+		\begin{tabular}{|c|>{\centering\arraybackslash}p{5cm}|p{8cm}|}
+			\hline
+				\textbf{C} & \textbf{Circom} & \textbf{Comentario} \\
+			\hline
+				\texttt{!a} & 1 - a & Si a es condición, su negación se consigue con la diferencia entre 1 y ésta \\
+			\hline
+				\texttt{a \&\& b} & a * b & Si a y b son verdaderos, el resultado de su producto será 1, de lo contrario será 0 \\
+			\hline
+				\texttt{a || b} & 1 - (1-a)*(1-b)& Si a, b o ambos son verdaderos, el resultado de su producto será 1, de lo contrario será 0 \\
+			\hline
+		\end{tabular}
+		
+	
+	
+	\section*{Operadores de Comparación}
+	
+		\begin{tabular}{|c|>{\centering\arraybackslash}p{5cm}|p{8cm}|}
+			\hline
+				\textbf{C} & \textbf{Circom} & \textbf{Comentario} \\
+			\hline
+				\texttt{a == b} & \texttt{IsZero()(a - b)} & Si \(a = b\), entonces se cumple (==1) \\
+			\hline
+				\texttt{a != b} & \texttt{1- IsZero()(a - b)} & Si \(a \neq b\), entonces es falso (==0), por tanto se invierte con la resta \\
+			\hline
+				\texttt{\(a < b\)} & LessThan(n)(a,b) & Si \(a < b\) es verdadero, entonces se cumple (==1) \\
+			\hline
+				\texttt{\(a \leq b\)} & LessThanEq(n)(a,b) & Si \(a \leq b\) es verdadero, entonces se cumple (==1) \\
+			\hline
+				\texttt{\(a > b\)} & 1- LessThanEq(n)(a,b) & Si \(a \leq b\) es falso (== 0), entonces \(a > b\) \\
+			\hline
+				\texttt{\(a \geq b \)} & 1- LessThan(n)(a,b) & Si \(a < b\) es falso (== 0), entonces \(a \geq b \) \\
+			\hline
+		\end{tabular}
+		
+		\smallskip
+		\noindent \textit{Nota:} Las funciones \texttt{IsZero()} son circuitos que comparan si un valor es igual a 0.
+		
+		\noindent \textit{Nota:} Las funciones \texttt{LessThan(n)} y \texttt{LessThanEq(n)} son circuitos que comparan dos valores (a < b) de hasta \( n \) bits.
+		
+	
+\end{document}
