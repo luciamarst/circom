@@ -1,0 +1,44 @@
+Comando a usar en circom
+
+-Para ejecutar circom sobre cualquier archivo usando civer:
+/home/luciamarst/circom_civer/target/release/circom
+
+
+-Una vez tenemos esa ruta, que es el programa circom, tenemos que añadir como FLAGS
+
+1. El archivo .circom a ejecutar
+2. (Opcional) Si queremos probar que es completamente determinista con civer, tenemos que poner --civer empty
+2. --check_safety
+
+Ejemplo: /home/luciamarst/circom_civer/target/release/circom sudoku.circom --civer empty.civer --check_safety -l node_modules
+-> Para el archivo empty es buena idea hacer touch empty.civer antes de ejecutar el comando
+
+
+
+-Si no se quiere usar civer, con utilizar circom [archivo] es suficiente
+
+A cada ejecución hay que añadirle esto al final para que no pete con las librerias importadas
+-l modules (para cargas las librearias de comparadores)
+
+COMPILACION:
+circom X.circom --r1cs --sym --wasm --O0 -l node_modules
+
+--r1cs: Ecuaciones en formato r1cs
+--sym: Para generar el witness (téstigo) y ver si hace bien lo que queremos con un input
+--wasm: Restriccoines en JSON
+--O0: NO añadir simplicaciones
+
+
+PARA GENERAR TESTIGO
+1. Tienes que usar archivos generados dentro del directorios _js
+2. Usar la funcion node antes de ejecutarlo, tiene que ser algo asi:
+
+node sudoku_js/generate_witness.js sudoku_js/sudoku.wasm input.json witness.wtns
+
+Una vez ejecutado ese comando, para ver que señales se han generado usamos el comando
+snarkjs wtns export json witness.wtns witness.json
+
+(abrimos el archivo witness.json para ver las señales, siguen el mismo orden que en el archivo .sym)
+
+IMPORTANTE: Recuerda que en witness.json la primera fila es la posicion 0, NO LA 1, por tanto se empieza a tener en cuenta desde la segunda fila
+
