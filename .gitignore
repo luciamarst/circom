@@ -1,0 +1,8 @@
+node_modules/
+sudoku_cpp/
+sudoku_js/
+*.wasm
+*.r1cs
+*.sym
+*.wtns
+
