@@ -12,6 +12,7 @@
 \usepackage{geometry}
 \geometry{margin=2.5cm}
 \usepackage{listings}
+\usepackage{graphicx}
 
 % Comandos
 
@@ -40,10 +41,11 @@
 	\begin{enumerate}
 		\item Operadores Lógicos
 		\item Operadores de Comparación
+		\item Operadores Aritméticos
 	\end{enumerate}
 
 	
-	\section *{Operadores Lógicos}
+	\section {Operadores Lógicos}
 		\begin{tabular}{|c|>{\centering\arraybackslash}p{5cm}|p{8cm}|}
 			\hline
 				\textbf{C} & \textbf{Circom} & \textbf{Comentario} \\
@@ -59,7 +61,7 @@
 	
 
 	
-	\section*{Operadores de Comparación}
+	\section{Operadores de Comparación}
 	
 		\begin{tabular}{|c|>{\centering\arraybackslash}p{5cm}|p{8cm}|}
 			\hline
@@ -83,6 +85,46 @@
 		\noindent \textit{Nota:} Las funciones \texttt{IsZero()} son circuitos que comparan si un valor es igual a 0.
 		
 		\noindent \textit{Nota:} Las funciones \texttt{LessThan(n)} y \texttt{LessThanEq(n)} son circuitos que comparan dos valores (a < b) de hasta \( n \) bits.
+		
+		\section{Operadores Aritméticos}
+		
+		\noindent Tanto en C como en Circom, los operadores suma (+), resta (-) y multiplicación (*) no difieren. En cambio, en operaciones como la división entera (/) y el módulo (\%) si que encontramos diferencias y por ende es necesaria su transcripción.
+		
+		\vspace{0.3cm}
+		
+		\noindent La idea desde la que se parte para encontrar esta equivalencia es de la propiedad fundamental de la división entera, la cual establece:
+		
+		\[
+		\scalebox{1.2}{$a = b \cdot q + r$}
+		\]
+		
+		\vspace{0.3cm}
+		
+		\subsection*{Operación división}
+		
+		\subsection*{Operación módulo}
+		
+		\noindent Partiendo de la fórmula \(a = b * q + r\), podemos llegar al resultado de la operación \(a \% b\) con la variable r, la que representa el resto de una división.
+		
+		\begin{align}
+			a &= b \cdot q + r \\
+			r &= a - (b \cdot q) \\
+			r &= a - (b \cdot ( a / b) )
+		\end{align}
+		
+		\noindent \textit{Nota: } q representa el resultado de una división, por lo que podemos decir que \( q = a/b \).
+		
+		\vspace{0.4cm}
+		
+		\begin{tabular}{|c|>{\centering\arraybackslash}p{5cm}|p{8cm}|}
+			\hline
+			\textbf{C} & \textbf{Circom} & \textbf{Comentario} \\
+			\hline
+			\texttt{\(a / b\)} & \texttt{} & \\
+			\hline
+			\texttt{\(a \% b\)} & \texttt{a - (b * (a/b))} & \(a / b\) hace referencia a la equivalencia que se obtiene en circom para poder realizar la operación \% \\
+			\hline
+		\end{tabular}
 		
 	
 \end{document}
