@@ -13,11 +13,34 @@
 \geometry{margin=2.5cm}
 \usepackage{listings}
 \usepackage{graphicx}
+\usepackage{xcolor}
 
 % Comandos
 
 % Opciones
 
+% Estilo
+\lstdefinelanguage{Circom}{
+	keywords={template, signal, input, output, component},
+	keywordstyle=\color{blue}\bfseries,
+	morecomment=[l]{//},   % comentarios //
+	morecomment=[s]{/*}{*/}, % comentarios /* */
+	morestring=[b]",       % cadenas con comillas
+}
+
+\lstset{
+	basicstyle=\ttfamily\small,
+	keywordstyle=\color{blue},
+	commentstyle=\color{green!50!black},
+	stringstyle=\color{red!60!black},
+	numbers=left,
+	numberstyle=\tiny,
+	stepnumber=1,
+	numbersep=10pt,
+	showstringspaces=false,
+	tabsize=2,
+	breaklines=true
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -102,6 +125,29 @@
 		
 		\subsection*{Operación división}
 		
+		\noindent Partiendo de la fórmula \(a = b * q + r\), podemos llegar al resultado de la operación \(a / b\) forzando a que se cumpla la fórmula pero despreciando el resto (ya que se trata de división entera).
+		
+		\vspace{0.3cm}
+		
+		\noindent El término "forzar" hace referencia a usar una variable en Circom, de forma que partiendo del dividendo y del divisor, el cociente solo pueda tener ese valor.
+		
+		
+		Ejemplo de código en Circom:
+		
+		\begin{lstlisting}[language=Circom]
+			template IntegerDivision() {
+				signal input a; // Dividendo
+				signal input b; // Divisor
+				signal output c; // Cociente q
+				
+				var q;
+				a === b * q;
+				c <== q;
+			}
+			
+			component main = IntegerDivision();
+		\end{lstlisting}
+		
 		\subsection*{Operación módulo}
 		
 		\noindent Partiendo de la fórmula \(a = b * q + r\), podemos llegar al resultado de la operación \(a \% b\) con la variable r, la que representa el resto de una división.
@@ -120,7 +166,7 @@
 			\hline
 			\textbf{C} & \textbf{Circom} & \textbf{Comentario} \\
 			\hline
-			\texttt{\(a / b\)} & \texttt{} & \\
+			\texttt{\(a / b\)} & \texttt{ a === b * q} & Forzando q con una variable a que esa ecuación se cumpla \\
 			\hline
 			\texttt{\(a \% b\)} & \texttt{a - (b * (a/b))} & \(a / b\) hace referencia a la equivalencia que se obtiene en circom para poder realizar la operación \% \\
 			\hline
