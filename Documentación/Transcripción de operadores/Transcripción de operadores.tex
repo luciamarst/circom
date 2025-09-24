@@ -65,6 +65,9 @@
 		\item Operadores Lógicos
 		\item Operadores de Comparación
 		\item Operadores Aritméticos
+		\item Acceso a Arrays
+		\item Expresiones condicionales
+		\item Operadores de desplazamiento
 	\end{enumerate}
 
 	
@@ -172,5 +175,138 @@
 			\hline
 		\end{tabular}
 		
+		\section{Acceso a Arrays}
+		
+		\noindent La diferencia principal entre C y Circom en el acceso a arrays radica en que el tamaño de los arrays en Circom ha de ser fijo a la hora de compilar y ser siempre constante, mientras que en C puede ser estático y dinámico. Además, en Circom el valor de los arrays no puede ser reasignado dinámicamente.
+		
+		\vspace{0.3cm}
+		
+		\noindent \textit{Nota: En C, el tamaño de un array puede ser variable, ya sea por arrays de longitud variable o por el uso de memoria dinámica}
+		
+		\vspace{0.3cm}
+		% Tabla con codigo C y Circom
+		
+		\begin{tabular}{p{0.45\textwidth} | p{0.48\textwidth}}
+			\hline
+			% COdigo en C
+			\lstset{language=C}
+			\begin{lstlisting}
+				// Codigo en C
+				#include <stdio.h>
+				
+				int main() {
+					
+					// Ejemplo de array con tamanyo variable con funcion f() 
+					int n = f();
+					int lista[n]; // Se decide en tiempo de ejecucion
+					
+					
+					// EJemplo de array de tamanyo variable con asignacion de memoria dinamica
+					int *lista = malloc(x);
+					
+					//x tamanyo que se quiera reservar en memoria dinamica
+				}
+			\end{lstlisting} 
+			
+			&
+			% Código en CIrcom
+			
+			\begin{lstlisting}[language=Circom]
+				
+				//Codigo circom
+				template accesoArray(N) {
+					signal input lista[N]; // Tamanyo fijo, suponemos iniciada
+					signal output sumaAcumulada;
+					
+					var suma = 0;
+					for(int i = 0; i < N; i++){
+						suma = suma + lista[i];
+						
+						// NO se puede hacer lo siguiente
+						// lista[i] <== 3;
+					}
+					
+					sumaAcumulada <== suma;
+				}
+				
+				component main = accesoArray(10);
+			\end{lstlisting}
+			\\
+			\hline
+		\end{tabular}
 	
+		\vspace{0.4cm}
+		
+		\noindent \textit{Nota: En Circom no se puede fijar el tamaño de un array con una señal.}
+		
+		\section{Expresiones condicionales}
+		
+		\noindent En C, al ser un lenguaje de ejecución dinámica, los condicionales pueden decidir el valor final de una variable en tiempo de ejecución.
+		
+		\vspace{0.3cm}
+		
+		\noindent En Circom, cada signal representa un “cable” del circuito, que solo puede recibir un valor. Por ello, no es posible reasignar un signal dentro de un condicional dinámico. 
+		
+		\vspace{0.3cm}
+		
+		\noindent Para simular decisiones condicionales basadas en entradas (inputs), se deben usar expresiones aritméticas que implementen la lógica de selección, de manera que el valor de salida quede correctamente definido sin reasignar el signal.
+		
+		\vspace{0.3cm}
+		% Tabla con codigo C y Circom
+		
+		\begin{tabular}{p{0.45\textwidth} | p{0.45\textwidth}}
+			\hline
+			% COdigo en C
+			\lstset{language=C}
+			\begin{lstlisting}
+				// Codigo en C
+				#include <stdio.h>
+				
+				int main(int argc, char *argv[]) {
+					int entrada = argv[1];
+					char mensaje[50];
+					
+					if(entrada % 2 == 0){ 
+						sprintf(mensaje, "%d es par\n", entrada);
+					}
+					else {
+						sprintf(mensaje, "%d es impar\n", entrada);
+					}
+					
+					printf("s", mensaje);
+					free(mensaje);
+					
+					return 0;
+				}
+			\end{lstlisting} 
+			
+			&
+			% Código en CIrcom
+			
+			\begin{lstlisting}[language=Circom]
+				
+				//Codigo circom
+				template condicionales() {
+					signal input entrada;
+					signal output salida; //0 par, 1 impar
+					
+					var var_division;
+					entrada == 2 * var_division;
+					
+					salida <== (entrada - (2*var_division)) 
+					
+				}
+				
+				component main = condicionales();
+			\end{lstlisting}
+			 \\
+			 \hline
+		\end{tabular}
+		
+		\vspace{0.3cm}
+		
+		\noindent Con este ejemplo se ilustra como puede transformarse una expresión condicional que comprueba si un número es par o impar en una expresión aritmética que representa lo mismo y evita el reasignar la señal de salida más de una vez (algo no permitido).
+		
+		\section{Operadores de desplazamiento}
+		
 \end{document}
