@@ -309,4 +309,85 @@
 		
 		\section{Operadores de desplazamiento}
 		
+		\noindent Los operadores de desplazamiento en C funcionan de la siguiente manera:
+		
+		\vspace{0.3cm}
+		
+		\noindent Imaginemos que tenemos el número 2 que queremos desplazar 2 bits
+	
+		\begin{itemize}
+			\item 1. Dado un número decimal 2, transformarlo a binario, que es 0010
+			\item 2. Con el n (número de bits a desplazar), desplazamos los dos últimos bits
+			\item 1000 (4 en decimal), es el número que se obtiene desplazando los bits
+		\end{itemize}
+		
+		\vspace{0.1cm}
+		
+		\noindent \textit{Observación: Podemos observar que para obtener el número equivalente del desplazamiento de bits en decimal se consigue con x * $2^n$ en el caso de desplazamiento a la derecha y x * $2^n$ en el caso de desplazamiento a la izquierda.}
+		
+		\vspace{0.3cm}
+		
+		\noindent Podemos hacer uso de esta observación para llegar a la equivalencia de tal operación en Circom.
+		
+		\vspace{0.4cm}
+		
+		\begin{tabular}{|c|>{\centering\arraybackslash}p{15cm}|}
+			\hline
+			\textbf{C} & \textbf{Circom} \\
+			\hline
+			\texttt{$a \ll b$ } & 
+			
+			\begin{lstlisting}[language=Circom]
+				
+				//Codigo circom
+				template desplazamiento_izq(N) {
+					signal input numero_decimal;
+					signal output salida;
+					
+					var potencia = 1;
+					
+					for (var i = 0; i < N; i++) {
+						potencia = potencia * 2;
+					}
+					
+					salida <== numero_decimal * potencia;
+					
+				}
+				
+				component main = desplazamiento_izq(N);
+			\end{lstlisting}
+			 
+			\\
+			\hline
+			\texttt{{$a \gg b$ }} & 
+			
+			\begin{lstlisting}[language=Circom]
+				
+				//Codigo circom
+				template desplazamiento_dcha(N) {
+					signal input numero_decimal;
+					signal output salida;
+					
+					var potencia = 1;
+					
+					for (var i = 0; i < N; i++) {
+						potencia = potencia * 2;
+					}
+					
+					var division;
+					
+					numero_decimal === potencia * division;
+					
+					salida <== division;
+					
+				}
+				
+				component main = desplazamiento_dcha(N);
+			\end{lstlisting}
+			
+			
+			\\
+			\hline
+		\end{tabular}
+		
 \end{document}
