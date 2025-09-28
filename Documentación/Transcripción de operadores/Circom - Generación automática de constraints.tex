@@ -1,0 +1,63 @@
+\documentclass[a4paper,10pt]{article}
+
+%%%%%%%%%%%% PREÁMBULO %%%%%%%%%%%%%%%%%%%%%
+
+% Paquetes
+
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{xcolor}
+
+% Comandos
+
+% Opciones
+
+% Estilo
+\lstdefinelanguage{Circom}{
+	keywords={template, signal, input, output, component},
+	keywordstyle=\color{blue}\bfseries,
+	morecomment=[l]{//},   % comentarios //
+	morecomment=[s]{/*}{*/}, % comentarios /* */
+	morestring=[b]",       % cadenas con comillas
+}
+
+\lstset{
+	basicstyle=\ttfamily\small,
+	keywordstyle=\color{blue},
+	commentstyle=\color{green!50!black},
+	stringstyle=\color{red!60!black},
+	numbers=left,
+	numberstyle=\tiny,
+	stepnumber=1,
+	numbersep=10pt,
+	showstringspaces=false,
+	tabsize=2,
+	breaklines=true
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+	%Introducción al documento
+	\title{Síntesis, traducción y verificación de sistemas de ecuaciones utilizados en Protocolos de Conocimiento}
+	\author{Clara Rodríguez, Alejandro Hernández y Lucía Martínez}
+	\date{\today}  
+	\maketitle 
+	
+	\begin{abstract}
+		\begin{center}
+			Este documento está destinado para la transcripción de operadores C a su equivalente en lenguaje circom.
+			
+		\end{center}
+	\end{abstract}
+	
+	\section*{Guía de contenidos}
+	
+\end{document}

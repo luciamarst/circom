@@ -1,0 +1,157 @@
+\documentclass[a4paper,12pt]{report}
+
+
+%%%%%%%%%%%% PREÁMBULO %%%%%%%%%%%%%%%%%%%%%
+
+% Paquetes
+
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{setspace}
+\usepackage{geometry}
+\usepackage{listings}
+\usepackage{changepage}
+\usepackage{xcolor}
+\usepackage{graphicx} 
+\usepackage{tikz}
+\usepackage{titlesec}
+
+\geometry{top=3cm, bottom=3cm, left=3cm, right=3cm}
+
+% Comandos
+
+% Opciones
+
+% Estilo
+\lstdefinelanguage{Circom}{
+	keywords={template, signal, input, output, component},
+	keywordstyle=\color{blue}\bfseries,
+	morecomment=[l]{//},   % comentarios //
+	morecomment=[s]{/*}{*/}, % comentarios /* */
+	morestring=[b]",       % cadenas con comillas
+}
+
+\lstset{
+	basicstyle=\ttfamily\small,
+	keywordstyle=\color{blue},
+	commentstyle=\color{green!50!black},
+	stringstyle=\color{red!60!black},
+	numbers=left,
+	numberstyle=\tiny,
+	stepnumber=1,
+	numbersep=10pt,
+	showstringspaces=false,
+	tabsize=2,
+	breaklines=true
+}
+
+\titleformat{\chapter}[frame] {\normalfont\Huge\bfseries} % formato
+{\chaptertitlename\ \thechapter} {13pt} % <--- menos que los 20pt originales
+{\LARGE} % antes del título
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+	\thispagestyle{empty}
+	
+	\begin{center}
+		\begin{center}
+			{\Huge \textbf{Síntesis, traducción y verificación de }}\\
+			\vspace{0.2cm}  
+			{\Huge \textbf{sistemas de ecuaciones utilizados en}} \\
+			\vspace{0.3cm}  
+			{\Huge \textbf{Protocolos de Conocimiento Cero}} \\ [1.5cm]
+		\end{center}
+		
+		
+		{\LARGE Lucía Martínez Martínez}\\[1cm]  
+		
+		{\large Grado en Ingeniería Informática}\\[0.1cm] 
+		{\large Universidad Complutense de Madrid}\\[1cm]  
+		
+		
+		\includegraphics[width=9cm]{/home/luciamarst/Descargas/logo.png} \\ [0.5cm]
+		
+		
+		{\large Trabajo de Fin de Grado del Grado en Informática} \\[0.1cm]
+		{\large Madrid, 2025 - 2026}
+	\end{center}
+	
+	\vfill  % Empuja lo siguiente hacia abajo
+	
+	
+	\begin{flushright}
+		\begin{minipage}{6cm}
+			\raggedleft 
+			\large \textbf{Directores}:\\
+			\large Clara Rodríguez Núñez\\
+			\large Alejandro Hernández Cerezo
+		\end{minipage}
+	\end{flushright}
+	
+	
+	\vspace{0.3cm}
+	
+	
+	
+	
+	\section*{\Huge Índice general}
+	
+		\vspace{1.5cm}
+		
+		
+		\subsection*{Índice general}
+		\vspace{0.5cm}
+			
+		\begin{adjustwidth}{1cm}{0cm} % margen izquierdo 1cm, derecho 0
+			\renewcommand{\thesubsection}{\Roman{subsection}}
+			
+			\subsection{Introducción a Circom}
+			
+			\begin{enumerate}
+				\renewcommand{\labelenumi}{\thesubsection.\arabic{enumi}} % Esto funciona
+				\item Zero Knowledge
+				\item Constraints RICS
+				\item CIRCOM
+			\end{enumerate}
+			
+			\vspace{0.5cm}
+			
+			\subsection{Descripción del problema}
+			\begin{enumerate}
+				\renewcommand{\labelenumi}{\thesubsection.\arabic{enumi}} % Esto funciona
+				\item Ejemplo del problema
+				\item Reglas de transformación
+				\item Ejemplo con constraints generadas automáticamente
+			\end{enumerate}
+			
+			\vspace{0.5cm}
+			
+			\subsection{Implementación}
+			\begin{enumerate}
+				\renewcommand{\labelenumi}{\thesubsection.\arabic{enumi}} % Esto funciona
+				\item Explicación y ejemplo de la construcción de las reglas
+			\end{enumerate}
+			
+			\vspace{0.5cm}
+			
+			\subsection{Experimentos}
+			\begin{enumerate}
+				\renewcommand{\labelenumi}{\thesubsection.\arabic{enumi}} % Esto funciona
+				\item Aplicación de la generación automática sobre juegos simples
+				\item Aplicación de la generación automática sobre \textit{circomLib} y comparación de constraints
+				\item Caso de uso, verificación y búsqueda de bugs
+			\end{enumerate}
+		\end{adjustwidth}
+		
+		\newpage
+		
+		
+		\chapter{Introducción a Circom}
+		Aquí va el contenido del capítulo 1.
+	
+\end{document}
