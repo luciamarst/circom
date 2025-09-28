@@ -74,7 +74,7 @@
 	\section {Operadores Lógicos}
 		\begin{tabular}{|c|>{\centering\arraybackslash}p{5cm}|p{8cm}|}
 			\hline
-				\textbf{C} & \textbf{Circom} & \textbf{Comentario} \\
+				\textbf{C} & \textbf{Circom} & {Comentario} \\
 			\hline
 				\texttt{!a} & 1 - a & Si a es condición, su negación se consigue con la diferencia entre 1 y ésta \\
 			\hline
@@ -88,7 +88,121 @@
 
 	
 	\section{Operadores de Comparación}
-	
+		\noindent Un detalle a observar en las funciones \textit{LessThan()} y \textit{LessThanEq()} es que para números negativos podría presentar problemas. 
+		
+		\vspace{0.2cm}
+		
+		\noindent El funcionamiento de \textit{Num2Bits(n)} cuando recibe un número negativo es el siguiente:
+		
+		\begin{itemize}
+			\item El número negativo se interpreta como un cuerpo finito.
+			
+			\item Éste se interpretará como un número superior a \(2^n - 1\), saliéndose fuera del rango [0,\(2^n-1\)], por tanto la constraints no se pueden cumplir y la prueba no se generará.
+			
+			\item En conclusión, con \textit{Num2Bits()} garantizamos el uso de número positivos dentro del rango mencionado de manera implícita.
+		\end{itemize}
+		
+		\noindent \textit{Observación: Gracias a la constraint lc1 === in (fuerza a que la entrada cumpla el rango \([0,2^n -1]\)), podemos evitar el uso de número negativos, ya que estos no cumplirán tal restricción.}
+		
+		\vspace{5cm}
+		
+		\textbf{\textit{Num2Bits(n):}}
+		
+		\begin{lstlisting}[language=Circom]
+			template Num2Bits(n){
+				signal input in;
+				signal output out[n];
+				var lc1=0; // Reconstruye el numero decimal a convertir para la constraint
+				
+				var e2=1; // Evitar la potencia
+				for (var i = 0; i<n; i++) {
+					out[i] <-- (in >> i) & 1; // Contruimos el numero en binario
+					out[i] * (out[i] -1 ) === 0;
+					lc1 += out[i] * e2;
+					e2 = e2+e2;
+				}
+				
+				lc1 === in; // Constraint mencionada anteriormente
+			}
+		\end{lstlisting}
+		
+		\vspace{0.5cm}
+		
+		\noindent Partiendo de esta información, podemos realizar pequeñas modificaciones en las funciones \textit{LessThan()} y \textit{LessThanEq()} para asegurar el uso de enteros positivos.
+		
+		\vspace{0.2cm}
+		
+		\begin{tabular}{|p{0.45\textwidth} | p{0.45\textwidth}|}
+			\hline
+			\lstset{language=Circom}
+			\begin{lstlisting}[language=Circom]
+				template SecureLessThan(n){
+					signal input in[2];
+					signal output out;
+					
+					//------------------
+				
+					component checkA = Num2Bits(n);
+					checkA.in <== in[0];
+					
+					component checkB = Num2Bits(n);
+					checkB.in <== in[1];
+					
+					 adder = BinSum(n, 2);
+					
+					var i;
+					for (i=0;i<n;i++) {
+						checkA.out[i] ==> adder.in[0][i];
+						checkB.out[i] ==> adder.in[1][i];
+					}
+					
+					// Miramos el bit + significativo (MSB), 1 si A < B, 0 de lo contrario
+					adder.out[n-1] ==> out;
+				}
+			\end{lstlisting} 
+			
+			&
+			% Código en CIrcom
+			
+			\begin{lstlisting}[language=Circom]
+				template SecureLessThanEq(n){
+					signal input in[2];
+					signal output out;
+					
+					//----------------------
+					component checkA = Num2Bits(n);
+					checkA.in <== in[0];
+					
+					component checkB = Num2Bits(n);
+					checkB.in <== in[1];
+					
+					adder = BinSum(n, 2);
+					
+					var i;
+					for (i=0;i<n;i++) {
+						checkA.out[i] ==> adder.in[0][i];
+						checkB.out[i] ==> adder.in[1][i];
+					}
+					
+					// Miramos el bit + significativo (MSB), 1 si A < B, 0 de lo contrario
+					component equal = IsEqual();
+					equal.in[0] <== in[0];
+					equal.in[1] <== in[1]; 
+					
+					out <==	adder.out[n-1] + equal.out - adder.out[n-1] * equal.out;
+				}
+				
+			\end{lstlisting}
+			\\
+			\hline
+		\end{tabular}
+			
+		\vspace{0.3cm}	
+		
+		\noindent Con está pequeña modificación, al usar para ambos número a comparar la función \textit{Num2Bits()} nos aseguramos de que se cumpla la restricción de ser número enteros positivos dentro del rango.
+		
+		\vspace{0.3cm}	
+		
 		\begin{tabular}{|c|>{\centering\arraybackslash}p{5cm}|p{8cm}|}
 			\hline
 				\textbf{C} & \textbf{Circom} & \textbf{Comentario} \\
@@ -97,20 +211,23 @@
 			\hline
 				\texttt{a != b} & \texttt{1- IsZero()(a - b)} & Si \(a \neq b\), entonces es falso (==0), por tanto se invierte con la resta \\
 			\hline
-				\texttt{\(a < b\)} & LessThan(n)(a,b) & Si \(a < b\) es verdadero, entonces se cumple (==1) \\
+				\texttt{\(a < b\)} & SecureLessThan(n)(a,b) & Si \(a < b\) es verdadero, entonces se cumple (==1) \\
 			\hline
-				\texttt{\(a \leq b\)} & LessThanEq(n)(a,b) & Si \(a \leq b\) es verdadero, entonces se cumple (==1) \\
+				\texttt{\(a \leq b\)} & SecureLessThanEq(n)(a,b) & Si \(a \leq b\) es verdadero, entonces se cumple (==1) \\
 			\hline
-				\texttt{\(a > b\)} & 1- LessThanEq(n)(a,b) & Si \(a \leq b\) es falso (== 0), entonces \(a > b\) \\
+				\texttt{\(a > b\)} & 1- SecureLessThanEq(n)(a,b) & Si \(a \leq b\) es falso (== 0), entonces \(a > b\) \\
 			\hline
-				\texttt{\(a \geq b \)} & 1- LessThan(n)(a,b) & Si \(a < b\) es falso (== 0), entonces \(a \geq b \) \\
+				\texttt{\(a \geq b \)} & 1- SecureLessThan(n)(a,b) & Si \(a < b\) es falso (== 0), entonces \(a \geq b \) \\
 			\hline
 		\end{tabular}
 		
 		\smallskip
+		
+		\vspace{0.1cm}
+		
 		\noindent \textit{Nota:} Las funciones \texttt{IsZero()} son circuitos que comparan si un valor es igual a 0.
 		
-		\noindent \textit{Nota:} Las funciones \texttt{LessThan(n)} y \texttt{LessThanEq(n)} son circuitos que comparan dos valores (a < b) de hasta \( n \) bits.
+		\noindent \textit{Nota:} Las funciones \texttt{IsEqual())} comprueba si dados dos números, estos son iguales o no.
 		
 		\section{Operadores Aritméticos}
 		
@@ -155,6 +272,10 @@
 		
 		\noindent Partiendo de la fórmula \(a = b * q + r\), podemos llegar al resultado de la operación \(a \% b\) con la variable r, la que representa el resto de una división.
 		
+		\vspace{0.2cm}
+		
+		\noindent Por otro lado, ha de cumplirse la expresión \(0 \leq r < b\). De lo contrario, podría producirse problemas en cuanto a la seguridad del circuito. 
+		
 		\begin{align}
 			a &= b \cdot q + r \\
 			r &= a - (b \cdot q) \\
@@ -165,11 +286,26 @@
 		
 		\vspace{0.4cm}
 		
+		\noindent Para que se cumpla la restricción \(0 \leq r < b\) :
+		
+		\begin{lstlisting}[language=Circom]
+			component lessThan = SecureLessThan(n);
+			lessThan.in[0] <== r;
+			lessThan.in[1] <== b;
+			
+			// 1 si r < b, como ya se checkea en SecureLessThan que sea positivo o 0 es suficiente
+			
+			lessThan.out === 1 // Hacemos que se cumpla la restriccion,
+			// Si no se cumple, no se generara la prueba
+		\end{lstlisting}
+		
+		\vspace{0.2cm}
+		
 		\begin{tabular}{|c|>{\centering\arraybackslash}p{5cm}|p{8cm}|}
 			\hline
 			\textbf{C} & \textbf{Circom} & \textbf{Comentario} \\
 			\hline
-			\texttt{\(a / b\)} & \texttt{ a === b * q} & Forzando q con una variable a que esa ecuación se cumpla \\
+			\texttt{\(a / b\)} & \texttt{a === b * q + r} & Forzando q con una variable a que esa ecuación se cumpla \\
 			\hline
 			\texttt{\(a \% b\)} & \texttt{a - (b * (a/b))} & \(a / b\) hace referencia a la equivalencia que se obtiene en circom para poder realizar la operación \% \\
 			\hline
@@ -238,6 +374,30 @@
 		\vspace{0.4cm}
 		
 		\noindent \textit{Nota: En Circom no se puede fijar el tamaño de un array con una señal.}
+		
+		\vspace{2.6cm}
+		
+		\noindent En Circom, no se puede acceder directamente a posiciones de arrays con señales inputs. Sin embargo, se puede acceder indirectamente a esta posición sin usar esta señal input.
+		
+		\vspace{0.4cm}
+			
+		\begin{lstlisting}[language=Circom]
+			signal input pos;
+			signal input lista[N]; 
+			signal output acceso;
+			
+			// NO SE PUEDE HACER
+			//lista[pos];
+			
+			// SI SE PUEDE HACER, coste O(N)
+			// Hay otras formas como arboles que reducen el coste a O(log (N))
+			for(int i = 0; i < N; i++){
+				signal seleccionado;
+				seleccionado <== (i === pos ? 1 : 0);
+				acceso <== acceso + lista[i] * seleccionado;
+			}
+			
+		\end{lstlisting}
 		
 		\section{Expresiones condicionales}
 		
