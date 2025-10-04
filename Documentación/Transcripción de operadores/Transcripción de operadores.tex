@@ -322,7 +322,7 @@
 		\vspace{0.3cm}
 		% Tabla con codigo C y Circom
 		
-		\begin{tabular}{p{0.45\textwidth} | p{0.48\textwidth}}
+		\begin{tabular}{p{0.48\textwidth} | p{0.48\textwidth}}
 			\hline
 			% COdigo en C
 			\lstset{language=C}
@@ -414,6 +414,10 @@
 		\vspace{0.3cm}
 		% Tabla con codigo C y Circom
 		
+		\noindent Un ejemplo específico de conversión de un condicional C a uno en Circom puede ser el siguiente: 
+		
+		\vspace{0.3cm}
+		
 		\begin{tabular}{p{0.45\textwidth} | p{0.45\textwidth}}
 			\hline
 			% COdigo en C
@@ -467,6 +471,105 @@
 		
 		\noindent Con este ejemplo se ilustra como puede transformarse una expresión condicional que comprueba si un número es par o impar en una expresión aritmética que representa lo mismo y evita el reasignar la señal de salida más de una vez (algo no permitido).
 		
+		\noindent A la hora de generalizar esta conversión condicional de C a Circom, primero tenemos que darnos cuenta del patrón que se sigue partiendo desde el caso más simple.
+		
+		\subsection*{Caso más simple: if/else}
+		
+		\begin{lstlisting}[language=C]
+			
+			// Codigo en C
+			if (age < 0) {
+				printf("Edad invalida.\n");
+			} else {
+				printf("Perfil: adulto mayor.\n");
+			}
+		\end{lstlisting} 
+		
+		\begin{lstlisting}[language=Circom]
+			
+			// Codigo en Circom
+			component less_0 = LessThan()(age,0);
+			
+			signal less_0 = less_0.out;
+			signal not_less_0 = 1 - less_0.out;
+			
+			mensaje <== less_0 * m1 + not_less_0 * m2;
+		\end{lstlisting}
+		
+		\vspace{0.2cm}
+		
+		\noindent Como podemos ver, el patrón que sigue es crear una componente equivalente a la expresión lógica utilizada en el if. Con esta componente, al tener dos opciones, el if o el else, observamos que el else siempre será la suma de la expresiones anteriores menos 1, ya que al no cumplir las anteriores tiene que ser lo contrario.
+		
+		\vspace{0.2cm}
+		
+		\noindent Este caso es demasiado simple, por lo que un ejemplo con más condicionales detallará mejor lo explicado anteriormente.
+		
+		\subsection*{Caso complejo: if/else if/else}
+			\begin{lstlisting}[language=C]
+				
+				// Codigo en C
+				
+				if (age < 0) {
+					printf("Edad invalida.\n");
+				} else if (age < 13) {
+					printf("Perfil: menor.\n");
+				} else if (age < 18) {
+					printf("Perfil: adolescente.\n");
+				} else if (age < 30) {
+					printf("Perfil: joven adulto.\n");
+				} else if (age < 60) {
+					printf("Perfil: adulto.\n");
+				} else {
+					printf("Perfil: adulto mayor.\n");
+				}
+			\end{lstlisting}
+			
+			
+			\begin{itemize}
+				\item Por cada condición de igualdad/desigualdad se crea un componente correspondiente:
+				\begin{lstlisting}[language=Circom]
+					component less_0 = LessThan()(age,0);
+					component less_13 = LessThan()(age,13);
+					component less_18 = LessThan()(age,18);
+					component less_30 = LessThan()(age,30);
+					component less_60 = LessThan()(age,60);
+				\end{lstlisting}
+				
+				\item Se generan señales intermedias para que las condiciones sean mutuamente excluyentes:
+				\begin{lstlisting}[language=Circom]
+					signal is_less_0 = less_0.out;
+					signal is_less_13 = (1 - less_0.out) * less_13.out;
+					signal is_less_18 = (1 - less_0.out) * (1 - less_13.out) * less_18.out;
+					signal is_less_30 = (1 - less_0.out) * (1 - less_13.out) * (1 - less_18.out) * less_30.out;
+					signal is_less_60 = (1 - less_0.out) * (1 - less_13.out) * (1 - less_18.out) * (1 - less_30.out) * less_60.out;
+					signal not_less_60 = 1 - less_60.out;
+				\end{lstlisting}
+				
+				\item Combinación ponderada de los mensajes:
+				\begin{lstlisting}[language=Circom]
+					mensaje <== is_less_0 * m1 +
+					is_less_13 * m2 +
+					is_less_18 * m3 +
+					is_less_30 * m4 +
+					is_less_60 * m5 +
+					not_less_60 * m6;
+				\end{lstlisting}
+			\end{itemize}
+			
+			\noindent Como podemos observar, siempre se repite el mismo patrón en el que cada condición utiliza la negación de las condiciones anteriores y el resultado de la comparación actual para el caso de los \textit{else/if}
+			
+			\vspace{0.2cm}
+			
+			\noindent En cuanto al \textit{else}, como se explico en el caso simple, se observa que siempre es la negación de la suma de todas las condiciones anteriores, quedando reflejado con más claridad en este ejemplo 
+			
+			\vspace{0.2cm}
+			
+			\noindent Para el caso del \textit{switch} sería similar, ya que es una estructura semejante a la de  \textit{if/else if/else}.
+			
+			\vspace{0.3cm}
+				
+			\noindent \textit{Observaciones: En este ejemplo concreto se uso el operador lógico <, pero para cualquier otra operación lógica bastaría con aplicar la transformación especificada en el apartado de operadores lógicos y de comparación.} 
+		
 		\section{Operadores de desplazamiento}
 		
 		\noindent Los operadores de desplazamiento en C funcionan de la siguiente manera:
@@ -483,62 +586,136 @@
 		
 		\vspace{0.1cm}
 		
-		\noindent \textit{Observación: Podemos observar que para obtener el número equivalente del desplazamiento de bits en decimal se consigue con x * $2^n$ en el caso de desplazamiento a la derecha y x * $2^n$ en el caso de desplazamiento a la izquierda.}
+		\noindent \textit{Observación: Podemos observar que para obtener el número equivalente del desplazamiento de bits en decimal se consigue con x * $2^n$ en el caso de desplazamiento a la derecha y x * $2^n$ en el caso de desplazamiento a la izquierda. Sin embargo, estas operaciones son muy costosas por lo que optaremos por otra opción.}
 		
 		\vspace{0.3cm}
 		
-		\noindent Podemos hacer uso de esta observación para llegar a la equivalencia de tal operación en Circom.
+		\noindent Para conseguir una equivalencia entre estos operadores, directamente transformamos el número decimal en binario y en función de si se trata de un  desplazamiento a la izquierda o a la derecha, despreciar y añadir por un lado o por otro.
 		
 		\vspace{0.4cm}
 		
-		\begin{tabular}{|c|>{\centering\arraybackslash}p{15cm}|}
-			\hline
-			\textbf{C} & \textbf{Circom} \\
-			\hline
-			\texttt{$a \ll b$ } & 
+		\subsection*{Función Bits2Num()}
+			\begin{lstlisting}[language=Circom]
+				
+				template Bits2Num(N){
+					 signal input binario[N];
+					signal output decimal;
+					
+					signal potencia[N];
+					signal sum[N];
+					
+					// Primera potencia = 1
+					potencia[0] <== 1;
+					sum[0] <== binario[0] * potencia[0];
+					
+					for (var i = 1; i < N; i++) {
+						potencia[i] <== potencia[i-1] * 2;       // potencia iterativa
+						sum[i] <== sum[i-1] + binario[i] * potencia[i];  // acumulacion
+					}
+					
+					decimal <== sum[N-1];
+				}
+			\end{lstlisting}
+		
+		
+		\subsection*{Desplazamiento a la izquierda}
+			\noindent Explicaremos un ejemplo de la aplicación que haremos para 11 << 2
+			
+			\begin{itemize}
+				\item Dado un número decimal, lo convertimos a binario, en este caso 11
+				
+				\begin{equation*}
+				 	0  0  0  0  1  0  1  1
+				\end{equation*}
+				
+				\item Con el número en binario, desplazamos 2 bits a la izquierda
+				\begin{equation*}
+					0  0  0  0  1  0  1  1 ----> 	0  0  1  0  1  1  0  0
+				\end{equation*}
+				
+				\item Como podemos ver, los últimos dos bits se ha transformado en 0, por lo que la idea es añadir un número n de 0 al final del array que representa el número binario.
+				
+			\end{itemize}
 			
 			\begin{lstlisting}[language=Circom]
 				
 				//Codigo circom
 				template desplazamiento_izq(N) {
 					signal input numero_decimal;
+					signal input desplazamiento;
 					signal output salida;
 					
-					var potencia = 1;
 					
-					for (var i = 0; i < N; i++) {
-						potencia = potencia * 2;
+					component n2b = Num2Bits(N);
+					n2b.in <== numero_decimal;
+					
+					
+					signal binario[N];
+					for(var i = 0; i < N-desplazamiento; i++){
+						binario[i] <== n2b.out[i];
 					}
 					
-					salida <== numero_decimal * potencia;
+					for(var i = N-desplazamiento; i < N; i++){
+						binario[i] <== 0;
+					}
+					
+				
+					component b2n = Bits2Num(N);
+					b2n.in <== binario;
+					
+					salida <== b2n.out;
 					
 				}
 				
 				component main = desplazamiento_izq(N);
 			\end{lstlisting}
 			 
-			\\
-			\hline
-			\texttt{{$a \gg b$ }} & 
 			
+		\subsection*{Desplazamiento a la derecha}
+				\noindent Explicaremos un ejemplo de la aplicación que haremos para 11 >> 2
+			
+			\begin{itemize}
+				\item Dado un número decimal, lo convertimos a binario, en este caso 11
+				
+				\begin{equation*}
+					0  0  0  0  1  0  1  1
+				\end{equation*}
+				
+				\item Con el número en binario, desplazamos 2 bits a la derecha
+				\begin{equation*}
+					0  0  0  0  1  0  1  1 ---->  0  0  0  0  0  0  1  0
+				\end{equation*}
+				
+				\item Como podemos ver, los últimos dos bits se han despreciado, añadiendo dos ceros al principio del número binario.
+				
 			\begin{lstlisting}[language=Circom]
 				
 				//Codigo circom
 				template desplazamiento_dcha(N) {
 					signal input numero_decimal;
+					signal input desplazamiento;
 					signal output salida;
 					
-					var potencia = 1;
 					
-					for (var i = 0; i < N; i++) {
-						potencia = potencia * 2;
+					component n2b = Num2Bits(N);
+					n2b.in <== numero_decimal;
+					
+					
+					signal binario[N];
+					
+					for(var i = 0; i < desplazamiento; i++){
+						binario[i] <== 0;
 					}
 					
-					var division;
+					for(var i = desplazamiento; i < N; i++){
+						binario[i] <== n2b.out[i];
+					}
 					
-					numero_decimal === potencia * division;
+		
+					component b2n = Bits2Num(N);
+					b2n.in <== binario;
 					
-					salida <== division;
+					salida <== b2n.out;
 					
 				}
 				
@@ -546,8 +723,5 @@
 			\end{lstlisting}
 			
 			
-			\\
-			\hline
-		\end{tabular}
 		
 \end{document}
