@@ -570,158 +570,217 @@
 				
 			\noindent \textit{Observaciones: En este ejemplo concreto se uso el operador lógico <, pero para cualquier otra operación lógica bastaría con aplicar la transformación especificada en el apartado de operadores lógicos y de comparación.} 
 		
+		
+		\subsection*{Condicionales anidados}
+			\begin{lstlisting}[language=C]
+				
+				// Codigo en C
+				
+				if (age < 20) {
+					if(age < 10){
+						printf("Perfil: niño.\n");
+					}
+					else{
+						printf("Perfil: adolescente.\n");
+					}
+				} else if(age < 40){
+					if(age < 30){
+						printf("Perfil: adulto joven.\n");
+					}
+					else {
+						printf("Perfil: adulto mayor.\n");
+					}
+				}
+				else{
+					printf("Perfil: adulto mayor.\n");
+				}
+			\end{lstlisting}
+			
+			
+			\begin{itemize}
+				\item Por cada condición de igualdad/desigualdad se crea un componente correspondiente, como en los casos anteriores.
+				
+				\begin{lstlisting}[language=Circom]
+					component less_10 = LessThan()(age,10);
+					component less_20 = LessThan()(age,20);
+					component less_30 = LessThan()(age,30);
+					component less_40 = LessThan()(age,40);
+				\end{lstlisting}
+				
+				\item Partiendo de lo citado an los apartados anteriores, tenemos que generar las condiciones excluyentes.
+				
+				\begin{lstlisting}[language=Circom]
+					signal is_less_20 = less_20.out;
+					signal is_less_10 = is_less_20 * less_10.out;
+					signal isnt_less_10 = is_less_20 * (1 - less_10.out);
+					
+					signal is_less_40 = less_40.out;
+					signal is_less_30 = is_less_40 * less_30.out;
+					signal isnt_less_30 = is_less_40 * (1 - less_30.out);
+					
+					
+					signal is_greater_40 = (1-is_less_40);
+				\end{lstlisting}
+				
+				\item Combinación ponderada de los mensajes:
+				\begin{lstlisting}[language=Circom]
+					mensaje <== is_less_10 * m1 + isnt_less_10 * m2 +
+								is_less_30 * m3 + isnt_less_30 * m4 +
+								is_greater_40 * m5;
+				\end{lstlisting}
+			\end{itemize}
+		
 		\section{Operadores de desplazamiento}
+		
 		
 		\noindent Los operadores de desplazamiento en C funcionan de la siguiente manera:
 		
 		\vspace{0.3cm}
 		
-		\noindent Imaginemos que tenemos el número 2 que queremos desplazar 2 bits
-	
+		\noindent Imaginemos que tenemos el número 2 que queremos desplazar 2 bits.
+		
 		\begin{itemize}
-			\item 1. Dado un número decimal 2, transformarlo a binario, que es 0010
-			\item 2. Con el n (número de bits a desplazar), desplazamos los dos últimos bits
-			\item 1000 (4 en decimal), es el número que se obtiene desplazando los bits
+			\item 1. Dado un número decimal 2, transformarlo a binario, que es \texttt{0010}.
+			\item 2. Con el n (número de bits a desplazar), desplazamos los dos últimos bits.
+			\item \texttt{1000} (8 en decimal) es el número que se obtiene desplazando los bits.
 		\end{itemize}
 		
 		\vspace{0.1cm}
 		
-		\noindent \textit{Observación: Podemos observar que para obtener el número equivalente del desplazamiento de bits en decimal se consigue con x * $2^n$ en el caso de desplazamiento a la derecha y x * $2^n$ en el caso de desplazamiento a la izquierda. Sin embargo, estas operaciones son muy costosas por lo que optaremos por otra opción.}
+		\noindent \textit{Observación: Podemos observar que para obtener el número equivalente del desplazamiento de bits en decimal se consigue con $x * 2^n$ en el caso de desplazamiento a la izquierda y con $x / 2^n$ en el caso de desplazamiento a la derecha. Sin embargo, estas operaciones son muy costosas, por lo que optaremos por otra opción.}
 		
 		\vspace{0.3cm}
 		
-		\noindent Para conseguir una equivalencia entre estos operadores, directamente transformamos el número decimal en binario y en función de si se trata de un  desplazamiento a la izquierda o a la derecha, despreciar y añadir por un lado o por otro.
+		\noindent Para conseguir una equivalencia entre estos operadores, directamente transformamos el número decimal en binario y, en función de si se trata de un desplazamiento a la izquierda o a la derecha, despreciar y añadir por un lado o por otro.
 		
 		\vspace{0.4cm}
 		
 		\subsection*{Función Bits2Num()}
-			\begin{lstlisting}[language=Circom]
+		\begin{lstlisting}[language=Circom]
+			template Bits2Num(N){
+				signal input binario[N];
+				signal output decimal;
 				
-				template Bits2Num(N){
-					 signal input binario[N];
-					signal output decimal;
-					
-					signal potencia[N];
-					signal sum[N];
-					
-					// Primera potencia = 1
-					potencia[0] <== 1;
-					sum[0] <== binario[0] * potencia[0];
-					
-					for (var i = 1; i < N; i++) {
-						potencia[i] <== potencia[i-1] * 2;       // potencia iterativa
-						sum[i] <== sum[i-1] + binario[i] * potencia[i];  // acumulacion
-					}
-					
-					decimal <== sum[N-1];
+				signal potencia[N];
+				signal sum[N];
+				
+				// Primera potencia = 1
+				potencia[0] <== 1;
+				sum[0] <== binario[0] * potencia[0];
+				
+				for (var i = 1; i < N; i++) {
+					potencia[i] <== potencia[i-1] * 2;                 // potencia iterativa
+					sum[i] <== sum[i-1] + binario[i] * potencia[i];    // acumulacion
 				}
-			\end{lstlisting}
+				
+				decimal <== sum[N-1];
+			}
+		\end{lstlisting}
 		
 		
 		\subsection*{Desplazamiento a la izquierda}
-			\noindent Explicaremos un ejemplo de la aplicación que haremos para 11 << 2
-			
-			\begin{itemize}
-				\item Dado un número decimal, lo convertimos a binario, en este caso 11
-				
-				\begin{equation*}
-				 	0  0  0  0  1  0  1  1
-				\end{equation*}
-				
-				\item Con el número en binario, desplazamos 2 bits a la izquierda
-				\begin{equation*}
-					0  0  0  0  1  0  1  1 ----> 	0  0  1  0  1  1  0  0
-				\end{equation*}
-				
-				\item Como podemos ver, los últimos dos bits se ha transformado en 0, por lo que la idea es añadir un número n de 0 al final del array que representa el número binario.
-				
-			\end{itemize}
-			
-			\begin{lstlisting}[language=Circom]
-				
-				//Codigo circom
-				template desplazamiento_izq(N) {
-					signal input numero_decimal;
-					signal input desplazamiento;
-					signal output salida;
-					
-					
-					component n2b = Num2Bits(N);
-					n2b.in <== numero_decimal;
-					
-					
-					signal binario[N];
-					for(var i = 0; i < N-desplazamiento; i++){
-						binario[i] <== n2b.out[i];
-					}
-					
-					for(var i = N-desplazamiento; i < N; i++){
-						binario[i] <== 0;
-					}
-					
-				
-					component b2n = Bits2Num(N);
-					b2n.in <== binario;
-					
-					salida <== b2n.out;
-					
-				}
-				
-				component main = desplazamiento_izq(N);
-			\end{lstlisting}
-			 
-			
-		\subsection*{Desplazamiento a la derecha}
-				\noindent Explicaremos un ejemplo de la aplicación que haremos para 11 >> 2
-			
-			\begin{itemize}
-				\item Dado un número decimal, lo convertimos a binario, en este caso 11
-				
-				\begin{equation*}
-					0  0  0  0  1  0  1  1
-				\end{equation*}
-				
-				\item Con el número en binario, desplazamos 2 bits a la derecha
-				\begin{equation*}
-					0  0  0  0  1  0  1  1 ---->  0  0  0  0  0  0  1  0
-				\end{equation*}
-				
-				\item Como podemos ver, los últimos dos bits se han despreciado, añadiendo dos ceros al principio del número binario.
-				
-			\begin{lstlisting}[language=Circom]
-				
-				//Codigo circom
-				template desplazamiento_dcha(N) {
-					signal input numero_decimal;
-					signal input desplazamiento;
-					signal output salida;
-					
-					
-					component n2b = Num2Bits(N);
-					n2b.in <== numero_decimal;
-					
-					
-					signal binario[N];
-					
-					for(var i = 0; i < desplazamiento; i++){
-						binario[i] <== 0;
-					}
-					
-					for(var i = desplazamiento; i < N; i++){
-						binario[i] <== n2b.out[i];
-					}
-					
+		\noindent Explicaremos un ejemplo de la aplicación que haremos para \verb|11 << 2|.
 		
-					component b2n = Bits2Num(N);
-					b2n.in <== binario;
-					
-					salida <== b2n.out;
-					
+		\begin{itemize}
+			\item Dado un número decimal, lo convertimos a binario, en este caso 11:
+			\begin{equation*}
+				\texttt{00001011}
+			\end{equation*}
+			
+			\item Con el número en binario, desplazamos 2 bits a la izquierda:
+			\begin{equation*}
+				\texttt{00001011 → 00101100}
+			\end{equation*}
+			
+			\item Como podemos ver, los últimos dos bits se han transformado en 0, por lo que la idea es añadir un número $n$ de ceros al final del array que representa el número binario.
+		\end{itemize}
+		
+		\begin{lstlisting}[language=Circom]
+			// Codigo Circom
+			template desplazamiento_izq(N) {
+				signal input numero_decimal;
+				signal input desplazamiento;
+				signal output salida;
+				
+				
+				assert(N >= desplazamiento);
+				
+				component n2b = Num2Bits(N);
+				n2b.in <== numero_decimal;
+				
+				signal binario[N];
+				
+				// Desplazar bits a la izquierda
+				for (var i = 0; i < N - desplazamiento; i++) {
+					binario[i] <== n2b.out[i+desplazamiento];
 				}
 				
-				component main = desplazamiento_dcha(N);
-			\end{lstlisting}
+				// Rellenar con ceros al inicio
+				for (var i = N - desplazamiento; i < N; i++) {
+					binario[i] <== 0;
+				}
+				
+				component b2n = Bits2Num(N);
+				b2n.binario <== binario;
+				
+				salida <== b2n.decimal;
+			}
 			
+			component main = desplazamiento_izq(N);
+		\end{lstlisting}
+		
+		
+		\subsection*{Desplazamiento a la derecha}
+		\noindent Explicaremos un ejemplo de la aplicación que haremos para \verb|11 >> 2|
+		
+		\begin{itemize}
+			\item Dado un número decimal, lo convertimos a binario, en este caso 11:
+			\begin{equation*}
+				\texttt{00001011}
+			\end{equation*}
+			
+			\item Con el número en binario, desplazamos 2 bits a la derecha:
+			\begin{equation*}
+				\texttt{00001011 → 00000010}
+			\end{equation*}
+			
+			\item Como podemos ver, los últimos dos bits se han despreciado, añadiendo dos ceros al principio del número binario.
+		\end{itemize}
+		
+		\begin{lstlisting}[language=Circom]
+			// Codigo Circom
+			template desplazamiento_dcha(N) {
+				signal input numero_decimal;
+				signal input desplazamiento;
+				signal output salida;
+				
+				assert(N >= desplazamiento);
+				
+				component n2b = Num2Bits(N);
+				n2b.in <== numero_decimal;
+				
+				signal binario[N];
+				
+				// Rellenar con ceros al final
+				for (var i = 0; i < desplazamiento; i++) {
+					binario[i] <== 0;
+				}
+				
+				// Desplazar bits a la derecha
+				for (var i = 0; i < N-desplazamiento; i++) {
+					binario[i+desplazamiento] <== n2b.out[i];
+				}
+				
+				component b2n = Bits2Num(N);
+				b2n.binario <== binario;
+				
+				salida <== b2n.decimal;
+			}
+			
+			component main = desplazamiento_dcha(N);
+		\end{lstlisting}
+		
+			\noindent \textit{Observación: Hay que asegurar de que el tamaño de N sea mayor o igual que el desplazamiento que se quiere realizar.}
 			
 		
 \end{document}
