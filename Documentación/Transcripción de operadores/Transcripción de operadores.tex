@@ -107,7 +107,7 @@
 	 \end{itemize}
 	
 	\section {Operadores Lógicos}
-		\renewcommand{\arraystretch}{3.5}
+		\renewcommand{\arraystretch}{3}
 		\begin{tabular}{|c|>{\centering\arraybackslash}p{14cm}|}
 			\hline
 			\textbf{Operación} & \textbf{Deducción} \\
@@ -154,7 +154,7 @@
 					\begin{prooftree} 
 						\hypo{TC(e_1) = (C_1, e_{1-binario})} 
 						\hypo{TC(e_2) = (C_2, e_{2-binario})} 
-						\infer2{TC(e_1 \text{\& } e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} = e_{1-binario}[i] * e_{2-binario}[i]\} \wedge \{v_{aux_2} = e_{1-binario}[i] + e_{2-binario}[i] * v_{aux}\}, v_{aux_2})} 
+						\infer2{TC(e_1 \text{\& } e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} = e_{1-binario}[i] * e_{2-binario}[i]\}, v_{aux})} 
 					\end{prooftree} 
 				}
 			}\\ 
@@ -166,7 +166,7 @@
 					\begin{prooftree} 
 					\hypo{TC(e_1) = (C_1, e_{1-binario})} 
 					\hypo{TC(e_2) = (C_2, e_{2-binario})} 
-					\infer2{TC(e_1 \text{| } e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} = e_{1-binario}[i] * e_{2-binario}[i]\} \wedge \{v_{aux_2} = e_{1-binario}[i] + e_{2-binario}[i] * v_{aux}\}, v_{aux_2})} 
+					\infer2{TC(e_1 \text{| } e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} = e_{1-binario}[i] * e_{2-binario}[i]\},  e_{1-binario}[i] + e_{2-binario}[i] - v_{aux})} 
 					\end{prooftree} 
 				}
 			} \\ 
@@ -197,7 +197,7 @@
 		
 		\noindent \textit{Observación: Gracias a la constraint lc1 === in (fuerza a que la entrada cumpla el rango \([0,2^n -1]\)), podemos evitar el uso de número negativos, ya que estos no cumplirán tal restricción.}
 		
-		\vspace{5cm}
+		\vspace{0.2cm}
 		
 		\textbf{\textit{Num2Bits(n):}}
 		
@@ -680,6 +680,34 @@
 		\vspace{0.2cm}
 		
 		\noindent Este caso es demasiado simple, por lo que un ejemplo con más condicionales detallará mejor lo explicado anteriormente.
+		
+		\noindent \textit{La traducción formal de los condicionales es la siguiente:}
+		
+		\vspace{0.3cm}
+		
+		\renewcommand{\arraystretch}{3}
+		\begin{tabularx}{\linewidth}{|c|>{\centering\arraybackslash}X|}
+			\hline
+			\textbf{Operación} & \textbf{Deducción} \\
+			\hline
+			\texttt{e = if \textit{cond } then $e_1$ else $e_2$} & 
+			\makecell[c]{ 
+				\resizebox{\linewidth}{!}{$
+					\begin{prooftree}
+						\hypo {TC(cond) = (C_{cond}, cond')}
+						\hypo{TC(e_1) = (C_1, e'_1)}
+						\hypo{TC(e_2) = (C_2, e'_2)}
+						\infer3{
+							TC(\texttt{if \textit{cond } then $e_1$ else $e_2$}) =
+							(C_{cond} \wedge C_1 \wedge C_2 \wedge 
+							\{v_{aux} = cond' * e'_1 + (1-cond') * e'_2\}, v_{aux})
+						}
+					\end{prooftree}
+					$}}
+			\\
+			\hline
+		\end{tabularx}
+		
 		
 		\subsection*{Caso complejo: if/else if/else}
 			\begin{lstlisting}[language=C]
