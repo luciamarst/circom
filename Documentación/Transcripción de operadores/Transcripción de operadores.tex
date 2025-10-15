@@ -554,24 +554,57 @@
 		
 		\vspace{2.6cm}
 		
-		\noindent En Circom, no se puede acceder directamente a posiciones de arrays con señales inputs. Sin embargo, se puede acceder indirectamente a esta posición sin usar esta señal input.
+		\noindent En Circom, no se puede acceder directamente a posiciones de arrays con señales inputs. Sin embargo, se puede acceder indirectamente a esta posición sin usar esta señal input. 
+		
+		\vspace{0.3cm}
+		
+		\noindent La propuesta para realizar este acceso es utilizar un multiplexor, el cuál tenga tantas entradas como tamaño tenga el array en cuestión. Por tanto, dada una posición el MUX devuelve el valor de la misma.
 		
 		\vspace{0.4cm}
 			
 		\begin{lstlisting}[language=Circom]
-			signal input pos;
-			signal input lista[N]; 
-			signal output acceso;
+			template MuxN(n) {
+				signal input in[n]; //
+				signal input sel;
+				signal output out;
+				
+				signal isSel[n];
+				component eq[n];
+				
+				for (var i = 0; i < n; i++) {
+					eq[i] = IsEqual();
+					eq[i].in[0] <== sel;
+					eq[i].in[1] <== i;
+					isSel[i] <== eq[i].out;
+				}
+				
+				signal suma_parcial[n + 1];
+				suma_parcial[0] <== 0;
+				
+				for (var i = 0; i < n; i++) {
+					suma_parcial[i + 1] <== suma_parcial[i] + isSel[i] * in[i];
+				}
+				
+				out <== suma_parcial[n];
+			}
 			
-			// NO SE PUEDE HACER
-			//lista[pos];
-			
-			// SI SE PUEDE HACER, coste O(N)
-			// Hay otras formas como arboles que reducen el coste a O(log (N))
-			for(int i = 0; i < N; i++){
-				signal seleccionado;
-				seleccionado <== (i === pos ? 1 : 0);
-				acceso <== acceso + lista[i] * seleccionado;
+			template acceso_lineal(n) {
+				signal input acceso;
+				signal input array[n];
+				signal output out;
+				
+				// Asumimos acceso dentro del rango
+				assert(acceso >= 0);
+				assert(acceso < n);
+				
+				component mux = MuxN(n);
+				
+				for (var i = 0; i < n; i++) {
+					mux.in[i] <== array[i];
+				}
+				mux.sel <== acceso;
+				
+				out <== mux.out;
 			}
 			
 		\end{lstlisting}
@@ -926,9 +959,9 @@
 				}
 				
 				component b2n = Bits2Num(N);
-				b2n.binario <== binario;
+				b2n.in <== binario;
 				
-				salida <== b2n.decimal;
+				salida <== b2n.out;
 			}
 			
 			component main = desplazamiento_izq(N);
@@ -977,9 +1010,9 @@
 				}
 				
 				component b2n = Bits2Num(N);
-				b2n.binario <== binario;
+				b2n.in <== binario;
 				
-				salida <== b2n.decimal;
+				salida <== b2n.out;
 			}
 			
 			component main = desplazamiento_dcha(N);
