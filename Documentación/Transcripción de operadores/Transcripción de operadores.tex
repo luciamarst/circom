@@ -14,6 +14,9 @@
 \usepackage{listings}
 \usepackage{graphicx}
 \usepackage{xcolor}
+\usepackage{makecell}
+\usepackage{tabularx}
+\usepackage{ebproof}
 
 % Comandos
 
@@ -62,6 +65,7 @@
 	\section*{Guía de contenidos}
 	
 	\begin{enumerate}
+		\item Notación
 		\item Operadores Lógicos
 		\item Operadores de Comparación
 		\item Operadores Aritméticos
@@ -69,21 +73,110 @@
 		\item Expresiones condicionales
 		\item Operadores de desplazamiento
 	\end{enumerate}
-
+	
+	\section{Notación} 
+	\noindent A lo largo del documento estudiaremos cómo traducir instrucciones y expresiones generadas por un lenguaje imperativo simple en un conjunto de ecuaciones en formato R1CS equivalente definimos las siguientes funciones: 
+	
+	\vspace{0.4cm} 
+	
+	\noindent \normalsize {\textbf{ Definición 1} Definimos la función de traducción de expresiones \textit{TC : $\text{Expr} \rightarrow C \times \text{Expr}$} siendo:} 
+	
+	\begin{itemize} 
+		\item \textit C un sistema de ecuación en formato R1CS
+		\item \textit C e una expresión lineal 
+	\end{itemize} 
+	
+	\vspace{0.2cm} 
+	
+	\noindent \textit{La intuición es que en caso de que las constraints C se verifiquen entonces e y $e'$ siempre tienen el mismo valor.} 
+	
+	\vspace{0.2cm} 
+	
+	\noindent Vamos a definir la función \textit{TC} de forma inductiva, comenzando por los casos base (números y variables) para luego pasar a definir los casos compuestos. 
+	
+	\subsection*{Casos base} 
+	
+	\begin{itemize} 
+		\item Si la expresión es un número $n$:
+		
+			 \hspace{3em} \textit{TC($n$) = TC($\emptyset$, $n$)} 
+			 
+		\item Si la expresión es una variable $v$:
+		
+			 \hspace{3em} \textit{TC($v$) = TC($\emptyset$, $v$)}
+	 \end{itemize}
 	
 	\section {Operadores Lógicos}
-		\begin{tabular}{|c|>{\centering\arraybackslash}p{5cm}|p{8cm}|}
+		\renewcommand{\arraystretch}{3.5}
+		\begin{tabular}{|c|>{\centering\arraybackslash}p{14cm}|}
 			\hline
-				\textbf{C} & \textbf{Circom} & {Comentario} \\
+			\textbf{Operación} & \textbf{Deducción} \\
+		
 			\hline
-				\texttt{!a} & 1 - a & Si a es condición, su negación se consigue con la diferencia entre 1 y ésta \\
+			\texttt{e = \text{not } b} & 
+			\makecell[c]{ 
+			$$
+				\begin{prooftree}
+					\hypo{TC(e_1) = (C, e'_1)}
+					\infer1{TC(not\ e_1) = (C, 1 - e'_1)}
+				\end{prooftree}
+			$$
+			} \\ 
 			\hline
-				\texttt{a \&\& b} & a * b & Si a y b son verdaderos, el resultado de su producto será 1, de lo contrario será 0 \\
+			
+			\texttt{e = \text{and } b} & 
+			\makecell[c]{ 
+				$$
+				\begin{prooftree}
+					\hypo{TC(e_1) = (C_1, e'_1)}
+					\hypo{TC(e_2) = (C_2, e'_2)}
+					\infer2{TC(e_1 \text{and } e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} = e'_1 * e'_2\}, v_{aux})}
+				\end{prooftree}
+				$$
+			} \\  
 			\hline
-				\texttt{a || b} & 1 - (1-a)*(1-b) ó a+b - (a*b)& Si a, b o ambos son verdaderos, el resultado de su producto será 1, de lo contrario será 0 \\
+			
+			\texttt{e = \text{or } b} & 
+			\makecell[c]{ 
+				$$
+				\begin{prooftree}
+					\hypo{TC(e_1) = (C_1, e'_1)}
+					\hypo{TC(e_2) = (C_2, e'_2)}
+					\infer2{TC(e_1 \text{or } e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} = e'_1 * e'_2\},e'_1 + e'_2 - v_{aux})}
+				\end{prooftree}
+				$$
+			} \\ 
+			\hline
+			
+			\texttt {$e = e_1 \& e_2$} &
+			\makecell[c]{
+				\resizebox{\hsize}{!}{
+					\begin{prooftree} 
+						\hypo{TC(e_1) = (C_1, e_{1-binario})} 
+						\hypo{TC(e_2) = (C_2, e_{2-binario})} 
+						\infer2{TC(e_1 \text{\& } e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} = e_{1-binario}[i] * e_{2-binario}[i]\} \wedge \{v_{aux_2} = e_{1-binario}[i] + e_{2-binario}[i] * v_{aux}\}, v_{aux_2})} 
+					\end{prooftree} 
+				}
+			}\\ 
+			\hline
+			
+			\texttt{$e = e_1$ | $e_2$} & 
+			\makecell[c]{ 
+				\resizebox{\hsize}{!}{
+					\begin{prooftree} 
+					\hypo{TC(e_1) = (C_1, e_{1-binario})} 
+					\hypo{TC(e_2) = (C_2, e_{2-binario})} 
+					\infer2{TC(e_1 \text{| } e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} = e_{1-binario}[i] * e_{2-binario}[i]\} \wedge \{v_{aux_2} = e_{1-binario}[i] + e_{2-binario}[i] * v_{aux}\}, v_{aux_2})} 
+					\end{prooftree} 
+				}
+			} \\ 
 			\hline
 		\end{tabular}
 		
+	
+		
+		
+		\vspace{0.2cm}
 	
 
 	
@@ -203,23 +296,84 @@
 		
 		\vspace{0.3cm}	
 		
-		\begin{tabular}{|c|>{\centering\arraybackslash}p{5cm}|p{8cm}|}
-			\hline
-				\textbf{C} & \textbf{Circom} & \textbf{Comentario} \\
-			\hline
-				\texttt{a == b} & \texttt{IsZero()(a - b)} & Si \(a = b\), entonces se cumple (==1) \\
-			\hline
-				\texttt{a != b} & \texttt{1- IsZero()(a - b)} & Si \(a \neq b\), entonces es falso (==0), por tanto se invierte con la resta \\
-			\hline
-				\texttt{\(a < b\)} & SecureLessThan(n)(a,b) & Si \(a < b\) es verdadero, entonces se cumple (==1) \\
-			\hline
-				\texttt{\(a \leq b\)} & SecureLessThanEq(n)(a,b) & Si \(a \leq b\) es verdadero, entonces se cumple (==1) \\
-			\hline
-				\texttt{\(a > b\)} & 1- SecureLessThanEq(n)(a,b) & Si \(a \leq b\) es falso (== 0), entonces \(a > b\) \\
-			\hline
-				\texttt{\(a \geq b \)} & 1- SecureLessThan(n)(a,b) & Si \(a < b\) es falso (== 0), entonces \(a \geq b \) \\
-			\hline
-		\end{tabular}
+			\renewcommand{\arraystretch}{3.5}
+			\begin{tabular}{|c|>{\centering\arraybackslash}p{14cm}|} 
+				\hline 
+				\textbf{Operación} & \textbf{Deducción} \\ 
+				\hline 
+				
+				\texttt{$e = e_1 = e_2$} & 
+				\makecell[c]{ 
+					Para un component zero = IsZero($e_1 - e_2$): \\[6pt] 
+					$$ 
+						\begin{prooftree} 
+							\hypo{TC(e_1) = (C_1, e'_1)} 
+							\hypo {TC(e_2) = (C_2, e'_2)} 
+							\infer2{TC(e_1 \text{= } e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} <== zero.out\}, v_{aux})} 
+						\end{prooftree} 
+					$$} \\ 
+					\hline 
+					
+					\texttt{$e = e_1 \neq e_2$} & 
+					\makecell[c]{ 
+						Para un component zero = IsZero($e_1 - e_2$): \\[6pt] 
+					$$ 
+						\begin{prooftree} 
+							\hypo{TC(e_1) = (C_1, e'_1)} 
+							\hypo {TC(e_2) = (C_2, e'_2)} 
+							\infer2{TC(e_1 \neq e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} <== zero.out\}, 1 - v_{aux})} 
+						\end{prooftree} 
+					$$} \\ 
+					
+					\hline 
+					
+					\texttt{\(a < b\)} & 
+					\makecell[c]{ 
+						Para un component lessThan = SecureLessThan(n)(a,b) : \\[6pt] 
+					$$ \begin{prooftree} 
+						\hypo{TC(e_1) = (C_1, e'_1)} 
+						\hypo {TC(e_2) = (C_2, e'_2)} 
+						\infer2{TC(e_1 < e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} <== lessThan.out\}, v_{aux})} 
+						\end{prooftree} 
+					$$} \\ 
+					
+					\hline \texttt{\(a \leq b\)} & 
+					\makecell[c]{ 
+						Para un component lessThanEq = SecureLessThanEq(n)(a,b) : \\[6pt] 
+						$$ 
+							\begin{prooftree} 
+							\hypo{TC(e_1) = (C_1, e'_1)} 
+							\hypo {TC(e_2) = (C_2, e'_2)} 
+							\infer2{TC(e_1 \leq e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} <== lessThanEq.out\}, v_{aux})} 
+							\end{prooftree} 
+						$$} \\ 
+						
+						\hline \texttt{\(a > b\)} & 
+						\makecell[c]{ 
+							Para un component lessThanEq = SecureLessThanEq(n)(a,b) : \\[6pt] 
+						$$ 
+							\begin{prooftree} 
+							\hypo{TC(e_1) = (C_1, e'_1)} 
+							\hypo {TC(e_2) = (C_2, e'_2)} 
+							\infer2{TC(e_1 > e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} <== lessThanEq.out\}, 1 - v_{aux})} 
+							\end{prooftree} 
+						$$} \\
+						
+						\hline 
+						
+						\texttt{\(a \geq b \)} & 
+						\makecell[c]{ 
+							Para un component lessThan = SecureLessThan(n)(a,b) : \\[6pt] 
+						$$ 
+							\begin{prooftree} 
+								\hypo{TC(e_1) = (C_1, e'_1)} 
+								\hypo {TC(e_2) = (C_2, e'_2)} 
+								\infer2{TC(e_1 \geq  e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} <== lessThan.out\}, 1 - v_{aux})} 
+								\end{prooftree} 
+						$$} \\ 
+						
+						\hline 
+					\end{tabular} 
 		
 		\smallskip
 		
@@ -228,6 +382,8 @@
 		\noindent \textit{Nota:} Las funciones \texttt{IsZero()} son circuitos que comparan si un valor es igual a 0.
 		
 		\noindent \textit{Nota:} Las funciones \texttt{IsEqual())} comprueba si dados dos números, estos son iguales o no.
+		
+		\vspace{0.2cm}
 		
 		\section{Operadores Aritméticos}
 		
@@ -301,13 +457,34 @@
 		
 		\vspace{0.2cm}
 		
-		\begin{tabular}{|c|>{\centering\arraybackslash}p{5cm}|p{8cm}|}
+		\begin{tabular}{|c|>{\centering\arraybackslash}p{14cm}|}
 			\hline
-			\textbf{C} & \textbf{Circom} & \textbf{Comentario} \\
+			\textbf{Operación} & \textbf{Deducción} \\
 			\hline
-			\texttt{\(a / b\)} & \texttt{a === b * q + r} & Forzando q con una variable a que esa ecuación se cumpla \\
+			
+			\texttt{$e= a / b$} & 
+			\makecell[c]{ 
+				$$ 
+				\begin{prooftree} 
+					\hypo{TC(a) = (C_1, a')} 
+					\hypo {TC(b) = (C_2, b')} 
+					\hypo {TC(q) = (C_3, q')} 
+					\hypo {TC(r) = (C_4, r')} 
+					\infer4{TC(a / b) = (C_1 \wedge C_2 \wedge C_3 \wedge C_4 \wedge \{v_{aux} = b' * q'\}, a' = v_{aux} + r')}
+				\end{prooftree} 
+				$$} \\
+			
 			\hline
-			\texttt{\(a \% b\)} & \texttt{a - (b * (a/b))} & \(a / b\) hace referencia a la equivalencia que se obtiene en circom para poder realizar la operación \% \\
+			
+			\texttt{$e = a \% b$} & 
+			\makecell[c]{ 
+				$$ 
+				\begin{prooftree} 
+					\hypo{TC(a) = (C_1, a')} 
+					\hypo {TC(b) = (C_2, b')} 
+					\infer2{TC(a \% b) = (C_1 \wedge C_2 \wedge \{v_{aux} = a'/b'\} \wedge \{v_{aux_2} = b * v_{aux}\}, a' - v_{aux_2})}
+				\end{prooftree} 
+				$$} \\
 			\hline
 		\end{tabular}
 		
@@ -780,7 +957,41 @@
 			component main = desplazamiento_dcha(N);
 		\end{lstlisting}
 		
-			\noindent \textit{Observación: Hay que asegurar de que el tamaño de N sea mayor o igual que el desplazamiento que se quiere realizar.}
+		\noindent \textit{Observación: Hay que asegurar de que el tamaño de N sea mayor o igual que el desplazamiento que se quiere realizar.}
+		
+		\vspace{0.5cm}
+		
+		\begin{tabular}{|c|>{\centering\arraybackslash}p{14cm}|}
+			\hline
+			\textbf{Operación} & \textbf{Deducción} \\
+			\hline
+			
+			\texttt{$e= e_1 \ll e_2$} & 
+				\makecell[c]{ 
+				Para un component izq = desplazamiento\_izq(n)(a,b) : \\[6pt] 
+				$$ 
+				\begin{prooftree} 
+					\hypo{TC(e_1) = (C_1, e'_1)} 
+					\hypo {TC(e_2) = (C_2, e'_2)} 
+					\infer2{TC(e_1 \ll e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} <== izq.out\}, v_{aux})}
+				\end{prooftree} 
+				$$} \\
+			
+			\hline
+			
+				\texttt{$e= e_1 \gg e_2$} & 
+			\makecell[c]{ 
+				Para un component izq = desplazamiento\_dcha(n)(a,b) : \\[6pt] 
+				$$ 
+				\begin{prooftree} 
+					\hypo{TC(e_1) = (C_1, e'_1)} 
+					\hypo {TC(e_2) = (C_2, e'_2)} 
+					\infer2{TC(e_1 \gg e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} <== dcha.out\}, v_{aux})}
+				\end{prooftree} 
+				$$} \\
+				
+			\hline
+		\end{tabular}
 			
 		
 \end{document}
