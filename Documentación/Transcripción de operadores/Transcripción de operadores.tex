@@ -321,7 +321,7 @@
 			\item La llamada a la función sería $lessThan(n)$ para estos casos.
 		\end{itemize}
 		
-		\vspace{0.2cm}
+		\vspace{20cm}
 		
 		\noindent A continuación, definiremos para cada operador su deducción.
 		
@@ -369,8 +369,8 @@
 							\left(
 							C_1 \wedge C_2 \wedge
 							\begin{array}{l}
-								\{SecureLessThan(253).in1 = e_1, \\
-								SecureLessThan(253).in2 = e_2, \\
+								\{SecureLessThan(253).in1 = e_1', \\
+								SecureLessThan(253).in2 = e_2', \\
 								SecureLessThan(253).out = v_{aux} \}, 
 							\end{array}
 							v_{aux}
@@ -388,12 +388,12 @@
 						\hypo {TC(e_2) = (C_2, e'_2)} 
 						\[
 						\infer2{
-							TC(e_1 < e_2) =
+							TC(e_1 <_{n} e_2) =
 							\left(
 							C_1 \wedge C_2 \wedge
 							\begin{array}{l}
-								\{SecureLessThan(n).in1 = e_1, \\
-								SecureLessThan(n).in2 = e_2, \\
+								\{SecureLessThan(n).in1 = e_1', \\
+								SecureLessThan(n).in2 = e_2', \\
 								SecureLessThan(n).out = v_{aux} \}, 
 							\end{array}
 							v_{aux}
@@ -413,12 +413,12 @@
 							\hypo {TC(e_2) = (C_2, e'_2)} 
 							\[
 						\infer2{
-							TC(e_1 < e_2) =
+							TC(e_1 \leq e_2) =
 							\left(
 							C_1 \wedge C_2 \wedge
 							\begin{array}{l}
-								\{SecureLessThanEq(253).in1 = e_1, \\
-								SecureLessThanEq(253).in2 = e_2, \\
+								\{SecureLessThanEq(253).in1 = e_1', \\
+								SecureLessThanEq(253).in2 = e_2', \\
 								SecureLessThanEq(253).out = v_{aux} \}, 
 							\end{array}
 							v_{aux}
@@ -438,12 +438,12 @@
 								\hypo {TC(e_2) = (C_2, e'_2)} 
 								\[
 								\infer2{
-									TC(e_1 < e_2) =
+									TC(e_1 \leq_{n} e_2) =
 									\left(
 									C_1 \wedge C_2 \wedge
 									\begin{array}{l}
-										\{SecureLessThanEq(n).in1 = e_1, \\
-										SecureLessThanEq(n).in2 = e_2, \\
+										\{SecureLessThanEq(n).in1 = e_1', \\
+										SecureLessThanEq(n).in2 = e_2', \\
 										SecureLessThanEq(n).out = v_{aux} \}, 
 									\end{array}
 									v_{aux}
@@ -463,12 +463,12 @@
 							\hypo {TC(e_2) = (C_2, e'_2)} 
 							\[
 							\infer2{
-								TC(e_1 < e_2) =
+								TC(e_1 > e_2) =
 								\left(
 								C_1 \wedge C_2 \wedge
 								\begin{array}{l}
-									\{SecureLessThan(253).in1 = e_1, \\
-									SecureLessThan(253).in2 = e_2, \\
+									\{SecureLessThan(253).in1 = e_1', \\
+									SecureLessThan(253).in2 = e_2', \\
 									SecureLessThan(253).out = v_{aux} \}, 
 								\end{array}
 								1 - v_{aux}
@@ -488,12 +488,12 @@
 								\hypo {TC(e_2) = (C_2, e'_2)} 
 								\[
 								\infer2{
-									TC(e_1 < e_2) =
+									TC(e_1 >_{n} e_2) =
 									\left(
 									C_1 \wedge C_2 \wedge
 									\begin{array}{l}
-										\{SecureLessThanEq(n).in1 = e_1, \\
-										SecureLessThanEq(n).in2 = e_2, \\
+										\{SecureLessThanEq(n).in1 = e_1', \\
+										SecureLessThanEq(n).in2 = e_2', \\
 										SecureLessThanEq(n).out = v_{aux} \}, 
 									\end{array}
 									1 - v_{aux}
@@ -513,12 +513,12 @@
 								\hypo {TC(e_2) = (C_2, e'_2)} 
 								\[
 								\infer2{
-									TC(e_1 < e_2) =
+									TC(e_1 \geq e_2) =
 									\left(
 									C_1 \wedge C_2 \wedge
 									\begin{array}{l}
-										\{SecureLessThan(253).in1 = e_1, \\
-										SecureLessThan(253).in2 = e_2, \\
+										\{SecureLessThan(253).in1 = e_1', \\
+										SecureLessThan(253).in2 = e_2', \\
 										SecureLessThan(253).out = v_{aux} \}, 
 									\end{array}
 									1 - v_{aux}
@@ -538,12 +538,12 @@
 								\hypo {TC(e_2) = (C_2, e'_2)} 
 								\[
 								\infer2{
-									TC(e_1 < e_2) =
+									TC(e_1 \geq_{n} e_2) =
 									\left(
 									C_1 \wedge C_2 \wedge
 									\begin{array}{l}
-										\{SecureLessThan(n).in1 = e_1, \\
-										SecureLessThan(n).in2 = e_2, \\
+										\{SecureLessThan(n).in1 = e_1', \\
+										SecureLessThan(n).in2 = e_2', \\
 										SecureLessThan(n).out = v_{aux} \}, 
 									\end{array}
 									1 - v_{aux}
@@ -568,7 +568,54 @@
 		
 		\section{Operadores Aritméticos}
 		
-		\noindent Tanto en C como en Circom, los operadores suma (+), resta (-) y multiplicación (*) no difieren. En cambio, en operaciones como la división entera (/) y el módulo (\%) si que encontramos diferencias y por ende es necesaria su transcripción.
+		\noindent Tanto en C como en Circom, los operadores suma (+), resta (-) y multiplicación (*) no difieren. 
+		
+		\vspace{0.2cm}
+		
+		\begin{tabular}{|c|>{\centering\arraybackslash}p{14cm}|}
+			\hline
+			\textbf{Operación} & \textbf{Deducción} \\
+			\hline
+			
+			\texttt{$e= e_1 + e_2$} & 
+			\makecell[c]{ 
+				$$ 
+				\begin{prooftree} 
+					\hypo{TC(e_1) = (C_1, e_1')} 
+					\hypo {TC(e_2) = (C_2, e_2')} 
+					\infer2{TC(e_1 + e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} = e_1' + e_2'\}, v_{aux})}
+				\end{prooftree} 
+				$$} \\
+			
+			\hline
+			
+			\texttt{$e= e_1 - e_2$} & 
+			\makecell[c]{ 
+				$$ 
+				\begin{prooftree} 
+					\hypo{TC(e_1) = (C_1, e_1')} 
+					\hypo {TC(e_2) = (C_2, e_2')} 
+					\infer2{TC(e_1 + e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} = e_1' - e_2'\}, v_{aux})}
+				\end{prooftree} 
+				$$} \\
+			\hline
+			
+			\texttt{$e= e_1 * e_2$} & 
+			\makecell[c]{ 
+				$$ 
+				\begin{prooftree} 
+					\hypo{TC(e_1) = (C_1, e_1')} 
+					\hypo {TC(e_2) = (C_2, e_2')} 
+					\infer2{TC(e_1 + e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} = e_1' * e_2'\}, v_{aux})}
+				\end{prooftree} 
+				$$} \\
+			\hline
+			
+		\end{tabular}
+		
+		\vspace{0.5cm}
+		
+		\noindent En cambio, en operaciones como la división entera (/) y el módulo (\%) si que encontramos diferencias y por ende es necesaria su transcripción.
 		
 		\vspace{0.3cm}
 		
