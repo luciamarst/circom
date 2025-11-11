@@ -1,0 +1,7 @@
+- Corregir documento para los comparadores. 
+- Tenemos dos tipos de comparadores, los que comparan número del mismo tamaño (que es conocido) y los que comparan número con diferente tamaño/tamaño no conocido
+	- Para los que no se conoce, especificar un operador donde el tamaño se autocompletará con el máximo posible en el cuerpo finito (253)
+	- Lo otro, modificar para que se $\le_{n} \rightarrow LessThan(n)$  
+	- Cambiar 	Para un component lessThan = SecureLessThan(n)(a,b), quitando el a y b. Declarándolo en la inferencia. $lessTahnEq(n).in = e_1$ 
+	- Cambiar $v_{aux} <== lessThan.out$, a $lessThanEq(n).out = e$
+	- 

@@ -107,8 +107,11 @@
 	 \end{itemize}
 	
 	\section {Operadores Lógicos}
+	
+	\vspace{0.2cm}
+	
 		\renewcommand{\arraystretch}{3}
-		\begin{tabular}{|c|>{\centering\arraybackslash}p{14cm}|}
+		\begin{tabular}{|c|>{\centering\arraybackslash}p{12cm}|}
 			\hline
 			\textbf{Operación} & \textbf{Deducción} \\
 		
@@ -169,18 +172,18 @@
 					\infer2{TC(e_1 \text{| } e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} = e_{1-binario}[i] * e_{2-binario}[i]\},  e_{1-binario}[i] + e_{2-binario}[i] - v_{aux})} 
 					\end{prooftree} 
 				}
-			} \\ 
+			}
+			\\ 	
 			\hline
-		\end{tabular}
+			\end{tabular}
 		
 	
-		
-		
 		\vspace{0.2cm}
 	
-
 	
 	\section{Operadores de Comparación}
+	
+		\subsection{Tratamiento de número negativos}
 		\noindent Un detalle a observar en las funciones \textit{LessThan()} y \textit{LessThanEq()} es que para números negativos podría presentar problemas. 
 		
 		\vspace{0.2cm}
@@ -294,83 +297,261 @@
 		
 		\noindent Con está pequeña modificación, al usar para ambos número a comparar la función \textit{Num2Bits()} nos aseguramos de que se cumpla la restricción de ser número enteros positivos dentro del rango.
 		
-		\vspace{0.3cm}	
 		
-			\renewcommand{\arraystretch}{3.5}
-			\begin{tabular}{|c|>{\centering\arraybackslash}p{14cm}|} 
+		\subsection{Tamaño de los números comparados}
+		\noindent Por otro lado, es importante el detalle de que podemos comparar dos números de tamaño conocido e igual, mientras que puede que comparemos dos números cuyo tamaño no conocemos o cuyos tamaños son diferentes.
+		
+		\vspace{0.2cm}	
+			
+		\noindent Para resolver este problema, vamos a definir dos operadores de comparación por cada operador de comparación existente exceptuando la igualdad y desigualdad.
+		
+		\vspace{1.2cm}	
+		
+		\noindent Un ejemplo de cuáles serían estos dos operadores sería el siguiente, para el operador $\leq$:
+		
+		\subsubsection{Operador $\leq$}
+		\begin{itemize}
+			\item $\leq$: Comparaciones de cuyos números se conoce el tamaño y además tienen el mismo tamaño.
+			\item La llamada a la función sería $lessThan(253)$ para estos casos, ya que el tamaño máximo es 253 en el cuerpo finito.
+		\end{itemize}
+		
+		\subsubsection{Operador $\leq_{n}$}
+			\begin{itemize}
+			\item $\leq_{n}$: Comparaciones de cuyos números no se conoce el tamaño y/o no tiene el mismo tamaño.
+			\item La llamada a la función sería $lessThan(n)$ para estos casos.
+		\end{itemize}
+		
+		\vspace{0.2cm}
+		
+		\noindent A continuación, definiremos para cada operador su deducción.
+		
+		\vspace{0.2cm}
+		
+			\renewcommand{\arraystretch}{3}
+			\begin{tabular}{|c|>{\centering\arraybackslash}p{13cm}|}
 				\hline 
 				\textbf{Operación} & \textbf{Deducción} \\ 
 				\hline 
 				
 				\texttt{$e = e_1 = e_2$} & 
-				\makecell[c]{ 
-					Para un component zero = IsZero($e_1 - e_2$): \\[6pt] 
+				\makecell[c]{ \\ 
+					signal diff <== $e_1 - e_2$ \\[3pt]
 					$$ 
 						\begin{prooftree} 
 							\hypo{TC(e_1) = (C_1, e'_1)} 
 							\hypo {TC(e_2) = (C_2, e'_2)} 
-							\infer2{TC(e_1 \text{= } e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} <== zero.out\}, v_{aux})} 
+							\infer2{TC(e_1 \text{= } e_2) = (C_1 \wedge C_2 \wedge \{IsZero().in = diff, IsZero().out = v_{aux}\}, v_{aux})} 
 						\end{prooftree} 
-					$$} \\ 
+					$$}  \\[3pt] 
 					\hline 
 					
 					\texttt{$e = e_1 \neq e_2$} & 
-					\makecell[c]{ 
-						Para un component zero = IsZero($e_1 - e_2$): \\[6pt] 
+					\makecell[c]{ \\
+						signal diff <== $e_1 - e_2$ \\[3pt]
 					$$ 
 						\begin{prooftree} 
 							\hypo{TC(e_1) = (C_1, e'_1)} 
 							\hypo {TC(e_2) = (C_2, e'_2)} 
-							\infer2{TC(e_1 \neq e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} <== zero.out\}, 1 - v_{aux})} 
+							\infer2{TC(e_1 \neq e_2) = (C_1 \wedge C_2 \wedge \{IsZero().in = diff, IsZero().out = v_{aux}\}, 1 - v_{aux})} 
 						\end{prooftree} 
-					$$} \\ 
+					$$} \\
 					
 					\hline 
 					
-					\texttt{\(a < b\)} & 
-					\makecell[c]{ 
-						Para un component lessThan = SecureLessThan(n)(a,b) : \\[6pt] 
+					\texttt{\(e = e_1 < e_2\)} & 
+					\makecell[c]{ \\[1pt] 
 					$$ \begin{prooftree} 
 						\hypo{TC(e_1) = (C_1, e'_1)} 
 						\hypo {TC(e_2) = (C_2, e'_2)} 
-						\infer2{TC(e_1 < e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} <== lessThan.out\}, v_{aux})} 
+						\[
+						\infer2{
+							TC(e_1 < e_2) =
+							\left(
+							C_1 \wedge C_2 \wedge
+							\begin{array}{l}
+								\{SecureLessThan(253).in1 = e_1, \\
+								SecureLessThan(253).in2 = e_2, \\
+								SecureLessThan(253).out = v_{aux} \}, 
+							\end{array}
+							v_{aux}
+							\right)
+						}
+						\]
 						\end{prooftree} 
 					$$} \\ 
+					\hline 
+						
+					\texttt{\(e = e_1 <_{n} e_2\)} & 
+					\makecell[c]{ \\
+						$$ \begin{prooftree} 
+						\hypo{TC(e_1) = (C_1, e'_1)} 
+						\hypo {TC(e_2) = (C_2, e'_2)} 
+						\[
+						\infer2{
+							TC(e_1 < e_2) =
+							\left(
+							C_1 \wedge C_2 \wedge
+							\begin{array}{l}
+								\{SecureLessThan(n).in1 = e_1, \\
+								SecureLessThan(n).in2 = e_2, \\
+								SecureLessThan(n).out = v_{aux} \}, 
+							\end{array}
+							v_{aux}
+							\right)
+						}
+						\]
+					\end{prooftree} 
+						$$} \\ 
 					
-					\hline \texttt{\(a \leq b\)} & 
-					\makecell[c]{ 
-						Para un component lessThanEq = SecureLessThanEq(n)(a,b) : \\[6pt] 
+					\hline 
+					
+					\texttt{\(e = e_1 \leq e_2\)} & 
+					\makecell[c]{ \\
 						$$ 
 							\begin{prooftree} 
 							\hypo{TC(e_1) = (C_1, e'_1)} 
 							\hypo {TC(e_2) = (C_2, e'_2)} 
-							\infer2{TC(e_1 \leq e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} <== lessThanEq.out\}, v_{aux})} 
+							\[
+						\infer2{
+							TC(e_1 < e_2) =
+							\left(
+							C_1 \wedge C_2 \wedge
+							\begin{array}{l}
+								\{SecureLessThanEq(253).in1 = e_1, \\
+								SecureLessThanEq(253).in2 = e_2, \\
+								SecureLessThanEq(253).out = v_{aux} \}, 
+							\end{array}
+							v_{aux}
+							\right)
+						}
+						\]
 							\end{prooftree} 
 						$$} \\ 
 						
-						\hline \texttt{\(a > b\)} & 
-						\makecell[c]{ 
-							Para un component lessThanEq = SecureLessThanEq(n)(a,b) : \\[6pt] 
+						\hline
+						
+						\texttt{\(e = e_1 \leq_{n} e_2\)} & 
+						\makecell[c]{ \\
+							$$ 
+							\begin{prooftree} 
+								\hypo{TC(e_1) = (C_1, e'_1)} 
+								\hypo {TC(e_2) = (C_2, e'_2)} 
+								\[
+								\infer2{
+									TC(e_1 < e_2) =
+									\left(
+									C_1 \wedge C_2 \wedge
+									\begin{array}{l}
+										\{SecureLessThanEq(n).in1 = e_1, \\
+										SecureLessThanEq(n).in2 = e_2, \\
+										SecureLessThanEq(n).out = v_{aux} \}, 
+									\end{array}
+									v_{aux}
+									\right)
+								}
+								\]
+							\end{prooftree} 
+							$$} \\ 
+						
+						\hline
+						
+						\texttt{\(e = e_1 > e_2\)} & 
+						\makecell[c]{ \\
 						$$ 
 							\begin{prooftree} 
 							\hypo{TC(e_1) = (C_1, e'_1)} 
 							\hypo {TC(e_2) = (C_2, e'_2)} 
-							\infer2{TC(e_1 > e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} <== lessThanEq.out\}, 1 - v_{aux})} 
+							\[
+							\infer2{
+								TC(e_1 < e_2) =
+								\left(
+								C_1 \wedge C_2 \wedge
+								\begin{array}{l}
+									\{SecureLessThan(253).in1 = e_1, \\
+									SecureLessThan(253).in2 = e_2, \\
+									SecureLessThan(253).out = v_{aux} \}, 
+								\end{array}
+								1 - v_{aux}
+								\right)
+							}
+							\]
 							\end{prooftree} 
 						$$} \\
 						
 						\hline 
 						
-						\texttt{\(a \geq b \)} & 
-						\makecell[c]{ 
-							Para un component lessThan = SecureLessThan(n)(a,b) : \\[6pt] 
+						\texttt{\(e = e_1 >_{n} e_2\)} & 
+						\makecell[c]{ \\
+							$$ 
+							\begin{prooftree} 
+								\hypo{TC(e_1) = (C_1, e'_1)} 
+								\hypo {TC(e_2) = (C_2, e'_2)} 
+								\[
+								\infer2{
+									TC(e_1 < e_2) =
+									\left(
+									C_1 \wedge C_2 \wedge
+									\begin{array}{l}
+										\{SecureLessThanEq(n).in1 = e_1, \\
+										SecureLessThanEq(n).in2 = e_2, \\
+										SecureLessThanEq(n).out = v_{aux} \}, 
+									\end{array}
+									1 - v_{aux}
+									\right)
+								}
+								\]
+							\end{prooftree} 
+							$$} \\
+						
+						\hline 
+						
+						\texttt{\(e = e_1 \geq e_2\)} & 
+						\makecell[c]{ \\
 						$$ 
 							\begin{prooftree} 
 								\hypo{TC(e_1) = (C_1, e'_1)} 
 								\hypo {TC(e_2) = (C_2, e'_2)} 
-								\infer2{TC(e_1 \geq  e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} <== lessThan.out\}, 1 - v_{aux})} 
+								\[
+								\infer2{
+									TC(e_1 < e_2) =
+									\left(
+									C_1 \wedge C_2 \wedge
+									\begin{array}{l}
+										\{SecureLessThan(253).in1 = e_1, \\
+										SecureLessThan(253).in2 = e_2, \\
+										SecureLessThan(253).out = v_{aux} \}, 
+									\end{array}
+									1 - v_{aux}
+									\right)
+								}
+								\]
 								\end{prooftree} 
 						$$} \\ 
+						
+						\hline 
+						
+							\texttt{\(e = e_1 \geq_{n} e_2\)} & 
+						\makecell[c]{ \\
+							$$ 
+							\begin{prooftree} 
+								\hypo{TC(e_1) = (C_1, e'_1)} 
+								\hypo {TC(e_2) = (C_2, e'_2)} 
+								\[
+								\infer2{
+									TC(e_1 < e_2) =
+									\left(
+									C_1 \wedge C_2 \wedge
+									\begin{array}{l}
+										\{SecureLessThan(n).in1 = e_1, \\
+										SecureLessThan(n).in2 = e_2, \\
+										SecureLessThan(n).out = v_{aux} \}, 
+									\end{array}
+									1 - v_{aux}
+									\right)
+								}
+								\]
+							\end{prooftree} 
+							$$} \\ 
 						
 						\hline 
 					\end{tabular} 
@@ -468,9 +649,7 @@
 				\begin{prooftree} 
 					\hypo{TC(a) = (C_1, a')} 
 					\hypo {TC(b) = (C_2, b')} 
-					\hypo {TC(q) = (C_3, q')} 
-					\hypo {TC(r) = (C_4, r')} 
-					\infer4{TC(a / b) = (C_1 \wedge C_2 \wedge C_3 \wedge C_4 \wedge \{v_{aux} = b' * q'\}, a' = v_{aux} + r')}
+					\infer2{TC(a / b) = (C_1 \wedge C_2 \wedge \{v_{aux} = b' * q'\}, a' = v_{aux} + r')}
 				\end{prooftree} 
 				$$} \\
 			
@@ -728,12 +907,12 @@
 				\resizebox{\linewidth}{!}{$
 					\begin{prooftree}
 						\hypo {TC(cond) = (C_{cond}, cond')}
-						\hypo{TC(e_1) = (C_1, e'_1)}
-						\hypo{TC(e_2) = (C_2, e'_2)}
+						\hypo{TC(e_1) = C_1}
+						\hypo{TC(e_2) = C_2)}
 						\infer3{
 							TC(\texttt{if \textit{cond } then $e_1$ else $e_2$}) =
 							(C_{cond} \wedge C_1 \wedge C_2 \wedge 
-							\{v_{aux} = cond' * e'_1 + (1-cond') * e'_2\}, v_{aux})
+							\{v_{aux} = cond' * C_1 + (1-cond') * e'_2\}, v_{aux})
 						}
 					\end{prooftree}
 					$}}
