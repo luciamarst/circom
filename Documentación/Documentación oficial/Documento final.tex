@@ -5,6 +5,7 @@
 
 % Paquetes
 
+\usepackage[explicit]{titlesec}
 \usepackage[utf8]{inputenc}
 \usepackage[spanish]{babel}
 \usepackage[T1]{fontenc}
@@ -17,7 +18,8 @@
 \usepackage{xcolor}
 \usepackage{graphicx} 
 \usepackage{tikz}
-\usepackage{titlesec}
+\usepackage{circuitikz}
+
 
 \geometry{top=3cm, bottom=3cm, left=3cm, right=3cm}
 
@@ -48,10 +50,13 @@
 	breaklines=true
 }
 
-\titleformat{\chapter}[frame] {\normalfont\Huge\bfseries} % formato
-{\chaptertitlename\ \thechapter} {13pt} % <--- menos que los 20pt originales
-{\LARGE} % antes del título
+\titleformat{\chapter}[frame]
+{\normalfont} 
+{\filcenter\large\enspace CAPÍTULO \thechapter\enspace}
+{12pt} 
+{\Huge\bfseries\filcenter #1} 
 
+\renewcommand{\thesection}{\thechapter.\arabic{section}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -74,11 +79,11 @@
 		{\large Universidad Complutense de Madrid}\\[1cm]  
 		
 		
-		\includegraphics[width=9cm]{/home/luciamarst/Descargas/logo.png} \\ [0.5cm]
+		\includegraphics[width=9cm]{C:/Users/lucia/Desktop/Universidad/4º Curso/circom/Documentación/Documentación oficial/logo.png} \\ [0.5cm]
 		
 		
-		{\large Trabajo de Fin de Grado del Grado en Informática} \\[0.1cm]
-		{\large Madrid, 2025 - 2026}
+		\textbf{{\large Trabajo de Fin de Grado}} \\[0.1cm]
+		{\large Curso 2025 - 2026}
 	\end{center}
 	
 	\vfill  % Empuja lo siguiente hacia abajo
@@ -114,8 +119,8 @@
 			
 			\begin{enumerate}
 				\renewcommand{\labelenumi}{\thesubsection.\arabic{enumi}} % Esto funciona
-				\item Zero Knowledge
-				\item Constraints RICS
+				\item Zero Knowledge Proof
+				\item R1CS
 				\item CIRCOM
 			\end{enumerate}
 			
@@ -151,7 +156,112 @@
 		\newpage
 		
 		
+	
 		\chapter{Introducción a Circom}
-		Aquí va el contenido del capítulo 1.
+		
+		\section{Zero Knowledge Proof}
+		\noindent En términos criptográficos, una prueba de conocimiento cero, conocida también por las siglas inglesas ZKP (Zero Knowledge Proof), es un protocolo que permite el establecimiento de un método cuyo objetivo es la demostración por una parte X a otra parte Y que una declaración es cierta, sin revelar ningún tipo de información sobre el procedimiento más allá de la veracidad de la declaración.
+		
+		\vspace{0.5cm}
+		
+		\noindent Para ilustrar mejor este término, se plantea la siguiente situación.
+		
+		\vspace{0.5cm}
+		
+		\noindent \textbf{Alejandro (prover)} tiene el décimo de la lotería de Navidad que ha sido premiado y quiere demostrarle a \textbf{Clara (verifier)} que posee el número ganador, pero sin que ésta sea conocedora del mismo (y así evitar que pueda cobrar el premio o se lo robe). Para ello, utilizan una caja fuerte que solo se abre introduciendo la combinación del decimo premiado.
+		
+		\vspace{0.5cm}
+		
+		\noindent Clara escribe en un papel un dígito aleatorio, lo introduce en la caja y la cierra. Posteriormente, Clara se gira, de forma que no ve nada más de la caja.
+		
+		\vspace{0.5cm}
+		
+		\noindent Alejandro, que conoce el número del décimo, introduce la combinación, abriendo así la caja y leyendo el número escrito por Clara en el papel en voz alta. En ese momento, Clara sabe que ha podido abrir la caja, y por tanto, \textbf{obtiene una prueba de que Alejandro es conocedor de esa información}. 
+		
+		\vspace{0.5cm}
+		
+		\noindent Sin embargo, Clara podría sospechar que Alejandro ha adivinado el dígito al azar, ya que la probabilidad es del 10\%, por lo que Clara decide repetir la prueba varias veces.
+		
+		\vspace{0.5cm}
+			
+		\noindent No obstante, si observamos 0,1*0,1 = 0,01, se reduce la probabilidad inicial de 0,1 a 0,01. Es decir, a medida que las repeticiones aumentan, menor es la probabilidad de que se acierte al azar, ya que ésta converge a 0, alcanzando así una certeza práctica sin haber revelado ni un solo dígito del décimo.
+		
+		\vspace{1.2cm}
+		
+		\noindent Con este ejemplo, el concepto de \textbf{prueba de conocimiento cero} queda ilustrado de una forma muy intuitiva. Sin embargo, esta es la explicación teórica, ya que para que toda esta lógica pueda ser trasladada al mundo criptográfico, necesitamos formalizar estas interacciones, que es donde entra en juego \textbf{Circom}.
+		
+		\section{R1CS}
+		
+		\noindent Antes de hablar de Circom, \textbf{es importante conocer y comprender qué es R1CS}.
+		
+		\vspace{0.5cm}
+		
+		\noindent Rank-1 Constraintsaint System, conocido como \textbf{R1CS}, es un sistema de representación matemática diseñado para transformar tareas computacionales complejas en un conjunto de restricciones algebraicas. Su relevancia incide en la propiedad de que generar la solución a un problema puede ser caro, mientras que su \textbf{verificación es muy eficiente y rápida}, clave en las pruebas de conocimiento cero.
+		
+		\vspace{0.5cm}
+		
+		\noindent En situaciones en las que múltiples partes deben validar de forma independiente una misma solución, R1CS permite generalizar este cálculo. Técnicamente, se acepta un coste adicional en la generación de la prueba con el fin de minimizar considerablemente el coste de la verificación. R1CS actúa como lenguaje que traduce la lógica de un programa es una estructura matemática (circuitos algebraicos) que un protocolo criptográfico puede procesar.
+		
+		\vspace{0.5cm}
+		
+		\noindent R1CS consigue esto gracias a que las restricciones deben seguir un formato de ecuación específico que no puede exceder el grado 2.
+		
+		\vspace{0.5cm}
+		
+		\noindent Esto implica que cada restricción debe poder expresarse como el producto de dos combinaciones lineales de variables, teniendo como resultado una tercera combinación lineal:
+		
+		\begin{equation*}
+			A * B + C = 0
+		\end{equation*}
+		
+		\noindent Donde A, B y C son combinaciones lineales de las señales del circuito.
+		
+		\vspace{0.5cm}
+		
+		\noindent Gracias a R1CS, es posible que el código escrito en \textbf{Circom} se transforme en un sistema de restricciones, consiguiendo así que la verificación sea sumamente eficiente.
+		
+		\section{CIRCOM}
+		\noindent Tras haber introducido los dos apartados anteriores introducidos, hasta este punto somos conocedores de que Circom es un lenguaje de programación basado en la descripción de circuitos, cuyo objetivo no es el cálculo como puede serlo en otro tipo de lenguajes, sino que \textbf{su propósito es conseguir demostrar sin revelar información sobre las operaciones realizadas}. 
+		
+		\vspace{0.5cm}
+		
+		\noindent Como hemos visto anteriormente, Circom es la \textbf{herramienta que permite trasladar la teoría de las pruebas de conocimiento cero a un ámbito práctico}. Esto es posible \textbf{gracias a R1CS}, cuyo formato de las restricciones es necesario para que los protocolos de prueba realicen verificaciones eficientes.
+		
+		\vspace{0.5cm}
+		
+		\noindent Además de su finalidad criptográfica, es importante entender la diferencia entre un lenguaje basado en circuitos a uno de propósito general, siendo Circom basado en circuitos donde la estructura del mismo debe ser estática; esto implica que cualquier valor determinante en la estructura del circuito (como tamaños de arrays, número de iteraciones de un bucle, etc..) \textbf{debe conocerse en tiempo de compilación}. Esto se debe a que así aseguramos que el sistema de restricciones R1CS que se genera en base a este circuito, sea fijo.
+		
+		\vspace{0.5cm}
+		
+		\noindent Por otro lado, Circom introduce el concepto de \textit{señales}, que actúan como los "cables" del circuito, los cuales transportan valores a través de las puertas lógicas del mismo. Mientras que las variables pueden usarse de manera auxiliar, \textbf{las señales son las que finalmente formarán parte de las ecuaciones que el verificador comprobará}.
+		
+		\vspace{0.5cm}
+		
+		\begin{center}
+			\begin{circuitikz} 
+				\draw (0,2) node[and port] (myand) {};
+				\draw (0,0) node[or port] (myor) {}; 
+				\draw (4,1) node[and port] (myresult) {};
+				
+				\draw (myand.in 1) node[anchor=east] {signal $x$};
+				\draw (myand.in 2) node[anchor=east] {signal $y$};
+				\draw (myor.in 1) node[anchor=east] {signal $x$};
+				\draw (myor.in 2) node[anchor=east] {signal $y$};
+				
+				\draw (myand.out) -- (myresult.in 1);
+				\draw (myor.out) -- (myresult.in 2);
+				
+				\draw (myresult.out) node[anchor=west] {signal $out$};
+			\end{circuitikz}
+		\end{center}
+		
+		\vspace{0.5cm}
+		
+		\noindent Un programa Circom, al ser ejecutado, genera dos tipos de archivo: \textit{un archivo R1CS y un archivo Witness (Téstigo)}. \textbf{R1CS} es el archivo en el que se añaden todas las restricciones del programa Circom, mientras que en \textbf{Witness} contiene el valor de cada señal del circuito, además de los valores intermedios.
+		
+		\vspace{0.5cm}
+		
+		\noindent Como hemos mencionado anteriormente, \textbf{las señales} son las que forman parte de las ecuaciones a verificar, o dicho de otra manera, \textbf{serán las restricciones que se añadirán al archivo R1CS para ser verificadas}. \textit{Aquí entra en juego la finalidad del proyecto, la cual detallaremos en el siguiente capítulo}.
+	
 	
 \end{document}

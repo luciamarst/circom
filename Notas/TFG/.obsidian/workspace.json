@@ -50,7 +50,7 @@
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -199,10 +199,10 @@
       "bases:Crear nueva base": false
     }
   },
-  "active": "e351587a6d0100f0",
+  "active": "f6f864863f332ac6",
   "lastOpenFiles": [
-    "Compilador.md",
     "Memoria.md",
+    "Compilador.md",
     "Bienvenido.md"
   ]
 }
