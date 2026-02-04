@@ -1,0 +1,15 @@
+\babel@toc {spanish}{}\relax 
+\contentsline {chapter}{\numberline {1}Introducción a Circom}{3}{}%
+\contentsline {section}{\numberline {1.1}Zero Knowledge Proof}{3}{}%
+\contentsline {section}{\numberline {1.2}R1CS}{4}{}%
+\contentsline {section}{\numberline {1.3}CIRCOM}{5}{}%
+\contentsline {chapter}{\numberline {2}Descripción del problema}{7}{}%
+\contentsline {section}{\numberline {2.1}Ejemplo del problema}{7}{}%
+\contentsline {section}{\numberline {2.2}Reglas de transformación}{7}{}%
+\contentsline {section}{\numberline {2.3}Ejemplo con constraints generadas automáticamente}{7}{}%
+\contentsline {chapter}{\numberline {3}Implementación}{8}{}%
+\contentsline {section}{\numberline {3.1}Explicación y ejemplo de la construcción de las reglas}{8}{}%
+\contentsline {chapter}{\numberline {4}Experimentos}{9}{}%
+\contentsline {section}{\numberline {4.1}Aplicación de la generación automática sobre juegos simples}{9}{}%
+\contentsline {section}{\numberline {4.2}Aplicación de la generación automática sobre circomLib y comparación de constraints}{9}{}%
+\contentsline {section}{\numberline {4.3}Caso de uso, verificación y búsqueda de bugs}{9}{}%
