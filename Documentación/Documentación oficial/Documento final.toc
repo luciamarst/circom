@@ -2,7 +2,7 @@
 \contentsline {chapter}{\numberline {1}Introducción a Circom}{3}{}%
 \contentsline {section}{\numberline {1.1}Zero Knowledge Proof}{3}{}%
 \contentsline {section}{\numberline {1.2}CIRCOM}{4}{}%
-\contentsline {section}{\numberline {1.3}R1CS}{6}{}%
+\contentsline {section}{\numberline {1.3}R1CS}{5}{}%
 \contentsline {chapter}{\numberline {2}Descripción del problema}{7}{}%
 \contentsline {section}{\numberline {2.1}Ejemplo del problema}{7}{}%
 \contentsline {section}{\numberline {2.2}Reglas de transformación}{7}{}%
