@@ -13,6 +13,7 @@
 \usepackage{amsmath}
 \usepackage{setspace}
 \usepackage{geometry}
+\usepackage{tabularx}
 \usepackage{listings}
 \usepackage{changepage}
 \usepackage{xcolor}
@@ -40,13 +41,21 @@
 
 % Estilo
 \lstdefinelanguage{Circom}{
-	keywords={template, signal, input, output, component},
+	keywords={template, signal, input, output, component, var, for, if, else, return, include},
 	keywordstyle=\color{blue}\bfseries,
-	morecomment=[l]{//},   % comentarios //
-	morecomment=[s]{/*}{*/}, % comentarios /* */
-	morestring=[b]",       % cadenas con comillas
+	ndkeywords={<==, ==>, ===, <--, -->},
+	ndkeywordstyle=\color{darkgray}\bfseries,
+	identifierstyle=\color{black},
+	sensitive=true,
+	morecomment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	commentstyle=\color{green!50!black}\ttfamily,
+	stringstyle=\color{red}\ttfamily,
+	morestring=[b]",
+	tabsize=2,
+	breaklines=true,
+	showstringspaces=false 
 }
-
 \lstset{
 	basicstyle=\ttfamily\small,
 	keywordstyle=\color{blue},
@@ -70,6 +79,12 @@ placement=H
 name=Figura,
 placement=H
 ]{figura}
+
+
+\DeclareFloatingEnvironment[
+name=Definición,
+placement=H
+]{definicion}
 
 % Lenguaje
 \lstdefinelanguage{Circom}{
@@ -183,15 +198,24 @@ placement=H
 	
 	\noindent Gracias a este equilibrio, las técnicas criptográficas pudieron llevar a la práctica el concepto teórico ZKP en protocolos prácticos. Actualmente, esto ha llevado a la creación de grandes familias de protocolos, destacando especialmente \textbf{zk-SNARKs}.
 	
-	\vspace{0.25cm}
 	
+	\begin{definicion}
+		
 	\noindent \textit{Succinct Non-Interactive Argument of Knowledge}, mayormente conocido por sus siglas \textbf{zk-SNARKs},  destacan por su reducido y concreto tamaño de prueba y corto tiempo de verificación. Sin embargo, presentan la desventaja de requerir una fase inicial conocida como \textbf{configuración de confianza}.
 	
-	\vspace{0.25cm}
+		\caption{zk-SNARKS}
+		\label{def:zk-snarks}
+	\end{definicion}
 	
+	
+	\begin{definicion}
 	\noindent Una configuración de confianza es una fase en la que se produce la generación de valores aleatorios que deben destruirse de forma inmediata. Si estos valores aleatorios son expuestos, se compromete la seguridad del sistema.
+	
+	
+	\caption{zk-SNARKS}
+	\label{def:confidence-configuration}
+	\end{definicion}
 		
-	\vspace{0.25cm}
 	
 	\noindent \textbf{El motivo} de que estos número aleatorios deban borrarse inmediatamente es debido a que cualquier entidad conocedora de esos valores podría almacenarlos y así generar \textbf{pruebas falsas}, de forma que se podría vulnerar la seguridad del sistema.
 	
@@ -427,9 +451,589 @@ placement=H
 	\section{Snarkjs}
 	\label{sec:snarkjs}
 	
-	\chapter{Descripción del problema}
+	\noindent Snarkjs es una librería de JavaScript creada para la generación y verificación de pruebas de conocimiento cero partiendo de las restricciones en formato R1CS correspondientes, que puede ser ejecutado tanto en dispositivos como en servidores con \textit{Node.js}, materializando el concepto de \hyperref[def:zk-snarks]{\textit{ \ref{def:zk-snarks} zk-SNARKS}} nombrado anteriormente.
+	
+	\vspace{0.25cm}
+	
+	\noindent Como se mostró previamente en la \hyperref[ex:zkp-transformacion]{\textit{ \ref{ex:zkp-transformacion} Figura}}, Snarkjs requiere de dos archivos para generar la prueba:
+	
+	\begin{itemize}
+		\item  \textit{Witness}, generado por el ejecutable C++/WASM.
+		\item  \textit{Archivo R1CS}, restricciones de la lógica del circuito.
+	\end{itemize}
+	
+	\vspace{0.25cm}
+	
+	\noindent Una vez disponibles estos dos archivos y la \hyperref[def:confidence-configuration]{\textit{ \ref{def:confidence-configuration} Configuración de confianza}} finalizada, Snarkjs genera la prueba de conocimiento cero que permite que el Prover pueda demostrarle al Verifier la validez de su declaración.
+		
+	\section{Descripción del problema}
+		
+	\chapter{Desarrollo del problema}
 	\section{Ejemplo del problema}
+	\section{Notación}
+		\noindent A lo largo del documento estudiaremos cómo traducir instrucciones y expresiones generadas por un lenguaje imperativo simple en un conjunto de ecuaciones en formato R1CS equivalente definimos las siguientes funciones: 
+		
+		\vspace{0.4cm} 
+		
+		\begin{definicion}
+			Definimos la función de traducción de expresiones \textit{TC : $\text{Expr} \rightarrow C \times \text{Expr}$} siendo:
+			
+			\begin{itemize} 
+			\item \textit C un sistema de ecuación en formato R1CS
+			\item \textit C es una expresión lineal 
+			\end{itemize} 
+			
+			\caption{Notación}
+			\label{def:notacion}
+		\end{definicion}
+
+		
+		\vspace{0.2cm} 
+		
+		\noindent La intuición es que en caso de que las constraints C se verifiquen, entonces e y $e'$ siempre tienen el mismo valor.
+		
+		\vspace{0.2cm} 
+		
+		\noindent Vamos a definir la función TC de forma inductiva, comenzando por los casos base (números y variables), para luego pasar a definir los casos compuestos. 
+		
+		\subsection*{Casos base} 
+		
+		\begin{itemize} 
+			\item Si la expresión es un número $n$:
+			
+			\hspace{3em} \textit{TC($n$) = TC($\emptyset$, $n$)} 
+			
+			\item Si la expresión es una variable $v$:
+			
+			\hspace{3em} \textit{TC($v$) = TC($\emptyset$, $v$)}
+		\end{itemize}
 	\section{Reglas de transformación}
+	
+	\noindent En esta sección se encuentra la documentación relativa a como se han implementado las reglas de transformación pertinentes para hacer posible la migración del problema descrito a la práctica.
+	
+	
+	\subsection{Operadores Lógicos}
+	
+	
+		\vspace{0.2cm}
+		
+		\renewcommand{\arraystretch}{3}
+		\begin{tabular}{|c|>{\centering\arraybackslash}p{12cm}|}
+			\hline
+			\textbf{Operación} & \textbf{Deducción} \\
+			
+			\hline
+			\texttt{e = \text{not } b} & 
+			\makecell[c]{ 
+				$$
+				\begin{prooftree}
+					\hypo{TC(e_1) = (C, e'_1)}
+					\infer1{TC(not\ e_1) = ((e'_1)*(e'_1-1)===0) \wedge(C, 1 - e'_1)}
+				\end{prooftree}
+				$$
+			} \\ 
+			\hline
+			
+			\texttt{e = \text{and } b} & 
+			\makecell[c]{ 
+			\resizebox{\hsize}{!}{
+				\begin{prooftree}
+					\hypo{TC(e_1) = (C_1, e'_1)}
+					\hypo{TC(e_2) = (C_2, e'_2)}
+					\infer2{
+						TC(e_1 \text{ and } e_2) = \left(
+						\begin{tabular}{c}
+							$C_1 \wedge C_2 \wedge$ \\
+							$(e'_1 * (e'_1-1) = 0) \wedge (e'_2 * (e'_2-1) = 0)$ \\
+							$\wedge \{v_{aux} = e'_1 * e'_2\}, v_{aux}$
+						\end{tabular}
+						\right)
+					}
+				\end{prooftree}
+			}} \\  
+			\hline
+			
+			\texttt{e = \text{or } b} & 
+			\makecell[c]{ 
+			\resizebox{\hsize}{!}{
+				\begin{prooftree}
+					\hypo{TC(e_1) = (C_1, e'_1)}
+					\hypo{TC(e_2) = (C_2, e'_2)}
+					\infer2{TC(e_1 \text{or } e_2)  = \left(
+						\begin{tabular}{c}
+							$C_1 \wedge C_2 \wedge$ \\
+							$(e'_1 * (e'_1-1) = 0) \wedge (e'_2 * (e'_2-1) = 0)$ \\
+							$\wedge \{v_{aux} = e'_1 * e'_2\},e'_1 + e'_2 - v_{aux}$
+						\end{tabular}
+						\right)
+					}
+				\end{prooftree}
+			}} \\ 
+			\hline
+			
+			\texttt {$e = e_1 \& e_2$} &
+			\makecell[c]{
+				\resizebox{\hsize}{!}{
+					\begin{prooftree} 
+						\hypo{TC(e_1) = (C_1, e_{1-binario})} 
+						\hypo{TC(e_2) = (C_2, e_{2-binario})} 
+						\infer2{TC(e_1 \text{\& } e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} = e_{1-binario}[i] * e_{2-binario}[i]\}, v_{aux})} 
+					\end{prooftree} 
+				}
+			}\\ 
+			\hline
+			
+			\texttt{$e = e_1$ | $e_2$} & 
+			\makecell[c]{ 
+				\resizebox{\hsize}{!}{
+					\begin{prooftree} 
+						\hypo{TC(e_1) = (C_1, e_{1-binario})} 
+						\hypo{TC(e_2) = (C_2, e_{2-binario})} 
+						\infer2{TC(e_1 \text{| } e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} = e_{1-binario}[i] * e_{2-binario}[i]\},  e_{1-binario}[i] + e_{2-binario}[i] - v_{aux})} 
+					\end{prooftree} 
+				}
+			}
+			\\ 	
+			\hline
+		\end{tabular}
+		
+		
+		\vspace{0.2cm}
+	\subsection{Operadores de Comparación}
+		\subsubsection{Tratamiento de número negativos}
+		\noindent Un detalle a observar en las funciones \textit{LessThan()} y \textit{LessThanEq()} es que para números negativos podría dificultar su uso. 
+		
+
+		\vspace{0.2cm}
+		
+		\noindent Esto se debe a que en el contexto de Circom trabajamos sobre un cuerpo finito $\mathbb{F}_p$, de forma que los números negativos realmente no existen. En su lugar, se representan mediante el módulo del campo.
+		
+		\vspace{0.2cm}
+			
+		\noindent Por ejemplo, el valor $- 1$ se interpreta como $p - 1$, un número extremadamente grande que se aproxima al orden del primo del campo.
+		
+		\vspace{0.2cm}
+		
+		\noindent Para solventar este problema, recurrimos a las transformación de los números a comparar de sistema decimal a binario. Esta conversión es estrictamente necesaria para asegurar que los números correspondientes no exceden el rango especificado.
+		
+		\vspace{0.2cm}
+		
+		\noindent \textit{Num2Bits(n)} consigue cumplir esta precondición ya que su funcionamiento reside en la transformación de decimal a binario, reconstruyendo el número decimal entrante durante la misma. De esta forma, al terminar la transformación y antes de salir de la función, se realiza una comprobación para verificar si el número decimal entrante y el número decimal reconstruido son iguales.
+		
+		\vspace{0.2cm}
+		
+		\noindent Al ser el número entrante excesivamente grande y superar el rango establecido, nunca se cumplirá la restricción de que ambos sean iguales debido a que el tamaño máximo fijado N es menor que el del número negativo, y por tanto, la reconstrucción no realizará un bucle de tamaño mayor a N. 
+		
+		\vspace{0.2cm}
+			
+		\noindent De esta forma, no habrá un bucle que reconstruya un número decimal negativo ya que nunca se realizan las iteraciones necesarias, forzando de esta forma a que solo los números positivos cumplan dicha condición.
+			
+		\vspace{0.3cm}
+		
+		\noindent Intuición del funcionamiento de \textit{Num2Bits(n)} con un número negativo entrante:
+		
+		\begin{itemize}
+			\item El número negativo se interpreta como el módulo del campo.
+			
+			\item Éste se interpretará como un número superior a \(2^n - 1\), saliéndose fuera del rango [0,\(2^n-1\)], por tanto la constraints no se pueden cumplir y la prueba no se generará.
+			
+			\item En conclusión, con \textit{Num2Bits()} garantizamos el uso de número positivos dentro del rango mencionado de manera implícita.
+		\end{itemize}
+		
+		\noindent \textit{Observación: Gracias a la constraint lc1 === in (fuerza a que la entrada cumpla el rango \([0,2^n -1]\)), podemos evitar el uso de número negativos, ya que estos no cumplirán tal restricción.}
+		
+		\vspace{0.2cm}
+		
+		\textbf{\textit{Num2Bits(n):}}
+		
+		\begin{lstlisting}[language=Circom]
+			template Num2Bits(n){
+				signal input in;
+				signal output out[n];
+				var lc1=0; // Reconstruye el numero decimal a convertir para la constraint
+				
+				var e2=1; // Evitar la potencia
+				for (var i = 0; i<n; i++) {
+					out[i] <-- (in >> i) & 1; // Contruimos el numero en binario
+					out[i] * (out[i] -1 ) === 0;
+					lc1 += out[i] * e2;
+					e2 = e2+e2;
+				}
+				
+				lc1 === in; // Constraint mencionada anteriormente
+			}
+		\end{lstlisting}
+		
+		\vspace{0.5cm}
+		
+		\noindent Para la implementación de los operadores de comparación relativos a $<, \leq, > \ y \ \geq$ únicamente es necesaria la función \textit{SecureLessThanEq(n)}.
+		
+		\vspace{0.2cm}
+	
+		\noindent El motivo de esto es que para una comparación entre una variable a y b, con \textit{SecureLessThanEq(n)} podemos conocer si a <= b o bien a > b en caso contrario (\textit{GreaterThan()}). 
+		
+		\vspace{0.2cm}
+		
+		\noindent Siguiendo esta lógica, podemos usar la misma función invirtiendo el orden de los parámetros, consiguiendo de esta manera los operadores \textit{GreatherThanEq()} y \textit{LessThan()}  si b$leq$a o b>a.
+
+		\vspace{0.2cm}
+		
+		\noindent La implementación de \textit{SecureLessThanEq(n)}, aparte de utilizar la función \textit{Num2Bits()} para cada par de variables a comparar, aplica Complemento a 2.
+		
+		\vspace{0.2cm}
+		
+		\noindent Es decir, dadas las variables A y B, previamente transformadas a bits, aplicamos (NOT A) + B + 1. La inversión de los bits de A y la suma tanto de B como de 1 es equivalente a la operación $B-A$.
+		
+		\vspace{0.2cm}
+		
+		\noindent Por tanto, cuando el minuendo es mayor o igual que el sustraendo, la suma de los bits junto con el complemento a dos produce un acarreo (overflow) en la posición n (el bit extra, bit más significativo). Por el contrario, si el minuendo es menor que el sustraendo, no se produce dicho overflow.
+		
+		\vspace{0.2cm}
+		
+		\noindent De esta forma sabemos que si el bit de acarreo es 1, podemos concluir que B $\geq$ A, ya que al hacer la suma con Complemento a 2, tenemos que:
+		\begin{equation}
+			\begin{aligned}
+				(\text{NOT } A) + B + 1 \\
+				[(2^n - 1) - A] + B + 1 \\
+				2^n - 1 - A + B + 1 \\
+			    2^n - A + B \\
+				B + (2^n - A)
+			\end{aligned}
+		\end{equation}
+		\vspace{0.2cm}
+		
+		\noindent Como podemos ver en las ecuaciones anteriores, debido al requerimiento de $2^n-1$ por parte de NOT A, es vital el +1 de $(NOT \ A)+B+1$. De lo contrario el resultado de la resta estaría desplazado por una unidad al no eliminar ese -1 de NOT A.
+		
+		\vspace{0.2cm}
+		
+		\noindent Partiendo de $2^n + B - A$, si B es mayor o igual que A, entonces (B-A) $\geq$ 0. De este modo, tendríamos que $2^n + (num. positivo) \geq 2^n$, concluyendo que si B $\geq$ A obtendríamos siempre un resultado mayor o igual a $2^n$, excediendo siempre los n bits y como consecuencia, produciendo un overflow.
+		
+		\vspace{0.2cm}
+		
+		\noindent Siguiendo la misma lógica, si el bit de acarreo es 0 significa que A es mayor que B ya que B-A < 0, y de esta forma obtendríamos $2^n + (num. positivo) < 2^n$, concluyendo así que no podría producirse un overflow.
+		
+		
+		
+	\newsavebox{\codeboxA}
+	\begin{lrbox}{\codeboxA}
+		\begin{minipage}{0.46\textwidth}
+			\begin{lstlisting}[
+				language=Circom, 
+				basicstyle=\scriptsize\ttfamily, 
+				columns=flexible, 
+				numbers=none, 
+				xleftmargin=1.5em, 
+				gobble=4
+				]
+				template SecureLessThan(n){
+					signal input in[2];
+					signal output out;
+					
+					//------------------
+					
+					component checkA = Num2Bits(n);
+					checkA.in <== in[0];
+					
+					component checkB = Num2Bits(n);
+					checkB.in <== in[1];
+					
+					adder = BinSum(n, 2);
+					
+					var i;
+					for (i=0;i<n;i++) {
+						checkA.out[i] ==> adder.in[0][i];
+						checkB.out[i] ==> adder.in[1][i];
+					}
+					
+					
+					// Miramos el bit + significativo (MSB), 1 si A < B, 0 de lo contrario
+					adder.out[n-1] ==> out;
+				}
+			\end{lstlisting}
+		\end{minipage}
+		\end{lrbox}
+		
+		\begin{center}
+			\usebox{\codeboxA}
+		\end{center}
+		
+		\vspace{0.3cm}	
+		
+		\noindent Con está pequeña modificación, al usar para ambos número a comparar la función \textit{Num2Bits()} nos aseguramos de que se cumpla la restricción de ser número enteros positivos dentro del rango.
+		
+		
+		\subsubsection{Tamaño de los números comparados}
+		\noindent Por otro lado, es importante el detalle de que podemos comparar dos números de tamaño conocido e igual, mientras que puede que comparemos dos números cuyo tamaño no conocemos o cuyos tamaños son diferentes.
+		
+		\vspace{0.2cm}	
+		
+		\noindent Para resolver este problema, vamos a definir dos operadores de comparación por cada operador de comparación existente exceptuando la igualdad y desigualdad.
+		
+		\vspace{1.2cm}	
+		
+		\noindent Un ejemplo de cuáles serían estos dos operadores sería el siguiente, para el operador $\leq$:
+		
+		\paragraph{Operador $\leq$}
+		\begin{itemize}
+			\item $\leq$: Comparaciones de cuyos números se conoce el tamaño y además tienen el mismo tamaño.
+			\item La llamada a la función sería $lessThan(253)$ para estos casos, ya que el tamaño máximo es 253 en el cuerpo finito.
+		\end{itemize}
+		
+		\paragraph{Operador $\leq_{n}$}
+		\begin{itemize}
+			\item $\leq_{n}$: Comparaciones de cuyos números no se conoce el tamaño y/o no tiene el mismo tamaño.
+			\item La llamada a la función sería $lessThan(n)$ para estos casos.
+		\end{itemize}
+		
+		\vspace{20cm}
+		
+		\noindent A continuación, definiremos para cada operador su deducción.
+		
+		\vspace{0.2cm}
+		
+		\renewcommand{\arraystretch}{3}
+		\begin{tabular}{|c|>{\centering\arraybackslash}p{13cm}|}
+			\hline 
+			\textbf{Operación} & \textbf{Deducción} \\ 
+			\hline 
+			
+			\texttt{$e = e_1 = e_2$} & 
+			\makecell[c]{ \\ 
+				signal diff <== $e_1 - e_2$ \\[3pt]
+				$$ 
+				\begin{prooftree} 
+					\hypo{TC(e_1) = (C_1, e'_1)} 
+					\hypo {TC(e_2) = (C_2, e'_2)} 
+					\infer2{TC(e_1 \text{= } e_2) = (C_1 \wedge C_2 \wedge \{IsZero().in = diff, IsZero().out = v_{aux}\}, v_{aux})} 
+				\end{prooftree} 
+				$$}  \\[3pt] 
+			\hline 
+			
+			\texttt{$e = e_1 \neq e_2$} & 
+			\makecell[c]{ \\
+				signal diff <== $e_1 - e_2$ \\[3pt]
+				$$ 
+				\begin{prooftree} 
+					\hypo{TC(e_1) = (C_1, e'_1)} 
+					\hypo {TC(e_2) = (C_2, e'_2)} 
+					\infer2{TC(e_1 \neq e_2) = (C_1 \wedge C_2 \wedge \{IsZero().in = diff, IsZero().out = v_{aux}\}, 1 - v_{aux})} 
+				\end{prooftree} 
+				$$} \\
+			
+			\hline 
+			
+			\texttt{\(e = e_1 < e_2\)} & 
+			\makecell[c]{ \\[1pt] 
+				$$ \begin{prooftree} 
+					\hypo{TC(e_1) = (C_1, e'_1)} 
+					\hypo {TC(e_2) = (C_2, e'_2)} 
+					\[
+					\infer2{
+						TC(e_1 < e_2) =
+						\left(
+						C_1 \wedge C_2 \wedge
+						\begin{array}{l}
+							\{SecureLessThan(253).in1 = e_1', \\
+							SecureLessThan(253).in2 = e_2', \\
+							SecureLessThan(253).out = v_{aux} \}, 
+						\end{array}
+						v_{aux}
+						\right)
+					}
+					\]
+				\end{prooftree} 
+				$$} \\ 
+			\hline 
+			
+			\texttt{\(e = e_1 <_{n} e_2\)} & 
+			\makecell[c]{ \\
+				$$ \begin{prooftree} 
+					\hypo{TC(e_1) = (C_1, e'_1)} 
+					\hypo {TC(e_2) = (C_2, e'_2)} 
+					\[
+					\infer2{
+						TC(e_1 <_{n} e_2) =
+						\left(
+						C_1 \wedge C_2 \wedge
+						\begin{array}{l}
+							\{SecureLessThan(n).in1 = e_1', \\
+							SecureLessThan(n).in2 = e_2', \\
+							SecureLessThan(n).out = v_{aux} \}, 
+						\end{array}
+						v_{aux}
+						\right)
+					}
+					\]
+				\end{prooftree} 
+				$$} \\ 
+			
+			\hline 
+			
+			\texttt{\(e = e_1 \leq e_2\)} & 
+			\makecell[c]{ \\
+				$$ 
+				\begin{prooftree} 
+					\hypo{TC(e_1) = (C_1, e'_1)} 
+					\hypo {TC(e_2) = (C_2, e'_2)} 
+					\[
+					\infer2{
+						TC(e_1 \leq e_2) =
+						\left(
+						C_1 \wedge C_2 \wedge
+						\begin{array}{l}
+							\{SecureLessThanEq(253).in1 = e_1', \\
+							SecureLessThanEq(253).in2 = e_2', \\
+							SecureLessThanEq(253).out = v_{aux} \}, 
+						\end{array}
+						v_{aux}
+						\right)
+					}
+					\]
+				\end{prooftree} 
+				$$} \\ 
+			
+			\hline
+			
+			\texttt{\(e = e_1 \leq_{n} e_2\)} & 
+			\makecell[c]{ \\
+				$$ 
+				\begin{prooftree} 
+					\hypo{TC(e_1) = (C_1, e'_1)} 
+					\hypo {TC(e_2) = (C_2, e'_2)} 
+					\[
+					\infer2{
+						TC(e_1 \leq_{n} e_2) =
+						\left(
+						C_1 \wedge C_2 \wedge
+						\begin{array}{l}
+							\{SecureLessThanEq(n).in1 = e_1', \\
+							SecureLessThanEq(n).in2 = e_2', \\
+							SecureLessThanEq(n).out = v_{aux} \}, 
+						\end{array}
+						v_{aux}
+						\right)
+					}
+					\]
+				\end{prooftree} 
+				$$} \\ 
+			
+			\hline
+			
+			\texttt{\(e = e_1 > e_2\)} & 
+			\makecell[c]{ \\
+				$$ 
+				\begin{prooftree} 
+					\hypo{TC(e_1) = (C_1, e'_1)} 
+					\hypo {TC(e_2) = (C_2, e'_2)} 
+					\[
+					\infer2{
+						TC(e_1 > e_2) =
+						\left(
+						C_1 \wedge C_2 \wedge
+						\begin{array}{l}
+							\{SecureLessThan(253).in1 = e_1', \\
+							SecureLessThan(253).in2 = e_2', \\
+							SecureLessThan(253).out = v_{aux} \}, 
+						\end{array}
+						1 - v_{aux}
+						\right)
+					}
+					\]
+				\end{prooftree} 
+				$$} \\
+			
+			\hline 
+			
+			\texttt{\(e = e_1 >_{n} e_2\)} & 
+			\makecell[c]{ \\
+				$$ 
+				\begin{prooftree} 
+					\hypo{TC(e_1) = (C_1, e'_1)} 
+					\hypo {TC(e_2) = (C_2, e'_2)} 
+					\[
+					\infer2{
+						TC(e_1 >_{n} e_2) =
+						\left(
+						C_1 \wedge C_2 \wedge
+						\begin{array}{l}
+							\{SecureLessThanEq(n).in1 = e_1', \\
+							SecureLessThanEq(n).in2 = e_2', \\
+							SecureLessThanEq(n).out = v_{aux} \}, 
+						\end{array}
+						1 - v_{aux}
+						\right)
+					}
+					\]
+				\end{prooftree} 
+				$$} \\
+			
+			\hline 
+			
+			\texttt{\(e = e_1 \geq e_2\)} & 
+			\makecell[c]{ \\
+				$$ 
+				\begin{prooftree} 
+					\hypo{TC(e_1) = (C_1, e'_1)} 
+					\hypo {TC(e_2) = (C_2, e'_2)} 
+					\[
+					\infer2{
+						TC(e_1 \geq e_2) =
+						\left(
+						C_1 \wedge C_2 \wedge
+						\begin{array}{l}
+							\{SecureLessThan(253).in1 = e_1', \\
+							SecureLessThan(253).in2 = e_2', \\
+							SecureLessThan(253).out = v_{aux} \}, 
+						\end{array}
+						1 - v_{aux}
+						\right)
+					}
+					\]
+				\end{prooftree} 
+				$$} \\ 
+			
+			\hline 
+			
+			\texttt{\(e = e_1 \geq_{n} e_2\)} & 
+			\makecell[c]{ \\
+				$$ 
+				\begin{prooftree} 
+					\hypo{TC(e_1) = (C_1, e'_1)} 
+					\hypo {TC(e_2) = (C_2, e'_2)} 
+					\[
+					\infer2{
+						TC(e_1 \geq_{n} e_2) =
+						\left(
+						C_1 \wedge C_2 \wedge
+						\begin{array}{l}
+							\{SecureLessThan(n).in1 = e_1', \\
+							SecureLessThan(n).in2 = e_2', \\
+							SecureLessThan(n).out = v_{aux} \}, 
+						\end{array}
+						1 - v_{aux}
+						\right)
+					}
+					\]
+				\end{prooftree} 
+				$$} \\ 
+			
+			\hline 
+		\end{tabular} 
+		
+		\smallskip
+		
+		\vspace{0.1cm}
+		
+		\noindent \textit{Nota:} Las funciones \texttt{IsZero()} son circuitos que comparan si un valor es igual a 0.
+		
+		\noindent \textit{Nota:} Las funciones \texttt{IsEqual())} comprueba si dados dos números, estos son iguales o no.
+		
+		\vspace{0.2cm}
+	\subsection{Operadores Aritméticos}
+	\subsection{Operadores de desplazamiento}
+	\subsection{Acceso a Arrays}
+	\subsection{Expresiones condicionales}
+	\subsection{Expresiones condicionales}
 	\section{Ejemplo con constraints generadas automáticamente}
 	
 	\chapter{Implementación}
