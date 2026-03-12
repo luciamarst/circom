@@ -116,7 +116,7 @@ placement=H
 		{\large Universidad Complutense de Madrid}\\[1cm]  
 		
 		
-		\includegraphics[width=9cm]{C:/Users/lucia/Desktop/Universidad/4º Curso/circom/Documentación/Documentación oficial/logo.png} \\ [0.5cm]
+		\includegraphics[width=9cm]{logo.png} \\ [0.5cm]
 		
 		
 		\textbf{{\large Trabajo de Fin de Grado}} \\[0.1cm]
@@ -253,8 +253,8 @@ placement=H
 	\noindent El proceso de compilación de Circom refleja un paradigma híbrido entre lo \textbf{declarativo e imperativo}. De esta forma, el compilador genera dos archivos esenciales para generar la prueba:
 	
 	\begin{itemize}
-		\item \textbf{Archivo R1CS:} Contiene el conjunto de todas las restricciones algebraicas que definen la lógica del circuito.
-		\item \textbf{Programa de Testigo (Witness):} Un ejecutable (en formato C++ o WASM) encargado de calcular los valores de todas las señales del circuito, incluyendo los valores intermedios, a partir de las entradas proporcionadas.
+		\item \textbf{Archivo R1CS:} Contiene el conjunto de todas las restricciones algebraicas que definen la lógica del circuito. Estas restricciones son añadidas desde un programa Circom por medio de los símbolos \texttt{<==} y \texttt{===}.
+		\item \textbf{Generador de Testigo (Witness):} Un ejecutable (en formato C++ o WASM) encargado de calcular los valores de todas las señales del circuito, incluyendo los valores intermedios, a partir de las entradas proporcionadas. Estas asignaciones son añadidas desde un programa Circom por medio de los símbolos \texttt{<==} y \texttt{<-}\texttt{-}
 	\end{itemize}
 	
 	\vspace{0.3cm}
@@ -380,7 +380,7 @@ placement=H
 			\begin{lstlisting}
 				template var_zero(){
 					signal input a;
-					a * 1 === 0;
+					a === 0;
 				}
 				
 				main component = var_zero();
@@ -398,7 +398,7 @@ placement=H
 				
 				\draw (myxnor.in 2) node[anchor=east] {const $0$};
 				
-				\draw (myxnor.out) node[anchor=west] {Success};
+				\draw (myxnor.out) node[anchor=west] {0};
 			\end{circuitikz}
 		}
 		\end{minipage}
@@ -407,7 +407,13 @@ placement=H
 	\label{ex:varA-dist-zero}
 \end{mi_ejemplo}
 
+\vspace{0.2cm}
 
+\noindent El ejemplo anterior refleja como Circom transforma la ecuación $a ===0$ en un circuito lógico equivalente. De esta forma podemos ver que las entradas del componente lógico XOR son a y 0, forzando a que la salida sea 0. 
+
+\vspace{0.25cm}
+
+\noindent El funcionamiento de una puerta lógica XOR se resume en que la salida es 0 si ambas entradas son iguales. Por tanto, al forzar que la salida sea 0, obligamos de esta forma a que a = 0 se cumpla.
 
 	\section{R1CS}
 	\label{sec:r1cs}
@@ -426,7 +432,7 @@ placement=H
 	
 	\vspace{0.3cm}
 	
-	\noindent Siguiendo el \hyperref[ex:varA-dist-zero]{\textit{Ejemplo \ref{ex:varA-dist-zero}}}, la restricción \texttt{a * 1 === 0} se traduce al formato R1CS como el producto de dos combinaciones lineales A y B, forzando así que el valor de la señal a sea nulo.
+	\noindent Siguiendo el \hyperref[ex:varA-dist-zero]{\textit{Ejemplo \ref{ex:varA-dist-zero}}}, la restricción \texttt{a === 0} se traduce al formato R1CS como el producto de dos combinaciones lineales A y B, forzando así que el valor de la señal a sea nulo.
 	
 \begin{mi_ejemplo}[H]
 	Dada la declaración:
@@ -466,10 +472,28 @@ placement=H
 	
 	\noindent Una vez disponibles estos dos archivos y la \hyperref[def:confidence-configuration]{\textit{ \ref{def:confidence-configuration} Configuración de confianza}} finalizada, Snarkjs genera la prueba de conocimiento cero que permite que el Prover pueda demostrarle al Verifier la validez de su declaración.
 		
-	\section{Descripción del problema}
+	\section{Preámbulo del problema}
+	\label{sec:descripcion-problema}
+	
+	\noindent Circom es un lenguaje de programación cuyo aprendizaje y aplicación puede ser tedioso en sus inicios, sobre todo si no se tiene habilidad tratando con lenguajes de bajo nivel.
+	
+	\vspace{0.2cm}
+	\noindent Recapitulando el comportamiento \textit{imperativo-declarativo} de Circom, este generaba dos archivos: R1CS para las restricciones y Witness para las asignaciones de señales. 
+	
+	\vspace{0.2cm}
+	\noindent El símbolo \texttt{<-}\texttt{-} permite añadir una asignación al archivo Witness, pero no al R1CS, ya que este es exclusivo para las restricciones del programa (añadidas con los operadores  \texttt{<==} y \texttt{===}). 
+	
+	\vspace{0.2cm}
+	\noindent Aprovechando la flexibilidad de las asignaciones y la sintaxis de Circom, podemos implementar una nueva funcionalidad realizando modificaciones en el compilador de Circom, las cuales permiten traducir la lógica programada en C directamente en restricciones de Circom. De este modo, el compilador actuaría como un puente, transformando automáticamente el flujo imperativo de C en un sistema de restricciones.
 		
 	\chapter{Desarrollo del problema}
+	
+	\section{Definición del problema}
+	\vspace{0.2cm}
+	\noindent 
+	
 	\section{Ejemplo del problema}
+	
 	\section{Notación}
 		\noindent A lo largo del documento estudiaremos cómo traducir instrucciones y expresiones generadas por un lenguaje imperativo simple en un conjunto de ecuaciones en formato R1CS equivalente definimos las siguientes funciones: 
 		
