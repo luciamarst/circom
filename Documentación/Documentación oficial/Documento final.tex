@@ -10,6 +10,7 @@
 \usepackage[spanish]{babel}
 \usepackage[T1]{fontenc}
 \usepackage{array}
+\usepackage{longtable}
 \usepackage{amsmath}
 \usepackage{setspace}
 \usepackage{geometry}
@@ -794,13 +795,15 @@ placement=H
 	\end{lstlisting}
 
 	\vspace{0.2cm}
-	\noindent Tras analizar ambos los bloques de código lógicamente equivalentes, es evidente la simplicidad, legibilidad e independencia que la nueva funcionalidad incorpora al lenguaje.
+	\noindent Tras analizar ambos bloques de código lógicamente equivalentes, es evidente la simplicidad, legibilidad e independencia que la nueva funcionalidad incorpora al lenguaje.
 	
 	\vspace{0.2cm}
 	\noindent Si bien este beneficio es ya notable en un ejemplo sencillo como este, su verdadero potencial reside en la migración a problemas más complejos.
 	
 	\vspace{0.2cm}
     \noindent Al trasladar esta lógica a sistemas de mayor envergadura, los beneficios en términos de mantenibilidad y reducción de errores en el diseño de circuitos como una mayor accesibilidad pueden ser exponenciales.
+	
+	\newpage
 	
 	\section{Notación}
 		\noindent A lo largo del documento estudiaremos cómo traducir instrucciones y expresiones generadas por un lenguaje imperativo simple en un conjunto de ecuaciones en formato R1CS equivalente definimos las siguientes funciones: 
@@ -843,99 +846,158 @@ placement=H
 	
 	\section{Reglas de transformación}
 	
-	\noindent En esta sección se encuentra la documentación relativa a la implementado de las reglas de transformación pertinentes para hacer posible la migración del problema descrito a la práctica.
+	\noindent Esta sección recoge la documentación sobre la implementación de las reglas de transformación pertinentes para materializar la funcionalidad descrita a la práctica.
 	
+	\vspace{0.2cm}
+	\noindent Las reglas de transformación especificadas abarcan los operadores lógicos, de comparación, aritméticos, de desplazamiento además del acceso a arrays y las expresiones condicionales.
 	
 	\subsection{Operadores Lógicos}
 	
 	
 		\vspace{0.2cm}
 		
+	\subsubsection{Traducción de operadores}
+	
+	
 		\renewcommand{\arraystretch}{3}
-		\begin{tabular}{|c|>{\centering\arraybackslash}p{12cm}|}
+		\begin{longtable}{|l|c|}
 			\hline
-			\textbf{Operación} & \textbf{Deducción} \\
+			\textbf{Operación} & \textbf{Regla de Inferencia} \\ \hline
+			\endfirsthead 
 			
 			\hline
-			\texttt{e = \text{not } b} & 
-			\makecell[c]{ 
-				$$
-				\begin{prooftree}
-					\hypo{TC(e_1) = (C, e'_1)}
-					\infer1{TC(not\ e_1) = ((e'_1)*(e'_1-1)===0) \wedge(C, 1 - e'_1)}
+			\textbf{Operación} & \textbf{Regla de Inferencia (cont.)} \\ \hline
+			\endhead
+			
+			\hline
+			\multicolumn{2}{r}{\textit{Continúa en la siguiente página...}} \\
+			\endfoot 
+			
+			\hline
+			\endlastfoot
+			
+			\texttt{not $e_1$} & 
+			\makecell[c]{ \\
+				\begin{prooftree} 
+					\hypo{TC(e_1) = (C_1, e'_1)} 
+					\infer1{ 
+						TC(\text{not } e_1) = 
+						\left( 
+						C_1 \wedge 
+						\left\{ 
+						e'_1 \cdot (e'_1 - 1) == 0
+						\right\}, 
+						1 - e'_1 
+						\right) 
+					} 
 				\end{prooftree}
-				$$
+			} \\
+		
+			\hline
+			
+			\texttt{$e_1$ and $e_2$} & 
+			\makecell[c]{ \\
+				\begin{prooftree} 
+					\hypo{TC(e_1) = (C_1, e'_1)} 
+					\hypo{TC(e_2) = (C_2, e'_2)} 
+					\infer2{ 
+						TC(e_1 \text{ and } e_2) = 
+						\left( 
+						C_1 \wedge C_2 \wedge 
+						\left\{ 
+						\begin{array}{l} 
+							e'_1 \cdot (e'_1 - 1) == 0, \\ 
+							e'_2 \cdot (e'_2 - 1) == 0, \\ 
+							v_{aux} = e'_1 \cdot e'_2 
+						\end{array} 
+						\right\}, 
+						v_{aux} 
+						\right) 
+					} 
+				\end{prooftree}
+			} \\ 
+			\hline
+					
+			\texttt{$e_1$ or $e_2$} & 
+			\makecell[c]{ \\
+				\begin{prooftree} 
+					\hypo{TC(e_1) = (C_1, e'_1)} 
+					\hypo{TC(e_2) = (C_2, e'_2)} 
+					\infer2{ 
+						TC(e_1 \text{ or } e_2) = 
+						\left( 
+						C_1 \wedge C_2 \wedge 
+						\left\{ 
+						\begin{array}{l} 
+							e'_1 \cdot (e'_1 - 1) == 0, \\ 
+							e'_2 \cdot (e'_2 - 1) == 0, \\ 
+							v_{aux1} = e'_1 \cdot e'_2 , \\
+							v_{aux} = =e'_1 + e'_2 - v_{aux1},
+						\end{array} 
+						\right\}, 
+						v_{aux} 
+						\right) 
+					} 
+				\end{prooftree}
+			} \\ 
+			\hline	
+			
+			\texttt{$e_1$ \& $e_2$} & 
+			\makecell[c]{ \\
+				\begin{prooftree} 
+					\hypo{TC(e_1) = (C_1, e'_{1,bin})} 
+					\hypo{TC(e_2) = (C_2, e'_{2,bin})} 
+					\infer2{ 
+						TC(e_1 \text{ \& } e_2) = 
+						\left( 
+						C_1 \wedge C_2 \wedge 
+						\left\{ 
+						\begin{array}{l} 
+							\forall i \in [0, n-1]: \\
+							v_{i} == e'_{1,bin}[i] \cdot e'_{2,bin}[i]
+						\end{array} 
+						\right\}, 
+						\vec{v}
+						\right) 
+					} 
+				\end{prooftree}
+			} \\ 
+			\hline
+	
+			
+			\texttt{$e_1 \mid e_2$} & 
+			\makecell[c]{ \\
+				\begin{prooftree} 
+					\hypo{TC(e_1) = (C_1, e'_{1,bin})} 
+					\hypo{TC(e_2) = (C_2, e'_{2,bin})} 
+					\infer2{ 
+						TC(e_1 \mid e_2) = 
+						\left( 
+						C_1 \wedge C_2 \wedge 
+						\left\{ 
+						\begin{array}{l} 
+							\forall i \in [0, n-1]: \\
+							vaux_{i} == e'_{1,bin}[i] \cdot e'_{2,bin}[i], \\
+							v_{i} == e'_{1,bin}[i] + e'_{2,bin}[i] \cdot vaux_{i} 
+						\end{array} 
+						\right\}, 
+						\vec{v}
+						\right) 
+					} 
+				\end{prooftree}
 			} \\ 
 			\hline
 			
-			\texttt{e = \text{and } b} & 
-			\makecell[c]{ 
-			\resizebox{\hsize}{!}{
-				\begin{prooftree}
-					\hypo{TC(e_1) = (C_1, e'_1)}
-					\hypo{TC(e_2) = (C_2, e'_2)}
-					\infer2{
-						TC(e_1 \text{ and } e_2) = \left(
-						\begin{tabular}{c}
-							$C_1 \wedge C_2 \wedge$ \\
-							$(e'_1 * (e'_1-1) = 0) \wedge (e'_2 * (e'_2-1) = 0)$ \\
-							$\wedge \{v_{aux} = e'_1 * e'_2\}, v_{aux}$
-						\end{tabular}
-						\right)
-					}
-				\end{prooftree}
-			}} \\  
-			\hline
-			
-			\texttt{e = \text{or } b} & 
-			\makecell[c]{ 
-			\resizebox{\hsize}{!}{
-				\begin{prooftree}
-					\hypo{TC(e_1) = (C_1, e'_1)}
-					\hypo{TC(e_2) = (C_2, e'_2)}
-					\infer2{TC(e_1 \text{or } e_2)  = \left(
-						\begin{tabular}{c}
-							$C_1 \wedge C_2 \wedge$ \\
-							$(e'_1 * (e'_1-1) = 0) \wedge (e'_2 * (e'_2-1) = 0)$ \\
-							$\wedge \{v_{aux} = e'_1 * e'_2\},e'_1 + e'_2 - v_{aux}$
-						\end{tabular}
-						\right)
-					}
-				\end{prooftree}
-			}} \\ 
-			\hline
-			
-			\texttt {$e = e_1 \& e_2$} &
-			\makecell[c]{
-				\resizebox{\hsize}{!}{
-					\begin{prooftree} 
-						\hypo{TC(e_1) = (C_1, e_{1-binario})} 
-						\hypo{TC(e_2) = (C_2, e_{2-binario})} 
-						\infer2{TC(e_1 \text{\& } e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} = e_{1-binario}[i] * e_{2-binario}[i]\}, v_{aux})} 
-					\end{prooftree} 
-				}
-			}\\ 
-			\hline
-			
-			\texttt{$e = e_1$ | $e_2$} & 
-			\makecell[c]{ 
-				\resizebox{\hsize}{!}{
-					\begin{prooftree} 
-						\hypo{TC(e_1) = (C_1, e_{1-binario})} 
-						\hypo{TC(e_2) = (C_2, e_{2-binario})} 
-						\infer2{TC(e_1 \text{| } e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} = e_{1-binario}[i] * e_{2-binario}[i]\},  e_{1-binario}[i] + e_{2-binario}[i] - v_{aux})} 
-					\end{prooftree} 
-				}
-			}
-			\\ 	
-			\hline
-		\end{tabular}
+		\end{longtable}
 		
 		
 		\vspace{0.2cm}
+		\noindent La implementación de estos operadores se ciñe a la reproducción de las puertas lógicas \textit{AND}, \textit{OR} y \textit{NOT}. 
+	
 	\subsection{Operadores de Comparación}
 		\subsubsection{Tratamiento de número negativos}
-		\noindent Un detalle destacable en la función \textit{LessThanEq()} mencionada a continuación, es que para números negativos podría dificultar su uso. 
+		\label{sssec:num_negativos}
+		\noindent Un detalle destacable en la función \textit{LessThanEq()}, utilizada para hacer posible la traducción de los operadores de comparación $<, \leq, > \ y \ \geq$ a restricciones algebraicas, es que para números negativos podría dificultar su uso si no se tienen en cuenta ciertos aspectos determinantes.
 		
 		\vspace{0.2cm}
 		\noindent El motivo reside en trabajamos sobre un cuerpo finito $\mathbb{F}_p$, de forma que los números negativos realmente no existen. En su lugar, se representan mediante el módulo del campo.
@@ -1019,25 +1081,52 @@ placement=H
 		
 		\vspace{0.2cm}	
 		
-		\begin{mi_ejemplo}[H]
-			\paragraph{Operador $\leq$}
+		\begin{definicion}[H]
+			\paragraph{Operador \textit{op}}
 			\begin{itemize}
-				\item $\leq$: Comparaciones de cuyos números se conoce el tamaño y además tienen el mismo tamaño.
-				\item La llamada a la función sería $lessThan(253)$ para estos casos, ya que el tamaño máximo es 253 en el cuerpo finito.
+				\item \textit{op}: Comparaciones de cuyos números se conoce el tamaño y además tienen el mismo tamaño.
+				\item La ausencia de dicho componente se traduce a la asunción del 253 como el tamaño fijo de ambos números comparados, el mayor tamaño posible posible.
 			\end{itemize}
 			
-			\paragraph{Operador $\leq\_(n)$}
+			\paragraph{Operador $op\_(n)$}
 			\begin{itemize}
-				\item $\leq_{n}$: Comparaciones de cuyos números no se conoce el tamaño y/o no tiene el mismo tamaño.
-				\item La llamada a la función sería $lessThan(n)$ para estos casos.
+				\item $op\_{n}$: Comparaciones de cuyos números no se conoce el tamaño y/o no tiene el mismo tamaño. De esta manera, n indica el tamaño fijado para ambos números comparados.
 			\end{itemize}
 			
-			\caption{Complemento de tamaño para operador $\leq$}
+			\caption{Complemento opcional de tamaño}
 			\label{ex:complemento-opc-tamano}
+		\end{definicion}
+		
+		\vspace{0.2cm}	
+		\noindent Este complemento aplica para todos los operadores de comparación, siguiendo la misma estructura que la del \hyperref[ex:complemento-opc-tamano]{\textit{Ejemplo  \ref{ex:complemento-opc-tamano}}};
+		
+		\vspace{0.2cm}	
+		\noindent Un caso de uso se presenta a continuación para clarificar la naturaleza de dicho complemento, así como su aplicación.
+		
+		\begin{mi_ejemplo}[H]
+					\begin{lstlisting}[language=Circom]
+					template Num2Bits(n) autocomplete{
+						signal input a;
+						signal output b;
+						
+						if(a >_(2) b){
+							b <-- 2;
+						}
+						else if(a ==_(2) b){
+							b <-- 1;
+						}
+						else{
+							b<--0;
+						}
+					}
+				\end{lstlisting}
+			
+				\caption{Caso de uso del complemento opcional de tamaño}
+				\label{ex:uso-complemento-opc}
 		\end{mi_ejemplo}
 		
 		\vspace{0.2cm}	
-		\noindent Este complemento aplica para todos los operadores de comparación, siguiendo la misma estructura que la del \hyperref[ex:complemento-opc-tamano]{\textit{Ejemplo  \ref{ex:complemento-opc-tamano}}} aplica sobre el operador $\leq$;
+		\noindent
 		
 		\subsubsection{Operadores $<, \leq, > \ y \ \geq$}
 		\noindent Para la implementación de dichos operadores únicamente es necesaria la función \textit{SecureLessThanEq(n)}.
@@ -1087,92 +1176,153 @@ placement=H
 		\noindent Siguiendo la misma lógica, si el bit de acarreo es 0 significa que A es mayor que B ya que B-A < 0, y de esta forma obtendríamos $2^n + (num. negativo) < 2^n$, concluyendo así que no podría producirse un overflow.
 		
 		
-		
-	\newsavebox{\codeboxA}
-	\begin{lrbox}{\codeboxA}
-		\begin{minipage}{0.46\textwidth}
-			\begin{lstlisting}[
-				language=Circom, 
-				basicstyle=\scriptsize\ttfamily, 
-				columns=flexible, 
-				numbers=none, 
-				xleftmargin=1.5em, 
-				gobble=4
-				]
-				template SecureLessThan(n){
-					signal input in[2];
-					signal output out;
-					
-					//------------------
-					
-					component checkA = Num2Bits(n);
-					checkA.in <== in[0];
-					
-					component checkB = Num2Bits(n);
-					checkB.in <== in[1];
-					
-					adder = BinSum(n, 2);
-					
-					var i;
-					for (i=0;i<n;i++) {
-						checkA.out[i] ==> adder.in[0][i];
-						checkB.out[i] ==> adder.in[1][i];
-					}
-					
-					
-					// Miramos el bit + significativo (MSB), 1 si A < B, 0 de lo contrario
-					adder.out[n-1] ==> out;
-				}
-			\end{lstlisting}
-		\end{minipage}
-		\end{lrbox}
-		
-		\begin{center}
-			\usebox{\codeboxA}
-		\end{center}
-		
-		\vspace{0.3cm}	
-		
+		\vspace{0.2cm}	
 		\noindent Con está pequeña modificación, al usar para ambos número a comparar la función \textit{Num2Bits()} nos aseguramos de que se cumpla la restricción de ser número enteros positivos dentro del rango.
 		
-		\subsubsection{Operadores = y !=}
+		\subsubsection{Operadores == y !=}
 
+		\vspace{0.2cm}
+		\noindent Los operadores $== \ y \ !=$ plantean una implementación alejada del complemento a 2, estrategia empleada en los anteriores operadores. La estrategia aplicada en este caso es la reproducción de la puerta lógica \textit{XOR}.
 		
 		\vspace{0.2cm}
+		\noindent XOR es una puerta lógica cuyo comportamiento se caracteriza por tener como salida el 0, únicamente cuando sus dos entradas son iguales, siendo exactamente lo necesario para implementar estos operadores.
+		
+		\vspace{0.2cm}
+		\noindent Siguiendo la tabla de verdad de dicha puerta lógica:
+		
+		\begin{itemize}
+			\item \textbf{Operador ==}: Obtenido el resultado de salida de la función XOR, añadimos la restricción de que esa salida sea obligatoriamente 0. De esta forma se proporciona un correcto comportamiento para este operador.
+			\item \textbf{Operador !=}: Obtenido el resultado de salida de la función XOR, añadimos la restricción de que esa salida sea obligatoriamente 1. De esta forma se proporciona un correcto comportamiento para este operador.
+		\end{itemize}
+		
+		\vspace{0.2cm}
+		\noindent Para lograr el correcto comportamiento de esta puerta lógica, aplicamos la ecuación $XOR = (A \cdot \overline{B}) + (\overline{A} \cdot B)$, obteniendo XOR=0 si A==B, o bien XOR=1 si A!=B.
+		
+		\vspace{0.2cm}
+		\noindent No obstante, requiere importancia destacar que la conversión a bits de ambos números para el uso de estos operadores es obligatoria, ya no solo por el motivo tratado en la sección \textit{ \ref{sssec:num_negativos} Tratamiento de números negativos}, sino que responde a la propia naturaleza de la lógica \textit{XOR}. Para que dicha comparación sea efectiva, debe ejecutarse bit a bit, lo que requiere estrictamente la representación binaria de ambos valores.
 		
 		\subsubsection{Traducción de operadores}
-		\noindent A continuación, definiremos para cada operador su deducción.
+		\noindent A continuación, definiremos para cada operador su inferencia.
 		
 		\vspace{0.2cm}
 		
+		\setlength{\LTpre}{0pt} 
+		\setlength{\LTpost}{0pt}
 		\renewcommand{\arraystretch}{3}
-		\begin{tabular}{|c|>{\centering\arraybackslash}p{13cm}|}
-			\hline 
-			\textbf{Operación} & \textbf{Deducción} \\ 
-			\hline 
+		\begin{longtable}{|l|c|}
+			\hline
+			\textbf{Operación} & \textbf{Regla de Inferencia} \\ \hline
+			\endfirsthead 
 			
-			\texttt{$e = e_1 = e_2$} & 
-			\makecell[c]{ \\ 
-				signal diff <== $e_1 - e_2$ \\[3pt]
-				$$ 
+			\hline
+			\textbf{Operación} & \textbf{Regla de Inferencia (cont.)} \\ \hline
+			\endhead
+			
+			\hline
+			\multicolumn{2}{r}{\textit{Continúa en la siguiente página...}} \\
+			\endfoot 
+			
+			\hline
+			\endlastfoot
+			
+			\texttt{$e = e_1 == e_2$} & 
+			\makecell[c]{ \\
 				\begin{prooftree} 
 					\hypo{TC(e_1) = (C_1, e'_1)} 
-					\hypo {TC(e_2) = (C_2, e'_2)} 
-					\infer2{TC(e_1 \text{= } e_2) = (C_1 \wedge C_2 \wedge \{IsZero().in = diff, IsZero().out = v_{aux}\}, v_{aux})} 
-				\end{prooftree} 
-				$$}  \\[3pt] 
+					\hypo{TC(e_2) = (C_2, e'_2)} 
+					\infer2{ 
+						TC(e_1 == e_2) = 
+						\left( 
+						C_1 \wedge C_2 \wedge 
+						\left\{ 
+						\begin{array}{l} 
+							XOR(253).in[0] = e'_1, \\ 
+							XOR(253).in[1] = e'_2, \\ 
+							XOR(253).out = v_{aux}, \\ 
+							v_{aux} == 0
+						\end{array} 
+						\right\}, 
+						1- v_{aux}
+						\right) 
+					} 
+				\end{prooftree}
+				$$} \\ 
+			
+			\hline 
+			
+			\texttt{$e = e_1 ==\_(n) \ e_2$} & 
+			\makecell[c]{ \\
+				\begin{prooftree} 
+					\hypo{TC(e_1) = (C_1, e'_1)} 
+					\hypo{TC(e_2) = (C_2, e'_2)} 
+					\infer2{ 
+						TC(e_1 ==\_(n) e_2) = 
+						\left( 
+						C_1 \wedge C_2 \wedge 
+						\left\{ 
+						\begin{array}{l} 
+							XOR(n).in[0] = e'_1, \\ 
+							XOR(n).in[1] = e'_2, \\ 
+							XOR(n).out = v_{aux}, \\ 
+							v_{aux} == 0
+						\end{array} 
+						\right\}, 
+						1- v_{aux}
+						\right) 
+					} 
+				\end{prooftree}
+				$$} \\ 
+			
 			\hline 
 			
 			\texttt{$e = e_1 \neq e_2$} & 
 			\makecell[c]{ \\
-				signal diff <== $e_1 - e_2$ \\[3pt]
-				$$ 
 				\begin{prooftree} 
 					\hypo{TC(e_1) = (C_1, e'_1)} 
-					\hypo {TC(e_2) = (C_2, e'_2)} 
-					\infer2{TC(e_1 \neq e_2) = (C_1 \wedge C_2 \wedge \{IsZero().in = diff, IsZero().out = v_{aux}\}, 1 - v_{aux})} 
-				\end{prooftree} 
-				$$} \\
+					\hypo{TC(e_2) = (C_2, e'_2)} 
+					\infer2{ 
+						TC(e_1 \neq e_2) = 
+						\left( 
+						C_1 \wedge C_2 \wedge 
+						\left\{ 
+						\begin{array}{l} 
+							XOR.in[0] = e'_1, \\ 
+							XOR.in[1] = e'_2, \\ 
+							XOR.out = v_{aux}, \\ 
+							v_{aux} == 1
+						\end{array} 
+						\right\}, 
+						v_{aux}
+						\right) 
+					} 
+				\end{prooftree}
+				$$} \\ 
+			
+			\hline 
+			
+			
+			\texttt{$e = e_1 \neq\_(n) \ e_2$} & 
+			\makecell[c]{ \\
+				\begin{prooftree} 
+					\hypo{TC(e_1) = (C_1, e'_1)} 
+					\hypo{TC(e_2) = (C_2, e'_2)} 
+					\infer2{ 
+						TC(e_1 \neq\_(n) e_2) = 
+						\left( 
+						C_1 \wedge C_2 \wedge 
+						\left\{ 
+						\begin{array}{l} 
+							XOR(n).in[0] = e'_1, \\ 
+							XOR(n).in[1] = e'_2, \\ 
+							XOR(n).out = v_{aux}, \\ 
+							v_{aux} == 1
+						\end{array} 
+						\right\}, 
+						v_{aux}
+						\right) 
+					} 
+				\end{prooftree}
+				$$} \\ 
 			
 			\hline 
 			
@@ -1186,12 +1336,16 @@ placement=H
 						TC(e_1 < e_2) =
 						\left(
 						C_1 \wedge C_2 \wedge
+						\left\{ 
 						\begin{array}{l}
-							\{SecureLessThan(253).in1 = e_1', \\
-							SecureLessThan(253).in2 = e_2', \\
-							SecureLessThan(253).out = v_{aux} \}, 
+							\{SLTEq(253).in1 = e_2', \\
+							SLTEq(253).in2 = e_1', \\
+							SLTEq(253).out = v_{aux} \\
+							v_{aux} == 0
+							\}, 
 						\end{array}
-						v_{aux}
+						\right\}, 
+						1- v_{aux}
 						\right)
 					}
 					\]
@@ -1199,22 +1353,26 @@ placement=H
 				$$} \\ 
 			\hline 
 			
-			\texttt{\(e = e_1 <_{n} e_2\)} & 
+			\texttt{\(e = e_1 <\_(n) \ e_2\)} & 
 			\makecell[c]{ \\
 				$$ \begin{prooftree} 
 					\hypo{TC(e_1) = (C_1, e'_1)} 
 					\hypo {TC(e_2) = (C_2, e'_2)} 
 					\[
 					\infer2{
-						TC(e_1 <_{n} e_2) =
+						TC(e_1 <\_(n)  e_2) =
 						\left(
 						C_1 \wedge C_2 \wedge
+						\left\{ 
 						\begin{array}{l}
-							\{SecureLessThan(n).in1 = e_1', \\
-							SecureLessThan(n).in2 = e_2', \\
-							SecureLessThan(n).out = v_{aux} \}, 
+							\{SLTEq(n).in1 = e_2', \\
+							SLTEq(n).in2 = e_1', \\
+							SLTEq(n).out = v_{aux} \\
+							v_{aux} == 0
+							\}, 
 						\end{array}
-						v_{aux}
+						\right\}, 
+						1- v_{aux}
 						\right)
 					}
 					\]
@@ -1234,11 +1392,15 @@ placement=H
 						TC(e_1 \leq e_2) =
 						\left(
 						C_1 \wedge C_2 \wedge
+						\left\{ 
 						\begin{array}{l}
-							\{SecureLessThanEq(253).in1 = e_1', \\
-							SecureLessThanEq(253).in2 = e_2', \\
-							SecureLessThanEq(253).out = v_{aux} \}, 
+							\{SLTEq(253).in1 = e_1', \\
+							SLTEq(253).in2 = e_2', \\
+							SLTEq(253).out = v_{aux} \\
+							v_{aux} == 1
+							\}, 
 						\end{array}
+						\right\}, 
 						v_{aux}
 						\right)
 					}
@@ -1248,7 +1410,7 @@ placement=H
 			
 			\hline
 			
-			\texttt{\(e = e_1 \leq_{n} e_2\)} & 
+			\texttt{\(e = e_1 \leq\_(n) \ e_2\)} & 
 			\makecell[c]{ \\
 				$$ 
 				\begin{prooftree} 
@@ -1256,14 +1418,18 @@ placement=H
 					\hypo {TC(e_2) = (C_2, e'_2)} 
 					\[
 					\infer2{
-						TC(e_1 \leq_{n} e_2) =
+						TC(e_1 \leq\_(n)  e_2) =
 						\left(
 						C_1 \wedge C_2 \wedge
+							\left\{ 
 						\begin{array}{l}
-							\{SecureLessThanEq(n).in1 = e_1', \\
-							SecureLessThanEq(n).in2 = e_2', \\
-							SecureLessThanEq(n).out = v_{aux} \}, 
+							\{SLTEq(n).in1 = e_1', \\
+							SLTEq(n).in2 = e_2', \\
+							SLTEq(n).out = v_{aux} \\
+							v_{aux} == 1
+							\}, 
 						\end{array}
+						\right\}, 
 						v_{aux}
 						\right)
 					}
@@ -1284,12 +1450,16 @@ placement=H
 						TC(e_1 > e_2) =
 						\left(
 						C_1 \wedge C_2 \wedge
+							\left\{ 
 						\begin{array}{l}
-							\{SecureLessThan(253).in1 = e_1', \\
-							SecureLessThan(253).in2 = e_2', \\
-							SecureLessThan(253).out = v_{aux} \}, 
+							\{SLTEq(253).in1 = e_1', \\
+							SLTEq(253).in2 = e_2', \\
+							SLTEq(253).out = v_{aux} \\
+							v_{aux} == 0
+							\}, 
 						\end{array}
-						1 - v_{aux}
+						\right\}, 
+						1- v_{aux}
 						\right)
 					}
 					\]
@@ -1298,7 +1468,7 @@ placement=H
 			
 			\hline 
 			
-			\texttt{\(e = e_1 >_{n} e_2\)} & 
+			\texttt{\(e = e_1 >\_(n) \ e_2\)} & 
 			\makecell[c]{ \\
 				$$ 
 				\begin{prooftree} 
@@ -1306,15 +1476,19 @@ placement=H
 					\hypo {TC(e_2) = (C_2, e'_2)} 
 					\[
 					\infer2{
-						TC(e_1 >_{n} e_2) =
+						TC(e_1 >\_(n)  e_2) =
 						\left(
 						C_1 \wedge C_2 \wedge
+							\left\{ 
 						\begin{array}{l}
-							\{SecureLessThanEq(n).in1 = e_1', \\
-							SecureLessThanEq(n).in2 = e_2', \\
-							SecureLessThanEq(n).out = v_{aux} \}, 
+							\{SLTEq(n).in1 = e_1', \\
+							SLTEq(n).in2 = e_2', \\
+							SLTEq(n).out = v_{aux} \\
+							v_{aux} == 0
+							\}, 
 						\end{array}
-						1 - v_{aux}
+						\right\}, 
+						1- v_{aux}
 						\right)
 					}
 					\]
@@ -1334,12 +1508,16 @@ placement=H
 						TC(e_1 \geq e_2) =
 						\left(
 						C_1 \wedge C_2 \wedge
+							\left\{ 
 						\begin{array}{l}
-							\{SecureLessThan(253).in1 = e_1', \\
-							SecureLessThan(253).in2 = e_2', \\
-							SecureLessThan(253).out = v_{aux} \}, 
+							\{SLTEq(253).in1 = e_2', \\
+							SLTEq(253).in2 = e_1', \\
+							SLTEq(253).out = v_{aux} \\
+							v_{aux} == 1
+							\}, 
 						\end{array}
-						1 - v_{aux}
+						\right\}, 
+						v_{aux}
 						\right)
 					}
 					\]
@@ -1348,7 +1526,7 @@ placement=H
 			
 			\hline 
 			
-			\texttt{\(e = e_1 \geq_{n} e_2\)} & 
+			\texttt{\(e = e_1 \geq\_(n) \ e_2\)} & 
 			\makecell[c]{ \\
 				$$ 
 				\begin{prooftree} 
@@ -1356,15 +1534,19 @@ placement=H
 					\hypo {TC(e_2) = (C_2, e'_2)} 
 					\[
 					\infer2{
-						TC(e_1 \geq_{n} e_2) =
+						TC(e_1 \geq\_(n) e_2) =
 						\left(
 						C_1 \wedge C_2 \wedge
+							\left\{ 
 						\begin{array}{l}
-							\{SecureLessThan(n).in1 = e_1', \\
-							SecureLessThan(n).in2 = e_2', \\
-							SecureLessThan(n).out = v_{aux} \}, 
+							\{SLTEq(n).in1 = e_2', \\
+							SLTEq(n).in2 = e_1', \\
+							SLTEq(n).out = v_{aux} \\
+							v_{aux} == 1
+							\}, 
 						\end{array}
-						1 - v_{aux}
+						\right\}, 
+						v_{aux}
 						\right)
 					}
 					\]
@@ -1372,22 +1554,17 @@ placement=H
 				$$} \\ 
 			
 			\hline 
-		\end{tabular} 
+		\end{longtable} 
 		
-		\smallskip
+	
+		\vspace{0.2cm} 
+		\noindent \textit{Observación}: Es importante darse cuanta que podemos hacer uso de la misma función para los operadores $<, \leq, > \ y \ \geq$ explotando su carácter reflexivo. Para ello, notesé que las llamadas de los operadores $\le \ y \geq $ se invierten.
 		
-		\vspace{0.1cm}
-		
-		\noindent \textit{Nota:} Las funciones \texttt{IsZero()} son circuitos que comparan si un valor es igual a 0.
-		
-		\noindent \textit{Nota:} Las funciones \texttt{IsEqual())} comprueba si dados dos números, estos son iguales o no.
-		
-		\vspace{0.2cm}
 	\subsection{Operadores Aritméticos}
 	\subsection{Operadores de desplazamiento}
 	\subsection{Acceso a Arrays}
 	\subsection{Expresiones condicionales}
-	\subsection{Expresiones condicionales}
+	
 	\section{Ejemplo con constraints generadas automáticamente}
 	
 	\chapter{Implementación}
