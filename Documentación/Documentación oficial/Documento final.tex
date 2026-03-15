@@ -993,6 +993,9 @@ placement=H
 		
 		\vspace{0.2cm}
 		\noindent La implementación de estos operadores se ciñe a la reproducción de las puertas lógicas \textit{AND}, \textit{OR} y \textit{NOT}. 
+		
+		\vspace{0.2cm}
+		\noindent La misma lógica aplica para los operadores bit a bit, con la única diferencia de que cada operación se realiza sobre cada par de bits, a diferencia de las operadores que trabajan números decimales.
 	
 	\subsection{Operadores de Comparación}
 		\subsubsection{Tratamiento de número negativos}
@@ -1560,7 +1563,162 @@ placement=H
 		\vspace{0.2cm} 
 		\noindent \textit{Observación}: Es importante darse cuanta que podemos hacer uso de la misma función para los operadores $<, \leq, > \ y \ \geq$ explotando su carácter reflexivo. Para ello, notesé que las llamadas de los operadores $\le \ y \geq $ se invierten.
 		
+	\newpage
+	
 	\subsection{Operadores Aritméticos}
+	
+	
+	\subsubsection{Suma, resta y multiplicación}
+	
+	\noindent Los operadores de suma y resta son los más sencillos de implementar debido a su naturaleza, ya que ninguna de estas operaciones corre el riesgo de generar una declaración que exceda el segundo grado. Por tanto, siempre cumplirán el formato R1CS establecido por Circom y no se requerirán señales intermedias para asegurar el cumplimiento de los estándares algebraicos del lenguaje.
+	
+	\vspace{0.2cm}
+	\noindent Por otro lado, esto no aplica a la multiplicación, precisamente porque existe una incertidumbre respecto al grado de la declaración. Al tratarse de un producto, no se puede garantizar que sus operandos no provengan de otra operación cuyo grado sea cuadrático.
+	
+	\vspace{0.2cm}
+	\noindent En consecuencia, cualquier operador que corra el riesgo de exceder el segundo grado en una declaración debe utilizar señales intermedias para asegurar el cumplimiento del formato R1CS.
+	
+	\vspace{0.2cm}
+	\noindent En cambio, operadores como la división y el módulo plantean una implementación más compleja, ya que para ambos operadores es necesario el desarrollo y cumplimiento del \textit{teorama de la división}, el cual dice lo siguiente.
+	
+	\begin{definicion}
+		\[
+		\scalebox{1.2}{$a = b \cdot q + r$}
+		\]
+		
+		\caption{Teorema de la división}
+		\label{def:teo-div}
+	\end{definicion}
+	
+	\vspace{0.2cm}
+	\noindent Conociendo esta condición a cumplir, en las siguientes secciones se especificará la aplicación de este teorema para conseguir la traducción a restricciones algebraicas deseada.
+	
+	\vspace{0.3cm}
+	
+	\subsubsection{División}
+	
+	\noindent Partiendo de la fórmula \(a = b * q + r\), podemos llegar al resultado de la operación \(a / b\) forzando a que se cumpla la fórmula pero despreciando el resto (ya que se trata de división entera).
+	
+	\vspace{0.3cm}
+	
+	\noindent El término "forzar" hace referencia a usar una variable en Circom, de forma que partiendo del dividendo y del divisor, el cociente solo pueda tener ese valor.
+	
+	
+	Ejemplo de código en Circom:
+	
+	\begin{lstlisting}[language=Circom]
+		template IntegerDivision() {
+			signal input a; // Dividendo
+			signal input b; // Divisor
+			signal output c; // Cociente q
+			
+			var q;
+			a === b * q;
+			c <== q;
+		}
+		
+		component main = IntegerDivision();
+	\end{lstlisting}
+	
+	\subsubsection{Módulo}
+	
+	\noindent Partiendo de la fórmula \(a = b * q + r\), podemos llegar al resultado de la operación \(a \% b\) con la variable r, la que representa el resto de una división.
+	
+	\vspace{0.2cm}
+	
+	\noindent Por otro lado, ha de cumplirse la expresión \(0 \leq r < b\). De lo contrario, podría producirse problemas en cuanto a la seguridad del circuito. 
+	
+	\begin{align}
+		a &= b \cdot q + r \\
+		r &= a - (b \cdot q) \\
+		r &= a - (b \cdot ( a / b) )
+	\end{align}
+	
+	\noindent \textit{Nota: } q representa el resultado de una división, por lo que podemos decir que \( q = a/b \).
+	
+	\vspace{0.4cm}
+	
+	\noindent Para que se cumpla la restricción \(0 \leq r < b\) :
+	
+	\begin{lstlisting}[language=Circom]
+		component lessThan = SecureLessThan(n);
+		lessThan.in[0] <== r;
+		lessThan.in[1] <== b;
+		
+		// 1 si r < b, como ya se checkea en SecureLessThan que sea positivo o 0 es suficiente
+		
+		lessThan.out === 1 // Hacemos que se cumpla la restriccion,
+		// Si no se cumple, no se generara la prueba
+	\end{lstlisting}
+	
+
+	
+		
+	\subsubsection{Traducción de operadores}
+	\begin{tabular}{|c|>{\centering\arraybackslash}p{14cm}|}
+		\hline
+		\textbf{Operación} & \textbf{Deducción} \\
+		\hline
+		
+		\texttt{$e= e_1 + e_2$} & 
+		\makecell[c]{ 
+			$$ 
+			\begin{prooftree} 
+				\hypo{TC(e_1) = (C_1, e_1')} 
+				\hypo {TC(e_2) = (C_2, e_2')} 
+				\infer2{TC(e_1 + e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} = e_1' + e_2'\}, v_{aux})}
+			\end{prooftree} 
+			$$} \\
+		
+		\hline
+		
+		\texttt{$e= e_1 - e_2$} & 
+		\makecell[c]{ 
+			$$ 
+			\begin{prooftree} 
+				\hypo{TC(e_1) = (C_1, e_1')} 
+				\hypo {TC(e_2) = (C_2, e_2')} 
+				\infer2{TC(e_1 + e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} = e_1' - e_2'\}, v_{aux})}
+			\end{prooftree} 
+			$$} \\
+		\hline
+		
+		\texttt{$e= e_1 * e_2$} & 
+		\makecell[c]{ 
+			$$ 
+			\begin{prooftree} 
+				\hypo{TC(e_1) = (C_1, e_1')} 
+				\hypo {TC(e_2) = (C_2, e_2')} 
+				\infer2{TC(e_1 + e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} = e_1' * e_2'\}, v_{aux})}
+			\end{prooftree} 
+			$$} \\
+		\hline
+		
+			\texttt{$e= a / b$} & 
+		\makecell[c]{ 
+			$$ 
+			\begin{prooftree} 
+				\hypo{TC(a) = (C_1, a')} 
+				\hypo {TC(b) = (C_2, b')} 
+				\infer2{TC(a / b) = (C_1 \wedge C_2 \wedge \{v_{aux} = b' * q'\}, a' = v_{aux} + r')}
+			\end{prooftree} 
+			$$} \\
+		
+		\hline
+		
+		\texttt{$e = a \% b$} & 
+		\makecell[c]{ 
+			$$ 
+			\begin{prooftree} 
+				\hypo{TC(a) = (C_1, a')} 
+				\hypo {TC(b) = (C_2, b')} 
+				\infer2{TC(a \% b) = (C_1 \wedge C_2 \wedge \{v_{aux} = a'/b'\} \wedge \{v_{aux_2} = b * v_{aux}\}, a' - v_{aux_2})}
+			\end{prooftree} 
+			$$} \\
+		\hline
+	\end{tabular}
+	
+	
 	\subsection{Operadores de desplazamiento}
 	\subsection{Acceso a Arrays}
 	\subsection{Expresiones condicionales}
