@@ -8,26 +8,26 @@
 \contentsline {chapter}{\numberline {2}Desarrollo del problema}{9}{chapter.2}%
 \contentsline {section}{\numberline {2.1}Definición del problema}{9}{section.2.1}%
 \contentsline {section}{\numberline {2.2}Ejemplo del problema}{12}{section.2.2}%
-\contentsline {section}{\numberline {2.3}Notación}{12}{section.2.3}%
-\contentsline {section}{\numberline {2.4}Reglas de transformación}{12}{section.2.4}%
-\contentsline {subsection}{\numberline {2.4.1}Operadores Lógicos}{13}{subsection.2.4.1}%
-\contentsline {subsection}{\numberline {2.4.2}Operadores de Comparación}{13}{subsection.2.4.2}%
-\contentsline {subsubsection}{\numberline {2.4.2.1}Tratamiento de número negativos}{13}{subsubsection.2.4.2.1}%
-\contentsline {subsubsection}{\numberline {2.4.2.2}Tamaño de los números comparados}{15}{subsubsection.2.4.2.2}%
-\contentsline {paragraph}{Operador $\leq $}{16}{paragraph*.12}%
-\contentsline {paragraph}{Operador $\leq _{n}$}{16}{paragraph*.13}%
-\contentsline {subsubsection}{\numberline {2.4.2.3}Operadores $<, \leq , > \ y \ \geq $}{16}{subsubsection.2.4.2.3}%
-\contentsline {subsubsection}{\numberline {2.4.2.4}Operadores = y !=}{17}{subsubsection.2.4.2.4}%
-\contentsline {subsubsection}{\numberline {2.4.2.5}Traducción de operadores}{17}{subsubsection.2.4.2.5}%
-\contentsline {subsection}{\numberline {2.4.3}Operadores Aritméticos}{19}{subsection.2.4.3}%
-\contentsline {subsection}{\numberline {2.4.4}Operadores de desplazamiento}{19}{subsection.2.4.4}%
-\contentsline {subsection}{\numberline {2.4.5}Acceso a Arrays}{19}{subsection.2.4.5}%
-\contentsline {subsection}{\numberline {2.4.6}Expresiones condicionales}{19}{subsection.2.4.6}%
-\contentsline {subsection}{\numberline {2.4.7}Expresiones condicionales}{19}{subsection.2.4.7}%
-\contentsline {section}{\numberline {2.5}Ejemplo con constraints generadas automáticamente}{19}{section.2.5}%
-\contentsline {chapter}{\numberline {3}Implementación}{20}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Explicación y ejemplo de la construcción de las reglas}{20}{section.3.1}%
-\contentsline {chapter}{\numberline {4}Experimentos}{21}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Aplicación de la generación automática sobre juegos simples}{21}{section.4.1}%
-\contentsline {section}{\numberline {4.2}Aplicación de la generación automática sobre circomLib y comparación de constraints}{21}{section.4.2}%
-\contentsline {section}{\numberline {4.3}Caso de uso, verificación y búsqueda de bugs}{21}{section.4.3}%
+\contentsline {section}{\numberline {2.3}Notación}{15}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Reglas de transformación}{16}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}Operadores Lógicos}{17}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}Operadores de Comparación}{17}{subsection.2.4.2}%
+\contentsline {subsubsection}{\numberline {2.4.2.1}Tratamiento de número negativos}{17}{subsubsection.2.4.2.1}%
+\contentsline {subsubsection}{\numberline {2.4.2.2}Tamaño de los números comparados}{19}{subsubsection.2.4.2.2}%
+\contentsline {paragraph}{Operador $\leq $}{20}{paragraph*.12}%
+\contentsline {paragraph}{Operador $\leq \_(n)$}{20}{paragraph*.13}%
+\contentsline {subsubsection}{\numberline {2.4.2.3}Operadores $<, \leq , > \ y \ \geq $}{20}{subsubsection.2.4.2.3}%
+\contentsline {subsubsection}{\numberline {2.4.2.4}Operadores = y !=}{22}{subsubsection.2.4.2.4}%
+\contentsline {subsubsection}{\numberline {2.4.2.5}Traducción de operadores}{22}{subsubsection.2.4.2.5}%
+\contentsline {subsection}{\numberline {2.4.3}Operadores Aritméticos}{24}{subsection.2.4.3}%
+\contentsline {subsection}{\numberline {2.4.4}Operadores de desplazamiento}{24}{subsection.2.4.4}%
+\contentsline {subsection}{\numberline {2.4.5}Acceso a Arrays}{24}{subsection.2.4.5}%
+\contentsline {subsection}{\numberline {2.4.6}Expresiones condicionales}{24}{subsection.2.4.6}%
+\contentsline {subsection}{\numberline {2.4.7}Expresiones condicionales}{24}{subsection.2.4.7}%
+\contentsline {section}{\numberline {2.5}Ejemplo con constraints generadas automáticamente}{24}{section.2.5}%
+\contentsline {chapter}{\numberline {3}Implementación}{25}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Explicación y ejemplo de la construcción de las reglas}{25}{section.3.1}%
+\contentsline {chapter}{\numberline {4}Experimentos}{26}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Aplicación de la generación automática sobre juegos simples}{26}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Aplicación de la generación automática sobre circomLib y comparación de constraints}{26}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Caso de uso, verificación y búsqueda de bugs}{26}{section.4.3}%

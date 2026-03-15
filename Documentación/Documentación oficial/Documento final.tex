@@ -43,34 +43,40 @@
 % Opciones
 
 % Estilo
+
+\renewcommand{\lstlistingname}{Código}
+\renewcommand{\lstlistlistingname}{Índice de códigos}
+
 \lstdefinelanguage{Circom}{
-	keywords={template, signal, input, output, component, var, for, if, else, return, include},
-	keywordstyle=\color{blue}\bfseries,
-	ndkeywords={<==, ==>, ===, <--, -->},
-	ndkeywordstyle=\color{darkgray}\bfseries,
-	identifierstyle=\color{black},
+	keywords={template, signal, input, output, component, var, for, if, else, return, include,autocomplete},
 	sensitive=true,
 	morecomment=[l]{//},
 	morecomment=[s]{/*}{*/},
+	morestring=[b]",
+	otherkeywords={<==, ==>, ===, <--, -->, ==}
+}
+
+\lstset{
+	language=Circom,
+	keywordstyle=\color{blue}\bfseries,
 	commentstyle=\color{green!50!black}\ttfamily,
 	stringstyle=\color{red}\ttfamily,
-	morestring=[b]",
-	tabsize=2,
-	breaklines=true,
-	showstringspaces=false 
-}
-\lstset{
-	basicstyle=\ttfamily\small,
-	keywordstyle=\color{blue},
-	commentstyle=\color{green!50!black},
-	stringstyle=\color{red!60!black},
+	identifierstyle=\color{black},
+	classoffset=1,
+	otherkeywords={<==, ==>, ===, <--, -->, ==},
+	keywordstyle=\color{orange!80!black}\bfseries,
+	classoffset=0,
+	basicstyle=\small\ttfamily,
 	numbers=left,
-	numberstyle=\tiny,
+	numberstyle=\tiny\color{gray},
 	stepnumber=1,
 	numbersep=10pt,
-	showstringspaces=false,
+	captionpos=b,           
+	breaklines=true,        
 	tabsize=2,
-	breaklines=true
+	showstringspaces=false,
+	frame=lines,           
+	framesep=5pt
 }
 
 \DeclareFloatingEnvironment[
@@ -536,8 +542,6 @@ placement=H
 	
 	
 	
-	\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
-	
 	\begin{mi_ejemplo}
 	\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
 	
@@ -622,8 +626,10 @@ placement=H
 	  	\label{ex:ejemplo-problema}
 	\end{mi_ejemplo}
 	
+	\newpage
+	
 	\vspace{0.2cm}
-	\noindent De esta forma, Circom sería un lenguaje de programación mucho mas accesible a los usuarios al facilitar su uso gracias a esta nueva funcionalidad.
+	\noindent De esta forma, Circom sería un lenguaje de programación mucho mas accesible para los usuarios al facilitar su uso, gracias a la incorporación esta nueva funcionalidad.
 	
 	\vspace{0.2cm}
 	\noindent Para ilustrar de forma práctica las limitaciones mencionadas y la dificultad que implica la definición manual de restricciones, se presenta a continuación un ejemplo que contrasta el flujo actual de Circom frente a la solución propuesta. 
@@ -631,7 +637,170 @@ placement=H
 	\section{Ejemplo del problema}
 	
 	\vspace{0.2cm}
-	\noindent
+	\noindent Una manera más precisa de materializar esta propuesta es por medio de un ejemplo, utilizando para ello un programa real en Circom.
+	
+	\vspace{0.2cm}
+	\noindent El programa que utilizaremos como ejemplo es el clásico juego de \textit{piedra, papel y tijera}. Éste consiste en 3 reglas principales.
+	
+	\vspace{0.2cm}
+	\begin{enumerate}
+		\item Piedra gana a Tijera, pero pierde contra Papel
+		\item Papel gana a Piedra, pero pierde contra Tijera.
+		\item Tijera gana contra Papel, pero pierde contra Piedra.
+	\end{enumerate}
+	
+	\vspace{0.2cm}
+	\noindent Este juego tan característico y conocido se debe en gran parte a su simplicidad. Sin embargo, transformar su lógica en un programa Circom que lo materialice en un circuito es una tarea más tediosa y compleja.
+	
+	\vspace{0.2cm}
+	\noindent A continuación, se muestra un programa Circom equivalente a la lógica de este juego.
+	
+	\vspace{0.2cm}
+		
+	\begin{lstlisting}[
+		language=Circom, 
+		caption={Implementación declarativa de Piedra, papel y tijera en Circom}, 
+		label={cod:piedra-papel-tijera-declarativa}
+		]
+		template piedra_papel_tijera () {
+			
+			// Piedra -> 0, Papel -> 1, Tijera -> 2
+			signal input jugador1; // Representa el estado del jugador 1
+			signal input jugador2; // Representa el estado del jugador 2
+			signal output ganador; // 0 -> jugador1; 1 -> jugador2, 2 -> empate
+			
+			signal eq;
+			signal inv;
+			signal out;
+			signal j1;
+			signal j2;
+			
+			// --- Comparaciones de cada jugador y estado ---
+			
+			// Jugador 1
+			component J1_0 = igualdadRepetida(0);
+			J1_0.in <== jugador1; 
+			
+			component J1_1 = igualdadRepetida(1);
+			J1_1.in <== jugador1;
+			
+			component J1_2 = igualdadRepetida(2);
+			J1_2.in <== jugador1;
+			
+			// Jugador 2
+			component J2_0 = igualdadRepetida(0);
+			J2_0.in <== jugador2;
+			
+			component J2_1 = igualdadRepetida(1);
+			J2_1.in <== jugador2;
+			
+			component J2_2 = igualdadRepetida(2);
+			J2_2.in <== jugador2;
+			
+			// Igualdad entre jugadores (empate)
+			signal eq0;
+			signal eq1;
+			signal eq2;
+			
+			eq0 <== (J1_0.out) * (J2_0.out);
+			eq1 <== (J1_1.out) * (J2_1.out);
+			eq2 <== (J1_2.out) * (J2_2.out);  
+			eq <== eq0 + eq1 + eq2;       
+			
+			// Inversion de empate
+			inv <== (1 - eq);
+			
+			// Combinaciones ganadoras Jugador 1
+			signal j1_0;
+			signal j1_1;
+			signal j1_2;
+			
+			j1_0 <== (J1_0.out) * (J2_2.out);
+			j1_1 <== (J1_1.out) * (J2_0.out);
+			j1_2 <== (J1_2.out) * (J2_1.out);
+			
+			j1 <== j1_0 + j1_1 + j1_2;
+			
+			// Combinaciones ganadoras Jugador 2
+			signal j2_0;
+			signal j2_1;
+			signal j2_2;
+			
+			j2_0 <== (J1_0.out) * (J2_1.out);
+			j2_1 <== (J1_1.out) * (J2_2.out);
+			j2_2 <== (J1_2.out) * (J2_0.out);
+			
+			j2 <== j2_0 + j2_1 + j2_2;
+			
+			// Calculo final del ganador
+			out <== j2; // Simplificado: j2*1 + j1*0 es igual a j2
+			
+			ganador <== ((1 - inv) * 2) + (out * inv);
+		}
+	\end{lstlisting}
+	
+	\vspace{0.2cm}
+	\noindent Tras la introducción del código equivalente a la lógica del juego, puede apreciarse a simple vista la complejidad de describir flujos lógicos usando Circom, requiriendo tanto de maestría en su sintaxis y recursos, como la destreza para reflejar fielmente la lógica del juego.
+	
+	\vspace{0.2cm}
+	\noindent Sin embargo, la incorporación de nuestra modificación sobre el compilador simplificará este proceso, permitiendo una programación más intuitiva sin privar al lenguaje de las restricciones algebraicas necesarias para generar la prueba de conocimiento cero.
+	
+	\vspace{0.2cm}
+	\noindent Dicha incorporación simplifica considerablemente el flujo lógico a describir, ya que se permite más libertad en cuanto al uso de recursos, habilitando al usuario a utilizar componentes como  los condicionales, que precisamente para la descripción de la lógica de este juego reduce la complejidad.
+	
+	\vspace{0.2cm}
+	\noindent Esto evita que el programador tenga que transformar manualmente cada bifurcación del algoritmo en expresiones algebraicas, delegando ese trabajo al compilador modificado.
+	
+	\vspace{0.3cm}
+	
+	\begin{lstlisting}[
+	language=Circom, 
+	caption={Implementación imperativa de Piedra, papel y tijera en Circom }, 
+	label={cod:piedra-papel-tijera-imperativa}
+	]
+	template piedra_papel_tijera () autocomplete{
+		
+		// Piedra -> 0, Papel -> 1, Tijera -> 2
+		signal input jugador1; // Representa el estado del jugador 1
+		signal input jugador2; // Representa el estado del jugador 2
+		signal output ganador; // 0 -> jugador1; 1 -> jugador2, 2 -> empate
+		
+		if(jugador1 == jugador2){ //Empate
+			ganador <-- 2;
+		}
+		else if(jugador2 == 0 && jugador1 == 2){ //Gana jugador 2 con piedra
+			ganador <--1;
+		}
+		else if(jugador1 == 0 && jugador2 == 2){ // Gana jugador 1 con piedra
+			ganador <--0;
+		}
+		else if(jugador2 == 2 && jugador1 == 1){ //Gana jugadpr 2 con tijera
+			ganador <--1;
+		}
+		else if(jugador1 == 2 && jugador2 == 1){ //Gana jugador 1 con tijera
+			ganador <-- 0;
+		}
+		else if(jugador2 == 1 && jugador1 == 0){ //Gana jugador 2 ocn papel
+			ganador <--1;
+		}
+		else if(jugador1 == 1 && jugador2 == 0){ // Gana jugador 1 con papel
+			ganador <-- 0;
+		}
+		else{
+			ganador <-- 3; //Valor no valido
+		}
+		
+	}	
+	\end{lstlisting}
+
+	\vspace{0.2cm}
+	\noindent Tras analizar ambos los bloques de código lógicamente equivalentes, es evidente la simplicidad, legibilidad e independencia que la nueva funcionalidad incorpora al lenguaje.
+	
+	\vspace{0.2cm}
+	\noindent Si bien este beneficio es ya notable en un ejemplo sencillo como este, su verdadero potencial reside en la migración a problemas más complejos.
+	
+	\vspace{0.2cm}
+    \noindent Al trasladar esta lógica a sistemas de mayor envergadura, los beneficios en términos de mantenibilidad y reducción de errores en el diseño de circuitos como una mayor accesibilidad pueden ser exponenciales.
 	
 	\section{Notación}
 		\noindent A lo largo del documento estudiaremos cómo traducir instrucciones y expresiones generadas por un lenguaje imperativo simple en un conjunto de ecuaciones en formato R1CS equivalente definimos las siguientes funciones: 
@@ -670,6 +839,8 @@ placement=H
 			
 			\hspace{3em} \textit{TC($v$) = TC($\emptyset$, $v$)}
 		\end{itemize}
+	
+	
 	\section{Reglas de transformación}
 	
 	\noindent En esta sección se encuentra la documentación relativa a la implementado de las reglas de transformación pertinentes para hacer posible la migración del problema descrito a la práctica.
@@ -794,6 +965,7 @@ placement=H
 		
 		\noindent Intuición del funcionamiento de \textit{Num2Bits(n)} con un número negativo entrante:
 		
+		
 		\begin{enumerate}
 			\item El número negativo se interpreta como el módulo del campo.
 			
@@ -854,15 +1026,18 @@ placement=H
 				\item La llamada a la función sería $lessThan(253)$ para estos casos, ya que el tamaño máximo es 253 en el cuerpo finito.
 			\end{itemize}
 			
-			\paragraph{Operador $\leq_{n}$}
+			\paragraph{Operador $\leq\_(n)$}
 			\begin{itemize}
 				\item $\leq_{n}$: Comparaciones de cuyos números no se conoce el tamaño y/o no tiene el mismo tamaño.
 				\item La llamada a la función sería $lessThan(n)$ para estos casos.
 			\end{itemize}
 			
-			\caption{Complemento de tamaño para operadores de comparación}
-			\label{ex:complemento-opc-tamaño}
+			\caption{Complemento de tamaño para operador $\leq$}
+			\label{ex:complemento-opc-tamano}
 		\end{mi_ejemplo}
+		
+		\vspace{0.2cm}	
+		\noindent Este complemento aplica para todos los operadores de comparación, siguiendo la misma estructura que la del \hyperref[ex:complemento-opc-tamano]{\textit{Ejemplo  \ref{ex:complemento-opc-tamano}}} aplica sobre el operador $\leq$;
 		
 		\subsubsection{Operadores $<, \leq, > \ y \ \geq$}
 		\noindent Para la implementación de dichos operadores únicamente es necesaria la función \textit{SecureLessThanEq(n)}.
