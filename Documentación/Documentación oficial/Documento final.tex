@@ -170,6 +170,7 @@ placement=H
 	\noindent En términos criptográficos, una prueba de conocimiento cero, conocida como Zero Knowledge Proof (o sus siglas inglesas ZKP), es una \textbf{familia de protocolos} que permite el establecimiento de métodos cuyo objetivo es permitir que una parte \textbf{(prover)} demuestre a otra \textbf{(verifier)} la validez de una afirmación \textbf{sin revelar información sobre la misma}, más allá de su validez.
 	
 	\vspace{0.2cm}
+	\noindent Un ejemplo 
 
 \begin{mi_ejemplo}[H]
 	\centering
@@ -204,15 +205,11 @@ placement=H
 	
 	\vspace{0.25cm}
 	
-	\noindent Históricamente, el término de ZKP apareció en los años 80 como un concepto puramente teórico, hasta su desarrollo en la práctica. Dicha noción surgió con la intención de reforzar tanto la seguridad como la privacidad en el ámbito criptográfico.
-	
-	\vspace{0.25cm}
-	
 	\noindent La \textbf{criptografía} constituye el pilar fundamental de la seguridad en el mundo digital, permitiendo proteger información sensible frente a amenazas. Las técnicas criptográficas nos ofrecen la capacidad de garantizar confidencialidad así como un equilibrio entre transparencia y privacidad.
 	
 	\vspace{0.25cm}
 	
-	\noindent Gracias a este equilibrio, las técnicas criptográficas pudieron llevar a la práctica el concepto teórico ZKP en protocolos prácticos. Actualmente, esto ha llevado a la creación de grandes familias de protocolos, destacando especialmente \textbf{zk-SNARKs}.
+	\noindent Históricamente, el término de ZKP apareció en los años 80 como un concepto puramente teórico, hasta su desarrollo en la práctica. Dicha noción surgió con la intención de reforzar tanto la seguridad como la privacidad en el ámbito criptográfico. Actualmente, esto ha llevado a la creación de grandes familias de protocolos, destacando especialmente \textbf{zk-SNARKs}.
 	
 	
 	\begin{definicion}
@@ -250,19 +247,16 @@ placement=H
 %	\noindent Sin embargo, para que estos circuitos puedan ser procesados por el protocolo de prueba, han de traducirse primeramente a un formato algebraico. Es en esta etapa donde \textbf{el código se transforma en un \textbf{Rank-1 Constraint System}}, conocido como \textbf{R1CS}. Este formato descompone la lógica del programa en un conjunto de ecuaciones cuadráticas, las cuales permiten verificar la validez de los cálculos sin revelar información. 
 	
 	\section{CIRCOM}
-	\noindent \textbf{Circom} es un lenguaje de programación basado en la descripción de circuitos (DSL), cuyo objetivo principal no es el cálculo, sino definir un sistema en el que las \textbf{señales} se relacionan entre sí. 
+	\noindent \textbf{Circom} es un lenguaje de programación basado en la descripción de circuitos (DSL), cuyo objetivo principal no es el cálculo, sino definir un sistema de ecuaciones que describe las relaciones entre las \textbf{señales} de entrada y salida.
 	
 	\vspace{0.3cm}
 	
-	\noindent Una señal es un componente que actúa como cable dentro del circuito, el cual transporta valores a través de las puertas lógicas del mismo y que forma parte de las ecuaciones que el programador desea verificar. Estas señales constituyen las restricciones que formarán parte del archivo \textbf{R1CS}.
+	\noindent Una señal es un componente que actúa como cable dentro del circuito, el cual transporta valores a través de las puertas lógicas del mismo y que forma parte de las ecuaciones que el programador desea verificar. Las restricciones del sistema de ecuaciones generado por Circom describen el comportamiento de las señales del circuito.
 	
 	\vspace{0.3cm}
 	
-	\noindent Esta visión es fundamental, ya que las ZKP no pueden interpretar código directamente; requieren que la computación se descomponga en una estructura de restricciones algebraicas denominada R1CS, que detallaremos en la sección  \hyperref[sec:r1cs]{\textbf{\ref{sec:r1cs}. R1CS}}.
+	\noindent Esta visión es fundamental, ya que las ZKP no pueden interpretar código directamente; requieren que la computación se exprese en una estructura de restricciones algebraicas denominada R1CS, que detallaremos en la sección  \hyperref[sec:r1cs]{\textbf{\ref{sec:r1cs}. R1CS}}.
 	
-	\vspace{0.3cm}
-	
-	\noindent Además de su finalidad criptográfica, es importante entender la diferencia entre un lenguaje basado en circuitos a uno de propósito general, siendo Circom basado en circuitos donde la estructura del mismo debe ser estática; esto implica que cualquier valor determinante en la estructura del circuito (como tamaños de arrays, número de iteraciones de un bucle, etc..) \textbf{debe conocerse en tiempo de compilación}. Esto se debe a que así aseguramos que el sistema de restricciones R1CS que se genera en base a este circuito, sea fijo.
 		
 	\vspace{0.3cm}
 
@@ -270,8 +264,12 @@ placement=H
 	
 	\begin{itemize}
 		\item \textbf{Archivo R1CS:} Contiene el conjunto de todas las restricciones algebraicas que definen la lógica del circuito. Estas restricciones son añadidas desde un programa Circom por medio de los símbolos \texttt{<==} y \texttt{===}.
-		\item \textbf{Generador de Testigo (Witness):} Un ejecutable (en formato C++ o WASM) encargado de calcular los valores de todas las señales del circuito, incluyendo los valores intermedios, a partir de las entradas proporcionadas. Estas asignaciones son añadidas desde un programa Circom por medio de los símbolos \texttt{<==} y \texttt{<-}\texttt{-}
+		\item \textbf{Generador de Testigo (Witness):} Un ejecutable (en formato C++ o WASM) encargado de calcular los valores de todas las señales del circuito, incluyendo los valores intermedios, a partir de las entradas proporcionadas. Estas asignaciones son añadidas desde un programa Circom por medio de los símbolos \texttt{<==} y \texttt{<-}\texttt{-}.
 	\end{itemize}
+	
+	\vspace{0.3cm}
+	
+	\noindent Una característica fundamental de Circom es que es un lenguaje basado en circuitos, donde la estructura del mismo debe ser estática; esto implica que cualquier valor determinante en la estructura del circuito (como tamaños de arrays, número de iteraciones de un bucle, etc..) \textbf{debe conocerse en tiempo de compilación}. Esto se debe a que el archivo R1CS contiene las restricciones algebraicas que describen el circuito, las cuales no pueden depender de los valores de las señales de entrada.
 	
 	\vspace{0.3cm}
 	
@@ -491,10 +489,15 @@ placement=H
 	\section{Preámbulo del problema}
 	\label{sec:descripcion-problema}
 	
-	\noindent Circom es un lenguaje de programación cuyo aprendizaje y aplicación puede ser tedioso en sus inicios, sobre todo si no se tiene habilidad tratando con lenguajes de bajo nivel.
+	\noindent Circom es un lenguaje de programación cuyo aprendizaje y aplicación puede ser tedioso en sus inicios, sobre todo si no se tiene habilidad tratando con lenguajes lógicos basados en restricciones. Entre los errores más comunes de este lenguaje se encuentran los conocidos como \textit{underconstrained bugs}. 
 	
 	\vspace{0.2cm}
-	\noindent Recapitulando el comportamiento \textit{imperativo-declarativo} de Circom, este generaba dos archivos: R1CS para las restricciones y Witness para las asignaciones de señales. 
+	\noindent Un underconstrained bug se produce cuando el usuario no introduce todas las ecuaciones necesarias en el fichero R1CS para reflejar el comportamiento del circuito.
+	
+	\vspace{0.2cm}
+	\noindent Un programa Circom  es correcto cuando las ecuaciones algebraicas del archivo R1CS representan exactamente el comportamiento del circuito (expresado de forma imperativa en el generador de witness). La ausencia de las restricciones conlleva que pueden generarse witness que no reflejan el correcto comportamiento del circuito, pero que se aceptarían al verificar las ecuaciones del R1CS.
+	
+	%EJEMPLO DE MAL USO DE <--
 	
 	\vspace{0.2cm}
 	\noindent El símbolo \texttt{<-}\texttt{-} permite añadir una asignación al archivo Witness, pero no al R1CS, ya que este es exclusivo para las restricciones del programa (añadidas con los operadores  \texttt{<==} y \texttt{===}). 
