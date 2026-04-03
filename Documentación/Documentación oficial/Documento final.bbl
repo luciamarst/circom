@@ -8,4 +8,16 @@ Nervos Network.
   2024.
 \newblock Accedido: 02-04-2026.
 
+\bibitem{circom_articulo_clara}
+Marta Bellés-Muñoz , Miguel Isabel , Jose Luis Muñoz-Tapia , Albert Rubio, and Jordi Baylina. 
+\newblock CIRCOM: A Circuit Description Language for Building Zero-Knowledge Applications. 
+\newblock \url{https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=10002421}, 2023.
+\newblock Accedido: 02-04-2026.
+
+\bibitem{battlezips_circom}
+BattleZips Team.
+\newblock BattleZips-Circom: Zero-knowledge Battleship engine, 2022.
+\newblock \url{https://github.com/BattleZips/BattleZips-Circom}, 2022.
+\newblock Accedido: 03-04-2026.
+
 \end{thebibliography}

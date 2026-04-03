@@ -131,7 +131,7 @@ placement=H
 		{\large Universidad Complutense de Madrid}\\[1cm]  
 		
 		
-		\includegraphics[width=9cm]{logo.png} \\ [0.5cm]
+		\includegraphics[width=9cm]{imagenes/logo.png} \\ [0.5cm]
 		
 		
 		\textbf{{\large Trabajo de Fin de Grado}} \\[0.1cm]
@@ -469,10 +469,12 @@ placement=H
 	
 	\noindent Gracias a R1CS, es posible que el código \textbf{escrito en Circom pueda transformarse en un sistema de restricciones}, consiguiendo así que la verificación sea sumamente eficiente.
 	
+	\newpage
+	
 	\section{Snarkjs}
 	\label{sec:snarkjs}
 	
-	\noindent Snarkjs es una librería de JavaScript creada para la generación y verificación de pruebas de conocimiento cero partiendo de las restricciones en formato R1CS correspondientes, que puede ser ejecutado tanto en dispositivos como en servidores con \textit{Node.js}, materializando el concepto de \hyperref[def:zk-snarks]{\textit{ \ref{def:zk-snarks} zk-SNARKS}} nombrado anteriormente.
+	\noindent Snarkjs es una librería de JavaScript creada para la generación y verificación de pruebas de conocimiento cero partiendo de las restricciones en formato R1CS correspondientes, que puede ser ejecutado tanto en dispositivos como en servidores con \textit{Node.js}, materializando el concepto de \hyperref[def:zk-snarks]{\textit{ \ref{def:zk-snarks} zk-SNARKS}} nombrado anteriormente \cite{circom_articulo_clara}.
 	
 	\vspace{0.25cm}
 	
@@ -507,22 +509,24 @@ placement=H
 	\noindent El símbolo \texttt{<-}\texttt{-} permite añadir una asignación al archivo Witness, pero no al R1CS, ya que este es exclusivo para las restricciones del programa (añadidas con los operadores  \texttt{<==} y \texttt{===}). 
 	
 	\vspace{0.2cm}
-	\noindent La funcionalidad de estos operadores es completamente diferente. Al principio, muchas personas que comienzan a programar en Circom no tienen clara la diferencia real entre los operadores, provocando programas Circom erróneos cuya prueba generada no sea válida. Un uso erróneo de estos operadores podría provocar problemas como el mencionado \hyperref[def:underconstrained-bug]{\textit{underconstrained bug}}, de forma que si el usuario utiliza  \texttt{<-}\texttt{-} para añadir restricciones al sistema de ecuaciones en lugar de \texttt{<==} o \texttt{===}, habrá ecuaciones que no serán añadidas al archivo R1CS, quedando incompleto.
+	\noindent La funcionalidad de estos operadores es completamente diferente. Al principio, muchas personas que comienzan a programar en Circom no tienen clara la diferencia real entre estos operadores, desarrollando programas erróneos cuya prueba generada no es válida.
 	
 	\vspace{0.2cm}
-	\noindent Un ejemplo real de como este tipo de error provocó que un programa Circom prácticamente perfecto generase un sistema de ecuaciones incompleto.
+	\noindent Un uso incorrecto de estos operadores podría provocar problemas como el mencionado \hyperref[def:underconstrained-bug]{\ref{def:underconstrained-bug} \textit{Underconstrained Bug} }, de forma que si el usuario utiliza  \texttt{<-}\texttt{-} para añadir restricciones al sistema de ecuaciones en lugar de \texttt{<==} o \texttt{===}, habrá ecuaciones que no serán añadidas al archivo R1CS, y por tanto, no formarán parte del sistema de ecuaciones que describe el circuito, quedando incompleto.
+	
+	\vspace{0.2cm}
+	\noindent Un ejemplo real de este tipo de error es el clásico juego de \textit{Hundir la flota} \cite{battlezips_circom}. Este juego desarrollado por terceros fue implementado prácticamente a la perfección. Sin embargo, en uno de los archivos Circom que formaban parte del programa, se hizo un uso incorrecto del operador \texttt{<-}\texttt{-}, provocando un \hyperref[def:underconstrained-bug]{ \textit{underconstrained bug}}.
 	
 	
 	\vspace{0.2cm}
-	\noindent Debido a este error, entre muchos otros, Circom es un lenguaje complejo, al que cuesta adaptarse en gran parte por los diferentes conceptos a similar. Por ello, el objetivo de este trabajo es facilitar al usuario una forma de programar en Circom muchas más rápida y sencilla.
+	\noindent Debido a este error, entre muchos otros, Circom es un lenguaje complejo, al que cuesta adaptarse, en gran parte por los diferentes conceptos a similar. Por ello, el objetivo de este trabajo es facilitar al usuario una forma de programar en Circom muchas más rápida y sencilla, así como segura.
 	
 	
 	\vspace{0.2cm}
-	\noindent Aprovechando la flexibilidad de las asignaciones y la sintaxis ofrecida por la naturaleza \textit{declarativa-imperativa} de Circom, podemos implementar una nueva funcionalidad realizando modificaciones en su compilador, las cuales permiten traducir la lógica programada utilizando las señales añadidas al Witness (por medio de \texttt{<-}\texttt{-}) directamente en restricciones de Circom. 
+	\noindent Aprovechando la flexibilidad de las asignaciones y la sintaxis ofrecida por la naturaleza \textit{declarativa-imperativa} de Circom, podemos implementar una nueva funcionalidad realizando modificaciones en su compilador, permitiendo así traducir la lógica imperativa (restricciones declaradas con \texttt{<-}\texttt{-}, únicamente añadidas al \textit{Witness}) en restricciones que formarán parte del sistema de ecuaciones (únicamente añadidas por medio de \texttt{<-}\texttt{-}).
 	
 	\vspace{0.2cm}
 	\noindent De este modo, \textbf{el compilador actuaría como un puente}, transformando automáticamente el flujo imperativo en un sistema de restricciones.
-		
 		
 		
 	\section{Objetivos y estructura del trabajo}
@@ -533,7 +537,7 @@ placement=H
 	
 	\section{Descripción del problema}
 	\vspace{0.2cm}
-	\noindent La problemática principal que surge durante el proceso de aprendizaje de Circom reside sustancialmente en su diferencia respecto a lenguajes de alto nivel, tanto en objetivo como restricciones de uso.
+	\noindent La problemática principal que surge durante el proceso de aprendizaje de Circom reside sustancialmente en su diferencia respecto a lenguajes de alto nivel, tanto en objetivo como en restricciones de uso.
 	
 	
 	\vspace{0.2cm}
@@ -563,99 +567,31 @@ placement=H
 	\vspace{0.2cm}
 	\noindent El cuerpo imperativo tras la modificación del compilador no sería únicamente funcional para la generación del testigo, sino que con dicha propuesta se permitiría la conversión del código correspondiente tal y como se haría si dicho cuerpo fuera el equivalente al generador de las restricciones R1CS.
 	
-	
+	\vspace{0.3cm}
 	
 	\begin{mi_ejemplo}
-	\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
-	
-		\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
-			%uncomment if require: \path (0,792); %set diagram left start at 0, and has height of 792
-			
-			%Image [id:dp9061229140354872] 
-			\draw (133.5,217.5) node  {\includegraphics[width=195.75pt,height=236.25pt]{imagen.png}};
-			%Shape: Rectangle [id:dp5639575144283527] 
-			\draw  [dash pattern={on 4.5pt off 4.5pt}] (27,266) -- (252,266) -- (252,349) -- (27,349) -- cycle ;
-			%Straight Lines [id:da5775223440303073] 
-			\draw    (254,307) -- (306,307.96) ;
-			\draw [shift={(308,308)}, rotate = 181.06] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
-			%Shape: Rectangle [id:dp14101412950936743] 
-			\draw  [dash pattern={on 4.5pt off 4.5pt}] (26,139) -- (251,139) -- (251,251) -- (26,251) -- cycle ;
-			%Straight Lines [id:da1009458349383262] 
-			\draw    (252,195) -- (304,195.96) ;
-			\draw [shift={(306,196)}, rotate = 181.06] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
-			%Image [id:dp9980584353139839] 
-			\draw (146,572.5) node  {\includegraphics[width=219pt,height=234.75pt]{imagen2.png}};
-			%Shape: Rectangle [id:dp7192439263566762] 
-			\draw  [dash pattern={on 4.5pt off 4.5pt}] (14,488) -- (239,488) -- (239,600) -- (14,600) -- cycle ;
-			%Shape: Rectangle [id:dp16877960635321765] 
-			\draw  [dash pattern={on 4.5pt off 4.5pt}] (16,613) -- (242,613) -- (242,700) -- (16,700) -- cycle ;
-			%Shape: Rectangle [id:dp15531463461460826] 
-			\draw   (171,417) -- (279,417) -- (279,440) -- (171,440) -- cycle ;
-			%Curve Lines [id:da052212532573903236] 
-			\draw    (279,417) .. controls (318.8,387.15) and (306.13,445.41) .. (377.91,438.11) ;
-			\draw [shift={(379,438)}, rotate = 173.75] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
-			%Straight Lines [id:da5081809178635847] 
-			\draw    (242,545) -- (318.38,520.15) -- (337.08,514.57) ;
-			\draw [shift={(339,514)}, rotate = 163.38] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
-			%Curve Lines [id:da7272675216685713] 
-			\draw    (256,541) .. controls (305.5,526.15) and (290.64,636.61) .. (326.24,690.96) ;
-			\draw [shift={(330.33,692.85)}, rotate = 218.09] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
-			%Curve Lines [id:da295865841729839] 
-			\draw    (243,695) .. controls (269.73,735.59) and (287.97,756.43) .. (327.14,755.73) ;
-			\draw [shift={(330.33,755.85)}, rotate = 180.13] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
-			%Straight Lines [id:da4027508153406578] 
-			\draw [line width=1.5]    (483,717) -- (483.45,743) ;
-			%Straight Lines [id:da14237345178809135] 
-			\draw [line width=1.5]    (492,717) -- (492.45,743) ;
-			%Straight Lines [id:da9442220547292206] 
-			\draw [line width=1.5]    (501,717) -- (501.45,743) ;
-			
-			% Text Node
-			\draw (189,13) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\Large Compilador sin modificación}};
-			% Text Node
-			\draw (315,291) node [anchor=north west][inner sep=0.75pt]   [align=left] {\begin{minipage}[lt]{202.19pt}\setlength\topsep{0pt}
-					\begin{center}
-						Código generador del archvo R1CS con las \\restricciones del circuito
-					\end{center}
-					
-			\end{minipage}};
-			% Text Node
-			\draw (309,178) node [anchor=north west][inner sep=0.75pt]   [align=left] {\begin{minipage}[lt]{230.52pt}\setlength\topsep{0pt}
-					\begin{center}
-						Código parte del generador del téstigo, no genera \\restricciones y por tanto, no forma parte \\del archivo R1CS
-					\end{center}
-					
-			\end{minipage}};
-			% Text Node
-			\draw (187,380) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\Large Compilador con modificación}};
-			% Text Node
-			\draw (336,486) node [anchor=north west][inner sep=0.75pt]   [align=left] {\begin{minipage}[lt]{219.37pt}\setlength\topsep{0pt}
-					\begin{center}
-						Tras la modificación, su único fin no sera formar\\parte del generador de téstigo.\\Ahora, el compilador traducira este código\\a restricciones. Estas restricciones serán equi-\\valentes a las del bloque de código inferior, ya \\que son fragmentos de código\\equivalentes. 
-					\end{center}
-					
-			\end{minipage}};
-			% Text Node
-			\draw (380,414) node [anchor=north west][inner sep=0.75pt]   [align=left] {Cabecera que indica al compilador que \\se quiere usar la nueva funcionalidad};
-			% Text Node
-			\draw (334,700) node [anchor=north west][inner sep=0.75pt]   [align=left] {Restricciones algebraicas del cuerpo imperativo};
-			% Text Node
-			\draw (333,750) node [anchor=north west][inner sep=0.75pt]   [align=left] {Restricciones algebraicas del cuerpo declarativo};
-			
-			
-		\end{tikzpicture}
-	
-	  	\caption{Implicaciones de la nueva funcionalidad}
+		
+		\caption{Implicaciones de la nueva funcionalidad}
+		
+		\includegraphics[width=1.0\textwidth]{imagenes/codigos_equiv.png}
+
 	  	\label{ex:ejemplo-problema}
 	\end{mi_ejemplo}
+
+	\vspace{0,2cm}
+	\noindent Los códigos expuestos en \hyperref[ex:ejemplo-problema]{\textit{Ejemplo} \ref{ex:ejemplo-problema}} son equivalentes. Ambos códigos buscan construir un sistema de ecuaciones para determinar si una entrada cualquiera es igual a cero.
+
+	\vspace{0,2cm}
+	\noindent La diferencia radica en que el primero ha sido implementado utilizando las características que ofrece Circom, mientras que el segundo se ha implementado utilizando las modificaciones realizadas en este trabajo sobre el compilador del lenguaje.
 	
-	\newpage
+	\vspace{0,2cm}
+	\noindent Puede apreciarse que la lógica necesaria para implementar una función tan primaria sin las modificaciones se convierte en una tarea más tediosa, mientras que con las modificaciones esta lógica se convierte en un simple bloque condicional que cualquier persona familiarizada con la programación sabría hacer.
 	
 	\vspace{0.2cm}
-	\noindent De esta forma, Circom sería un lenguaje de programación mucho mas accesible para los usuarios al facilitar su uso, gracias a la incorporación esta nueva funcionalidad.
+	\noindent De esta forma, Circom sería un lenguaje de programación mucho mas accesible para los usuarios, al facilitar su uso incorporando esta nueva funcionalidad.
 	
 	\vspace{0.2cm}
-	\noindent Para ilustrar de forma práctica las limitaciones mencionadas y la dificultad que implica la definición manual de restricciones, se presenta a continuación un ejemplo que contrasta el flujo actual de Circom frente a la solución propuesta. 
+	\noindent Para ejemplificar de manera práctica las restricciones mencionadas y la dificultad que supone definir manualmente limitaciones más allá del \hyperref[ex:ejemplo-problema]{\textit{Ejemplo} \ref{ex:ejemplo-problema}}, se presenta a continuación un ejemplo que contrasta el flujo actual de Circom frente a la solución propuesta. 
 	
 	\section{Ejemplo del problema}
 	
@@ -770,7 +706,7 @@ placement=H
 	\noindent Sin embargo, la incorporación de nuestra modificación sobre el compilador simplificará este proceso, permitiendo una programación más intuitiva sin privar al lenguaje de las restricciones algebraicas necesarias para generar la prueba de conocimiento cero.
 	
 	\vspace{0.2cm}
-	\noindent Dicha incorporación simplifica considerablemente el flujo lógico a describir, ya que se permite más libertad en cuanto al uso de recursos, habilitando al usuario a utilizar componentes como  los condicionales, que precisamente para la descripción de la lógica de este juego reduce la complejidad.
+	\noindent Dicha incorporación simplifica considerablemente el flujo lógico a describir, ya que se permite más libertad en cuanto al uso de recursos, habilitando al usuario a utilizar componentes como los condicionales, que precisamente para la descripción de la lógica de este juego reduce la complejidad.
 	
 	\vspace{0.2cm}
 	\noindent Esto evita que el programador tenga que transformar manualmente cada bifurcación del algoritmo en expresiones algebraicas, delegando ese trabajo al compilador modificado.
@@ -1759,7 +1695,20 @@ placement=H
 	\section{Aplicación de la generación automática sobre circomLib y comparación de constraints}
 	\section{Caso de uso, verificación y búsqueda de bugs}
 		
+	
+	\begin{lstlisting}[language=Circom]
+	template funcion() autocomplete {
+		signal input a;
+		signal output b;
 		
+	  	if(a==0){
+	  		b <-- 1;
+	  	}
+	  	else{
+	  		b <-- 0;
+	  	}
+	}
+	\end{lstlisting}
 		
 	\bibliographystyle{unsrt} % Estilo sencillo que numera por orden de aparición
 	\bibliography{referencias}
