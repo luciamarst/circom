@@ -637,7 +637,7 @@ placement=H
 	\noindent Este juego tan característico y conocido se debe en gran parte a su simplicidad. Sin embargo, transformar su lógica en un programa Circom que lo materialice en un circuito es una tarea más tediosa y compleja.
 	
 	\vspace{0.2cm}
-	\noindent A continuación, se muestra un programa Circom equivalente a la lógica de este juego.
+	\noindent Con el fin de aclarar esta transición entre la lógica del juego y su implementación técnica, se ha desarrollado un repositorio específico que alberga el código fuente del circuito \cite{rps_circom}. A continuación, se muestra un fragmento de este programa Circom equivalente a la lógica del juego:
 	
 	\vspace{0.2cm}
 		
@@ -731,6 +731,13 @@ placement=H
 	
 	\vspace{0.2cm}
 	\noindent Dicha incorporación simplifica considerablemente el flujo lógico a describir, ya que se permite más libertad en cuanto al uso de recursos, habilitando al usuario a utilizar componentes como los condicionales, que precisamente para la descripción de la lógica de este juego reduce la complejidad.
+	
+	\vspace{0.2cm}
+	\noindent 
+	\begin{mi_ejemplo}
+		\caption{Traducción de condicionales}
+		
+	\end{mi_ejemplo}
 	
 	\vspace{0.2cm}
 	\noindent Esto evita que el programador tenga que transformar manualmente cada bifurcación del algoritmo en expresiones algebraicas, delegando ese trabajo al compilador modificado.
@@ -1719,21 +1726,43 @@ placement=H
 	\section{Aplicación de la generación automática sobre circomLib y comparación de constraints}
 	\section{Caso de uso, verificación y búsqueda de bugs}
 		
+
+	\begin{center}
+		\noindent
+		% Definimos una altura fija (ej. 6cm) para que ambas cajas midan lo mismo
+		\begin{minipage}[t][6cm][t]{0.48\textwidth}
+			\textbf{Circom Estándar} \\
+			\rule{\textwidth}{0.4pt}
+			\begin{lstlisting}[language=Circom, basicstyle=\small\ttfamily]
+				signal j1_0;
+				signal j1_1;
+				signal j1_2;
+				
+				j1_0 <== (J1_0.out) * (J2_2.out);
+				j1_1 <== (J1_1.out) * (J2_0.out);
+				j1_2 <== (J1_2.out) * (J2_1.out);
+				
+				j1 <== j1_0 + j1_1 + j1_2;
+			\end{lstlisting}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t][6cm][t]{0.48\textwidth}
+			\textbf{Modificación (autocomplete)} \\
+			\rule{\textwidth}{0.4pt}
+			\begin{lstlisting}[language=Circom, basicstyle=\small\ttfamily]
+				else if(jugador1 == 0 && jugador2 == 2){ 
+					ganador <-- 0;
+				}
+				else if(jugador1 == 1 && jugador2 == 0){ 
+					ganador <-- 0;
+				}
+				else if(jugador1 == 2 && jugador2 == 1){ 
+					ganador <-- 0;
+				}
+			\end{lstlisting}
+		\end{minipage}
+	\end{center}
 	
-	\begin{lstlisting}[language=Circom]
-	template funcion() autocomplete {
-		signal input a;
-		signal output b;
-		
-	  	if(a==0){
-	  		b <-- 1;
-	  	}
-	  	else{
-	  		b <-- 0;
-	  	}
-	}
-	\end{lstlisting}
-		
 	\bibliographystyle{unsrt} % Estilo sencillo que numera por orden de aparición
 	\bibliography{referencias}
 	%\printbibliography
