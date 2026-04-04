@@ -1,5 +1,11 @@
 \begin{thebibliography}{6}
 
+\bibitem{wiki_zkp}
+Wikipedia. (2026).
+\newblock \emph{Prueba de conocimiento cero}.
+\newblock \url{https://es.wikipedia.org/wiki/Prueba_de_conocimiento_cero}.
+\newblock Accedido: 04-04-2026.
+
 \bibitem{nervos_zkp}
 Nervos Network. (2024).
 \newblock \emph{Pruebas de conocimiento cero (zero knowledge proofs)}.
