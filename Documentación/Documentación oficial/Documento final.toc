@@ -19,8 +19,8 @@
 \contentsline {subsection}{\numberline {3.2.2}Operadores de Comparación}{20}{subsection.3.2.2}%
 \contentsline {subsubsection}{\numberline {3.2.2.1}Tratamiento de número negativos}{20}{subsubsection.3.2.2.1}%
 \contentsline {subsubsection}{\numberline {3.2.2.2}Tamaño de los números comparados}{21}{subsubsection.3.2.2.2}%
-\contentsline {paragraph}{Operador \textit {op}}{22}{paragraph*.14}%
-\contentsline {paragraph}{Operador $op\_(n)$}{22}{paragraph*.15}%
+\contentsline {paragraph}{Operador \textit {op}}{22}{paragraph*.15}%
+\contentsline {paragraph}{Operador $op\_(n)$}{22}{paragraph*.16}%
 \contentsline {subsubsection}{\numberline {3.2.2.3}Operadores $<, \leq , > \ y \ \geq $}{22}{subsubsection.3.2.2.3}%
 \contentsline {subsubsection}{\numberline {3.2.2.4}Operadores == y !=}{23}{subsubsection.3.2.2.4}%
 \contentsline {subsubsection}{\numberline {3.2.2.5}Traducción de operadores}{24}{subsubsection.3.2.2.5}%

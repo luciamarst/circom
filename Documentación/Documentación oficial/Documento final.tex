@@ -637,9 +637,9 @@ placement=H
 	\noindent Este juego tan característico y conocido se debe en gran parte a su simplicidad. Sin embargo, transformar su lógica en un programa Circom que lo materialice en un circuito es una tarea más tediosa y compleja.
 	
 	\vspace{0.2cm}
-	\noindent Con el fin de aclarar esta transición entre la lógica del juego y su implementación técnica, se ha desarrollado un repositorio específico que alberga el código fuente del circuito \cite{rps_circom}. A continuación, se muestra un fragmento de este programa Circom equivalente a la lógica del juego:
+	\noindent Con el fin de aclarar esta transición entre la lógica del juego y su implementación técnica, se ha desarrollado un repositorio específico que alberga el código fuente del circuito, implementado tanto con la nueva funcionalidad del compilador como sin ella \cite{rps_circom}. A continuación, se muestra un fragmento de este programa Circom equivalente a la lógica del juego:
 	
-	\vspace{0.2cm}
+	\vspace{0.3cm}
 		
 	\begin{lstlisting}[
 		language=Circom, 
@@ -730,60 +730,129 @@ placement=H
 	\noindent Sin embargo, la incorporación de nuestra modificación sobre el compilador simplificará este proceso, permitiendo una programación más intuitiva sin privar al lenguaje de las restricciones algebraicas necesarias para generar la prueba de conocimiento cero.
 	
 	\vspace{0.2cm}
-	\noindent Dicha incorporación simplifica considerablemente el flujo lógico a describir, ya que se permite más libertad en cuanto al uso de recursos, habilitando al usuario a utilizar componentes como los condicionales, que precisamente para la descripción de la lógica de este juego reduce la complejidad.
+	\noindent Dicha incorporación simplifica considerablemente el flujo lógico a describir, ya que se permite más libertad en cuanto al uso de recursos. A continuación, se presenta una comparativa que ilustra cómo la nueva funcionalidad simplifica operaciones que, en Circom estándar, requieren un diseño aritmético.
 	
-	\vspace{0.2cm}
-	\noindent 
 	\begin{mi_ejemplo}
-		\caption{Traducción de condicionales}
-		
+		\caption{Traducción de la lógica de empate}
+		\label{ej:empate}
+		\begin{center}
+			\rule{\textwidth}{0.6pt} 
+			% Primera columna
+			\begin{minipage}[t][6cm][t]{0.48\textwidth}
+				\raggedright % Fuerza alineacion a la izquierda en el bloque
+				\textbf{Circom Estándar} \\
+				\vspace{0.2cm}
+				\begin{lstlisting}[
+					language=Circom, 
+					frame=none, 
+					numbers=none, 
+					xleftmargin=0pt, % Elimina el margen izquierdo del listing
+					gobble=8         % Elimina espacios de indentacion del .tex
+					]
+					signal eq0, eq1, eq2;
+					
+					eq0 <== (J1_0.out) * (J2_0.out);
+					eq1 <== (J1_1.out) * (J2_1.out);
+					eq2 <== (J1_2.out) * (J2_2.out);  
+					eq <== eq0 + eq1 + eq2;       
+					
+					inv <== (1 - eq);
+				\end{lstlisting}
+			\end{minipage}
+			\hfill
+			% Segunda columna
+			\begin{minipage}[t][4.5cm][t]{0.48\textwidth}
+				\raggedright 
+				\textbf{Modificación (autocomplete)} \\
+				\vspace{0.2cm}
+				\begin{lstlisting}[
+					language=Circom, 
+					frame=none, 
+					numbers=none, 
+					xleftmargin=0pt, % Elimina el margen izquierdo del listing
+					gobble=8         % Elimina espacios de indentacion del .tex
+					]
+					if(jugador1 == jugador2){ 
+						ganador <-- 2;
+					}
+				\end{lstlisting}
+			\end{minipage}
+			\rule{\textwidth}{0.8pt} 
+		\end{center}
 	\end{mi_ejemplo}
 	
-	\vspace{0.2cm}
-	\noindent Esto evita que el programador tenga que transformar manualmente cada bifurcación del algoritmo en expresiones algebraicas, delegando ese trabajo al compilador modificado.
+	\noindent Como se observa, incluso en una comprobación de igualdad, el usuario debe gestionar señales auxiliares e inversas (\texttt{inv}). Esta complejidad aumenta exponencialmente al definir las condiciones de victoria del jugador 1, en el
+	\hyperref[ex:victoriaj1]{\textbf{Ejemplo. \ref{ex:victoriaj1}}}.
 	
-	\vspace{0.3cm}
 	
-	\begin{lstlisting}[
-	language=Circom, 
-	caption={Implementación imperativa de Piedra, papel y tijera en Circom }, 
-	label={cod:piedra-papel-tijera-imperativa}
-	]
-	template piedra_papel_tijera () autocomplete{
-		
-		// Piedra -> 0, Papel -> 1, Tijera -> 2
-		signal input jugador1; // Representa el estado del jugador 1
-		signal input jugador2; // Representa el estado del jugador 2
-		signal output ganador; // 0 -> jugador1; 1 -> jugador2, 2 -> empate
-		
-		if(jugador1 == jugador2){ //Empate
-			ganador <-- 2;
-		}
-		else if(jugador2 == 0 && jugador1 == 2){ //Gana jugador 2 con piedra
-			ganador <--1;
-		}
-		else if(jugador1 == 0 && jugador2 == 2){ // Gana jugador 1 con piedra
-			ganador <--0;
-		}
-		else if(jugador2 == 2 && jugador1 == 1){ //Gana jugadpr 2 con tijera
-			ganador <--1;
-		}
-		else if(jugador1 == 2 && jugador2 == 1){ //Gana jugador 1 con tijera
-			ganador <-- 0;
-		}
-		else if(jugador2 == 1 && jugador1 == 0){ //Gana jugador 2 ocn papel
-			ganador <--1;
-		}
-		else if(jugador1 == 1 && jugador2 == 0){ // Gana jugador 1 con papel
-			ganador <-- 0;
-		}
-		else{
-			ganador <-- 3; //Valor no valido
-		}
-		
-	}	
-	\end{lstlisting}
+	\begin{mi_ejemplo}
+		\caption{Traducción de la lógica del jugador 1}
+		\label{ex:victoriaj1}
+		\begin{center}
+			\rule{\textwidth}{0.6pt} % Linea superior continua
+			% Primera columna
+			\begin{minipage}[t][6cm][t]{0.48\textwidth}
+				\raggedright % Fuerza alineacion a la izquierda en el bloque
+				\textbf{Circom Estándar} \\
+				\vspace{0.2cm}
+				\begin{lstlisting}[
+					language=Circom, 
+					frame=none, 
+					numbers=none, 
+					xleftmargin=0pt, % Elimina el margen izquierdo del listing
+					gobble=8         % Elimina espacios de indentacion del .tex
+					]
+					signal j1_0;
+					signal j1_1;
+					signal j1_2;
+					
+					j1_0 <== (J1_0.out) * (J2_2.out);
+					j1_1 <== (J1_1.out) * (J2_0.out);
+					j1_2 <== (J1_2.out) * (J2_1.out);
+					
+					j1 <== j1_0 + j1_1 + j1_2;
+				\end{lstlisting}
+			\end{minipage}
+			\hfill
+			% Segunda columna
+			\begin{minipage}[t][6cm][t]{0.48\textwidth}
+				\raggedright % Fuerza alineacion a la izquierda en el bloque
+				\textbf{Modificación (autocomplete)} \\
+				\vspace{0.2cm}
+				\begin{lstlisting}[
+					language=Circom, 
+					frame=none, 
+					numbers=none, 
+					xleftmargin=0pt, % Elimina el margen izquierdo del listing
+					gobble=8         % Elimina espacios de indentacion del .tex
+					]
+					else if(jugador1 == 0 && 
+					jugador2 == 2){ 
+						ganador <-- 0;
+					}
+					else if(jugador1 == 1 && 
+					jugador2 == 0){ 
+						ganador <-- 0;
+					}
+					else if(jugador1 == 2 && 
+					jugador2 == 1){ 
+						ganador <-- 0;
+					}
+				\end{lstlisting}
+			\end{minipage}
+			
+			\vspace{1cm}
+			\rule{\textwidth}{0.8pt} % Linea inferior continua
+		\end{center}
+	\end{mi_ejemplo}
+	
 
+	\vspace{0.2cm}
+	\noindent En estos bloques de código equivalentes, uno está íntegramente escrito con el operador \texttt{<==} para incorporar todas las restricciones al sistema de ecuaciones. El otro, a pesar de no utilizar este operador, puede usar el operador \texttt{<-}\texttt{-} sin inconvenientes debido a las modificaciones que hemos hecho sobre el compilador; de este modo, las restricciones se añaden también al archivo R1CS y no solo al testigo.
+	
+	\vspace{0.2cm}
+	\noindent Por lo tanto, puede apreciarse que el esfuerzo lógico para describir la lógica del juego utilizando el operador \texttt{<==} es mucho más complejo que aprovechando la nueva funcionalidad añadida. Su uso evita que el programador tenga que transformar manualmente cada bifurcación del algoritmo en expresiones algebraicas, delegando ese trabajo al compilador modificado.
+	
 	\vspace{0.2cm}
 	\noindent Tras analizar ambos bloques de código lógicamente equivalentes, es evidente la simplicidad, legibilidad e independencia que la nueva funcionalidad incorpora al lenguaje.
 	
@@ -1725,43 +1794,7 @@ placement=H
 	\section{Aplicación de la generación automática sobre juegos simples}
 	\section{Aplicación de la generación automática sobre circomLib y comparación de constraints}
 	\section{Caso de uso, verificación y búsqueda de bugs}
-		
-
-	\begin{center}
-		\noindent
-		% Definimos una altura fija (ej. 6cm) para que ambas cajas midan lo mismo
-		\begin{minipage}[t][6cm][t]{0.48\textwidth}
-			\textbf{Circom Estándar} \\
-			\rule{\textwidth}{0.4pt}
-			\begin{lstlisting}[language=Circom, basicstyle=\small\ttfamily]
-				signal j1_0;
-				signal j1_1;
-				signal j1_2;
-				
-				j1_0 <== (J1_0.out) * (J2_2.out);
-				j1_1 <== (J1_1.out) * (J2_0.out);
-				j1_2 <== (J1_2.out) * (J2_1.out);
-				
-				j1 <== j1_0 + j1_1 + j1_2;
-			\end{lstlisting}
-		\end{minipage}
-		\hfill
-		\begin{minipage}[t][6cm][t]{0.48\textwidth}
-			\textbf{Modificación (autocomplete)} \\
-			\rule{\textwidth}{0.4pt}
-			\begin{lstlisting}[language=Circom, basicstyle=\small\ttfamily]
-				else if(jugador1 == 0 && jugador2 == 2){ 
-					ganador <-- 0;
-				}
-				else if(jugador1 == 1 && jugador2 == 0){ 
-					ganador <-- 0;
-				}
-				else if(jugador1 == 2 && jugador2 == 1){ 
-					ganador <-- 0;
-				}
-			\end{lstlisting}
-		\end{minipage}
-	\end{center}
+	
 	
 	\bibliographystyle{unsrt} % Estilo sencillo que numera por orden de aparición
 	\bibliography{referencias}
