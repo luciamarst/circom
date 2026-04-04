@@ -1247,24 +1247,80 @@ placement=H
 		\subsubsection{Operadores == y !=}
 
 		\vspace{0.2cm}
-		\noindent Los operadores $== \ y \ !=$ plantean una implementación alejada del complemento a 2, estrategia empleada en los anteriores operadores. La estrategia aplicada en este caso es la reproducción de la puerta lógica \textit{XOR}.
-		
-		\vspace{0.2cm}
-		\noindent XOR es una puerta lógica cuyo comportamiento se caracteriza por tener como salida el 0, únicamente cuando sus dos entradas son iguales, siendo exactamente lo necesario para implementar estos operadores.
-		
-		\vspace{0.2cm}
-		\noindent Siguiendo la tabla de verdad de dicha puerta lógica:
+		\noindent Los operadores $== \ y \ !=$ plantean una implementación alejada del complemento a 2, estrategia empleada en los anteriores operadores. La estrategia aplicada en este caso es simplemente establecer dos restricciones claves:
 		
 		\begin{itemize}
-			\item \textbf{Operador ==}: Obtenido el resultado de salida de la función XOR, añadimos la restricción de que esa salida sea obligatoriamente 0. De esta forma se proporciona un correcto comportamiento para este operador.
-			\item \textbf{Operador !=}: Obtenido el resultado de salida de la función XOR, añadimos la restricción de que esa salida sea obligatoriamente 1. De esta forma se proporciona un correcto comportamiento para este operador.
+			\item \texttt{(in1-in2) $*$ equal\_signal = 0}
+			\item \texttt{1 $-$ ((in1$-$in2) $*$ inv\_signal) = equal\_signal}
 		\end{itemize}
 		
 		\vspace{0.2cm}
-		\noindent Para lograr el correcto comportamiento de esta puerta lógica, aplicamos la ecuación $XOR = (A \cdot \overline{B}) + (\overline{A} \cdot B)$, obteniendo XOR=0 si A==B, o bien XOR=1 si A!=B.
+		\noindent Estas dos ecuaciones son imprescindibles, ya que las usaremos para determinar si in1 == in2 o $in1 \neq in2$, utilizando  \texttt{equal\_signal} como indicador.
+		
+		% No se si aqui meter referencia al capitulo de circom por lo de la señal
+		\vspace{0.2cm}
+		\noindent La señal  \texttt{equal\_signal} será 1 cuando in1 == in2, o será 0 cuando $in1 \neq in2$. Este comportamiento se consigue por medio de las dos ecuaciones descritas anteriormente.
 		
 		\vspace{0.2cm}
-		\noindent No obstante, requiere importancia destacar que la conversión a bits de ambos números para el uso de estos operadores es obligatoria, ya no solo por el motivo tratado en la sección \textit{ \ref{sssec:num_negativos} Tratamiento de números negativos}, sino que responde a la propia naturaleza de la lógica \textit{XOR}. Para que dicha comparación sea efectiva, debe ejecutarse bit a bit, lo que requiere estrictamente la representación binaria de ambos valores.
+		\noindent \texttt{(in1-in2) $*$ equal\_signal = 0} es imprescindible para obtener que  \texttt{equal\_signal} sea 0 cuando in1 e in2 sean diferentes. Esto se debe a que si in1 es distinto a in2, entonces el resultado de su diferencia será distinto a 0. Por tanto, la ecuación quedaría así:
+		
+		\begin{equation}
+			\begin{aligned}
+				&num \cdot equal\_signal = 0 \\
+				&num \in \mathbb{R} \setminus \{0\}
+			\end{aligned}
+		\end{equation}
+	
+		\vspace{0.2cm}
+		\noindent De esta forma, al ser num un valor distinto de cero, la única forma de que se satisfaga la ecuación es forzar a que  \texttt{equal\_signal} sea obligatoriamente 0. De este modo, la señal será igual a 0, indicando que in1 e in2 son diferentes.
+		
+		\vspace{0.2cm}
+		\noindent \textit{Observación}: Si in1 e in2 fuesen iguales, entonces su diferencia sería igual a 0, por tanto  \texttt{equal\_aux} podría tomar cualquier valor e \texttt{(in1-in2) $*$ equal\_signal = 0} seguiría satisfaciéndose:
+		
+		\begin{equation}
+			\begin{aligned}
+				&0 \cdot equal\_signal = 0 \\
+				&equal\_signal \in \mathbb{R}
+			\end{aligned}
+		\end{equation}
+		
+		 \vspace{0.2cm}
+		 \noindent Por ello, es importante la segunda ecuación, ya que además de que \texttt{equal\_signal} puede ser cualquier valor, podría ser 0 también, indicando erróneamente que in1 e in2 son diferentes.
+		
+		\vspace{0.2cm}
+		\noindent Esta segunda ecuación, \texttt{1 $-$ ((in1$-$in2) $*$ inv\_signal) = equal\_signal}, además de asegurar que \texttt{equal\_signal} sea distinta de cero, garantiza que el resultado sea estrictamente 1 siempre que \texttt{in1} e \texttt{in2} sean idénticos.
+		
+		\vspace{0.2cm}
+		\noindent Esto se consigue mediante el uso de una segunda señal, \texttt{inv\_signal}, la cual garantiza que \texttt{equal\_signal} tome el valor 1 cuando in1 e in2 son iguales. Dado que en este escenario la diferencia entre ambas entradas es nula, cualquier valor de \texttt{inv\_signal} $\in \mathbb{R}$ resultará en un producto igual a cero, derivando en el siguiente comportamiento:
+		
+		\begin{equation}
+			\begin{aligned}
+				1 - ((in1 - in2) \cdot inv\_signal) &= equal\_signal \\
+				1 - (0 \cdot inv\_signal) &= equal\_signal \\
+				1 - 0 &= equal\_signal \\
+				1 &= equal\_signal
+			\end{aligned}
+		\end{equation}
+			
+		\vspace{0.2cm}
+		\noindent Como puede observarse, aunque en la primera ecuación para in1 == in2 la señal equal\_signal pueda tener cualquier valor, con esta segunda ecuación forzamos a que su valor sea 0, en caso de que in1!=in2, o bien 1, si in1==in2.
+		
+		\vspace{0.2cm}
+		\noindent En caso de que $in1 \neq in2$, entonces \texttt{equal\_signal} sería 0, obteniendo un comportamiento diferente:
+		
+		\begin{equation}
+			\begin{aligned}
+				1 - ((in1 - in2) \cdot inv\_signal) &= equal\_signal \\
+				1 - ((in1 - in2) \cdot inv\_signal) &= 0 \\
+				\text{Como } (in1 - in2) &\in \mathbb{R} \setminus \{0\} \\
+				inv\_signal &= \frac{1}{in1 - in2} \\
+				1 - 1 &= 0 \\
+				0 &= 0
+			\end{aligned}
+		\end{equation}
+		
+		\vspace{0.2cm}
+		\noindent Gracias a la señal \texttt{inv\_signal}, incluso cuando ambas entradas son diferentes, la restricción puede satisfacerse ajustando el valor de la señal al inverso de la diferencia, para así obtener como producto de estas el 1.
 		
 		\subsubsection{Traducción de operadores}
 		\noindent A continuación, definiremos para cada operador su inferencia.

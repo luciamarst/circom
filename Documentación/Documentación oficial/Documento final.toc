@@ -23,19 +23,19 @@
 \contentsline {paragraph}{Operador $op\_(n)$}{22}{paragraph*.16}%
 \contentsline {subsubsection}{\numberline {3.2.2.3}Operadores $<, \leq , > \ y \ \geq $}{22}{subsubsection.3.2.2.3}%
 \contentsline {subsubsection}{\numberline {3.2.2.4}Operadores == y !=}{23}{subsubsection.3.2.2.4}%
-\contentsline {subsubsection}{\numberline {3.2.2.5}Traducción de operadores}{24}{subsubsection.3.2.2.5}%
-\contentsline {subsection}{\numberline {3.2.3}Operadores Aritméticos}{27}{subsection.3.2.3}%
-\contentsline {subsubsection}{\numberline {3.2.3.1}Suma, resta y multiplicación}{27}{subsubsection.3.2.3.1}%
-\contentsline {subsubsection}{\numberline {3.2.3.2}División}{27}{subsubsection.3.2.3.2}%
-\contentsline {subsubsection}{\numberline {3.2.3.3}Módulo}{28}{subsubsection.3.2.3.3}%
-\contentsline {subsubsection}{\numberline {3.2.3.4}Traducción de operadores}{29}{subsubsection.3.2.3.4}%
-\contentsline {subsection}{\numberline {3.2.4}Operadores de desplazamiento}{29}{subsection.3.2.4}%
-\contentsline {subsection}{\numberline {3.2.5}Acceso a Arrays}{29}{subsection.3.2.5}%
-\contentsline {subsection}{\numberline {3.2.6}Expresiones condicionales}{29}{subsection.3.2.6}%
-\contentsline {section}{\numberline {3.3}Ejemplo con constraints generadas automáticamente}{29}{section.3.3}%
-\contentsline {chapter}{\numberline {4}Implementación}{30}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Explicación y ejemplo de la construcción de las reglas}{30}{section.4.1}%
-\contentsline {chapter}{\numberline {5}Experimentos}{31}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Aplicación de la generación automática sobre juegos simples}{31}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Aplicación de la generación automática sobre circomLib y comparación de constraints}{31}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Caso de uso, verificación y búsqueda de bugs}{31}{section.5.3}%
+\contentsline {subsubsection}{\numberline {3.2.2.5}Traducción de operadores}{25}{subsubsection.3.2.2.5}%
+\contentsline {subsection}{\numberline {3.2.3}Operadores Aritméticos}{28}{subsection.3.2.3}%
+\contentsline {subsubsection}{\numberline {3.2.3.1}Suma, resta y multiplicación}{28}{subsubsection.3.2.3.1}%
+\contentsline {subsubsection}{\numberline {3.2.3.2}División}{28}{subsubsection.3.2.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.3.3}Módulo}{29}{subsubsection.3.2.3.3}%
+\contentsline {subsubsection}{\numberline {3.2.3.4}Traducción de operadores}{30}{subsubsection.3.2.3.4}%
+\contentsline {subsection}{\numberline {3.2.4}Operadores de desplazamiento}{30}{subsection.3.2.4}%
+\contentsline {subsection}{\numberline {3.2.5}Acceso a Arrays}{30}{subsection.3.2.5}%
+\contentsline {subsection}{\numberline {3.2.6}Expresiones condicionales}{30}{subsection.3.2.6}%
+\contentsline {section}{\numberline {3.3}Ejemplo con constraints generadas automáticamente}{30}{section.3.3}%
+\contentsline {chapter}{\numberline {4}Implementación}{31}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Explicación y ejemplo de la construcción de las reglas}{31}{section.4.1}%
+\contentsline {chapter}{\numberline {5}Experimentos}{32}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Aplicación de la generación automática sobre juegos simples}{32}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Aplicación de la generación automática sobre circomLib y comparación de constraints}{32}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Caso de uso, verificación y búsqueda de bugs}{32}{section.5.3}%
