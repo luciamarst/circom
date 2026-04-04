@@ -28,14 +28,17 @@
 \contentsline {subsubsection}{\numberline {3.2.3.1}Suma, resta y multiplicación}{28}{subsubsection.3.2.3.1}%
 \contentsline {subsubsection}{\numberline {3.2.3.2}División}{28}{subsubsection.3.2.3.2}%
 \contentsline {subsubsection}{\numberline {3.2.3.3}Módulo}{29}{subsubsection.3.2.3.3}%
-\contentsline {subsubsection}{\numberline {3.2.3.4}Traducción de operadores}{30}{subsubsection.3.2.3.4}%
-\contentsline {subsection}{\numberline {3.2.4}Operadores de desplazamiento}{30}{subsection.3.2.4}%
-\contentsline {subsection}{\numberline {3.2.5}Acceso a Arrays}{30}{subsection.3.2.5}%
-\contentsline {subsection}{\numberline {3.2.6}Expresiones condicionales}{30}{subsection.3.2.6}%
-\contentsline {section}{\numberline {3.3}Ejemplo con constraints generadas automáticamente}{30}{section.3.3}%
-\contentsline {chapter}{\numberline {4}Implementación}{31}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Explicación y ejemplo de la construcción de las reglas}{31}{section.4.1}%
-\contentsline {chapter}{\numberline {5}Experimentos}{32}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Aplicación de la generación automática sobre juegos simples}{32}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Aplicación de la generación automática sobre circomLib y comparación de constraints}{32}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Caso de uso, verificación y búsqueda de bugs}{32}{section.5.3}%
+\contentsline {subsubsection}{\numberline {3.2.3.4}Traducción de operadores}{29}{subsubsection.3.2.3.4}%
+\contentsline {subsection}{\numberline {3.2.4}Operadores de desplazamiento}{29}{subsection.3.2.4}%
+\contentsline {subsubsection}{\numberline {3.2.4.1}Desplazamiento a la izquierda}{30}{subsubsection.3.2.4.1}%
+\contentsline {subsubsection}{\numberline {3.2.4.2}Desplazamiento a la derecha}{30}{subsubsection.3.2.4.2}%
+\contentsline {subsubsection}{\numberline {3.2.4.3}Traducción de operadores}{31}{subsubsection.3.2.4.3}%
+\contentsline {subsection}{\numberline {3.2.5}Acceso a Arrays}{31}{subsection.3.2.5}%
+\contentsline {subsection}{\numberline {3.2.6}Expresiones condicionales}{31}{subsection.3.2.6}%
+\contentsline {section}{\numberline {3.3}Ejemplo con constraints generadas automáticamente}{31}{section.3.3}%
+\contentsline {chapter}{\numberline {4}Implementación}{32}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Explicación y ejemplo de la construcción de las reglas}{32}{section.4.1}%
+\contentsline {chapter}{\numberline {5}Experimentos}{33}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Aplicación de la generación automática sobre juegos simples}{33}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Aplicación de la generación automática sobre circomLib y comparación de constraints}{33}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Caso de uso, verificación y búsqueda de bugs}{33}{section.5.3}%
