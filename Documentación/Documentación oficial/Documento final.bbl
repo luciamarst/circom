@@ -1,29 +1,39 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{6}
 
 \bibitem{nervos_zkp}
-Nervos Network.
-\newblock Pruebas de conocimiento cero (zero knowledge proofs).
-\newblock
-  \url{https://www.nervos.org/es/knowledge-base/zero_knowledge_proofs_(explainCKBot)},
-  2024.
+Nervos Network. (2024).
+\newblock \emph{Pruebas de conocimiento cero (zero knowledge proofs)}.
+\newblock \url{https://www.nervos.org/es/knowledge-base/zero_knowledge_proofs_(explainCKBot)}.
 \newblock Accedido: 02-04-2026.
 
+\bibitem{thesis_clara}
+Rodríguez Nuñez, C. (2024). 
+\newblock \emph{Propiedades de corrección y seguridad en tecnologías blockchain} [Tesis de grado/máster, Institución no especificada].
+\newblock Accedido: 04-04-2026.
+
+\bibitem{R1CS_cita}
+Buterin, V. (2016).
+\newblock \emph{Quadratic Arithmetic Programs: from Zero to Hero}.
+\newblock \url{https://vitalik.eth.limo/general/2016/12/10/qap.html}.
+\newblock Accedido: 04-04-2026.
+
 \bibitem{circom_articulo_clara}
-Marta Bellés-Muñoz , Miguel Isabel , Jose Luis Muñoz-Tapia , Albert Rubio, and Jordi Baylina. 
+Bellés-Muñoz, M., Isabel, M., Muñoz-Tapia, J. L., Rubio, A. y Baylina, J. (2023). 
 \newblock CIRCOM: A Circuit Description Language for Building Zero-Knowledge Applications. 
-\newblock \url{https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=10002421}, 2023.
+\newblock \emph{IEEE Software/Journal}.
+\newblock \url{https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=10002421}.
 \newblock Accedido: 02-04-2026.
 
 \bibitem{battlezips_circom}
-BattleZips Team.
-\newblock BattleZips-Circom: Zero-knowledge Battleship engine, 2022.
-\newblock \url{https://github.com/BattleZips/BattleZips-Circom}, 2022.
+BattleZips Team. (2022).
+\newblock \emph{BattleZips-Circom: Zero-knowledge Battleship engine} [Software].
+\newblock \url{https://github.com/BattleZips/BattleZips-Circom}.
 \newblock Accedido: 03-04-2026.
 
 \bibitem{rps_circom}
-L.~Martínez.
-\newblock zk-rock-paper-scissors: A Zero-Knowledge implementation in Circom, 2026
-\newblock \url{https://github.com/luciamarst/zk-rock-paper-scissors}, 2026.
+Martínez, L. (2026).
+\newblock \emph{zk-rock-paper-scissors: A Zero-Knowledge implementation in Circom} [Software].
+\newblock \url{https://github.com/luciamarst/zk-rock-paper-scissors}.
 \newblock Accedido: 03-04-2026.
 
 \end{thebibliography}

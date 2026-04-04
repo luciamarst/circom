@@ -248,7 +248,7 @@ placement=H
 %	\noindent Sin embargo, para que estos circuitos puedan ser procesados por el protocolo de prueba, han de traducirse primeramente a un formato algebraico. Es en esta etapa donde \textbf{el código se transforma en un \textbf{Rank-1 Constraint System}}, conocido como \textbf{R1CS}. Este formato descompone la lógica del programa en un conjunto de ecuaciones cuadráticas, las cuales permiten verificar la validez de los cálculos sin revelar información. 
 	
 	\section{CIRCOM}
-	\noindent \textbf{Circom} es un lenguaje de programación basado en la descripción de circuitos (DSL), cuyo objetivo principal no es el cálculo, sino definir un sistema de ecuaciones que describe las relaciones entre las \textbf{señales} de entrada y salida.
+	\noindent \textbf{Circom} es un lenguaje de programación basado en la descripción de circuitos (DSL), cuyo objetivo principal no es el cálculo, sino definir un sistema de ecuaciones que describe las relaciones entre las \textbf{señales} de entrada y salida \cite{thesis_clara}.
 	
 	\vspace{0.3cm}
 	
@@ -433,7 +433,7 @@ placement=H
 	\section{R1CS}
 	\label{sec:r1cs}
 
-	\noindent \textit{Rank-1 Constraint System} (conocido como \textbf{R1CS}), es un sistema de representación matemático diseñado para transformar tareas computacionales complejas en un conjunto de restricciones algebraicas. Su relevancia incide en la propiedad de que generar la solución a un problema puede ser caro, mientras que su \textbf{verificación es muy eficiente y rápida}, clave en las pruebas de conocimiento cero.
+	\noindent \textit{Rank-1 Constraint System} (conocido como \textbf{R1CS}), es un sistema de representación matemático diseñado para transformar tareas computacionales complejas en un conjunto de restricciones algebraicas. Su relevancia incide en la propiedad de que generar la solución a un problema puede ser caro, mientras que su \textbf{verificación es muy eficiente y rápida}, clave en las pruebas de conocimiento cero \cite{R1CS_cita}.
 	
 	\vspace{0.25cm}
 	
@@ -474,7 +474,7 @@ placement=H
 	\section{Snarkjs}
 	\label{sec:snarkjs}
 	
-	\noindent Snarkjs es una librería de JavaScript creada para la generación y verificación de pruebas de conocimiento cero partiendo de las restricciones en formato R1CS correspondientes, que puede ser ejecutado tanto en dispositivos como en servidores con \textit{Node.js}, materializando el concepto de \hyperref[def:zk-snarks]{\textit{ \ref{def:zk-snarks} zk-SNARKS}} nombrado anteriormente \cite{circom_articulo_clara}.
+	\noindent Snarkjs es una librería de JavaScript creada para la generación y verificación de pruebas de conocimiento cero partiendo de las restricciones en formato R1CS correspondientes, que puede ser ejecutado tanto en dispositivos como en servidores con \textit{Node.js}, materializando el concepto de \hyperref[def:zk-snarks]{\textit{ \ref{def:zk-snarks} zk-SNARKS}} nombrado anteriormente \cite{thesis_clara}\cite{circom_articulo_clara}.
 	
 	\vspace{0.25cm}
 	
@@ -1925,6 +1925,7 @@ placement=H
 		\end{tabular}
 	
 	\subsection{Acceso a Arrays}
+	
 	\subsection{Expresiones condicionales}
 	
 	\section{Ejemplo con constraints generadas automáticamente}
