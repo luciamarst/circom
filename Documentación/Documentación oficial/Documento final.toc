@@ -2,7 +2,7 @@
 \contentsline {chapter}{\numberline {1}Introducción a Circom}{4}{chapter.1}%
 \contentsline {section}{\numberline {1.1}Zero Knowledge Proof}{4}{section.1.1}%
 \contentsline {section}{\numberline {1.2}CIRCOM}{5}{section.1.2}%
-\contentsline {section}{\numberline {1.3}R1CS}{8}{section.1.3}%
+\contentsline {section}{\numberline {1.3}R1CS}{7}{section.1.3}%
 \contentsline {section}{\numberline {1.4}Snarkjs}{9}{section.1.4}%
 \contentsline {section}{\numberline {1.5}Preámbulo del problema}{9}{section.1.5}%
 \contentsline {section}{\numberline {1.6}Objetivos y Estructura del trabajo}{10}{section.1.6}%
@@ -16,11 +16,9 @@
 \contentsline {section}{\numberline {3.2}Reglas de transformación}{18}{section.3.2}%
 \contentsline {subsection}{\numberline {3.2.1}Operadores Lógicos}{19}{subsection.3.2.1}%
 \contentsline {subsubsection}{\numberline {3.2.1.1}Traducción de operadores}{19}{subsubsection.3.2.1.1}%
-\contentsline {subsection}{\numberline {3.2.2}Operadores de Comparación}{20}{subsection.3.2.2}%
-\contentsline {subsubsection}{\numberline {3.2.2.1}Tratamiento de número negativos}{20}{subsubsection.3.2.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Operadores de Comparación}{19}{subsection.3.2.2}%
+\contentsline {subsubsection}{\numberline {3.2.2.1}Tratamiento de número negativos}{19}{subsubsection.3.2.2.1}%
 \contentsline {subsubsection}{\numberline {3.2.2.2}Tamaño de los números comparados}{21}{subsubsection.3.2.2.2}%
-\contentsline {paragraph}{Operador \textit {op}}{22}{paragraph*.15}%
-\contentsline {paragraph}{Operador $op\_(n)$}{22}{paragraph*.16}%
 \contentsline {subsubsection}{\numberline {3.2.2.3}Operadores $<, \leq , > \ y \ \geq $}{22}{subsubsection.3.2.2.3}%
 \contentsline {subsubsection}{\numberline {3.2.2.4}Operadores == y !=}{23}{subsubsection.3.2.2.4}%
 \contentsline {subsubsection}{\numberline {3.2.2.5}Traducción de operadores}{25}{subsubsection.3.2.2.5}%
