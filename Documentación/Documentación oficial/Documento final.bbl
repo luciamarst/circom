@@ -9,8 +9,15 @@ Wikipedia. (2026).
 \bibitem{nervos_zkp}
 Nervos Network. (2024).
 \newblock \emph{Pruebas de conocimiento cero (zero knowledge proofs)}.
+\newblock 
 \newblock \url{https://www.nervos.org/es/knowledge-base/zero_knowledge_proofs_(explainCKBot)}.
 \newblock Accedido: 02-04-2026.
+
+\bibitem{binance_academy_zk}
+Binance Academy. (2024). 
+\newblock \emph{ZK-SNARKs y ZK-STARKs explicados}. 
+\newblock \url{https://www.binance.com/es/academy/articles/zk-snarks-and-zk-starks-explained}
+\newblock Accedido: 09-04-2026.
 
 \bibitem{thesis_clara}
 Rodríguez Nuñez, C. (2024). 
@@ -35,6 +42,18 @@ BattleZips Team. (2022).
 \newblock \emph{BattleZips-Circom: Zero-knowledge Battleship engine} [Software].
 \newblock \url{https://github.com/BattleZips/BattleZips-Circom}.
 \newblock Accedido: 03-04-2026.
+
+\bibitem{darkforest_circuits_2021}
+Dark Forest Team (2021).
+\newblock \emph{Dark Forest Circuits}.
+\newblock \url{https://github.com/darkforest-eth/circuits}
+\newblock Accedido: 09-04-2026.
+
+\bibitem{iden3_multiplexer_2023}
+Iden3 (2023).
+\newblock \emph{Multiplexer circuit - circomlib}.
+\newblock Recuperado de \url{https://github.com/iden3/circomlib/blob/master/circuits/multiplexer.circom}
+\newblock Accedido: 09-04-2026.
 
 \bibitem{rps_circom}
 Martínez, L. (2026).

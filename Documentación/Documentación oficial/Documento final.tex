@@ -214,18 +214,19 @@ placement=H
 	\noindent Históricamente, el término de ZKP apareció en los años 80 como un concepto puramente teórico, hasta su desarrollo en la práctica \cite{nervos_zkp}. Dicha noción surgió con la intención de reforzar tanto la seguridad como la privacidad en el ámbito criptográfico. Actualmente, esto ha llevado a la creación de grandes familias de protocolos, destacando especialmente \textbf{zk-SNARKs}.
 	
 	
-	TODO: DEFINIR ALGO, QUE NO HE DEFINIDO NADA EN SNARKS
 	\begin{definicion}[zk-SNARKS]
 	
-	\noindent \textit{Succinct Non-Interactive Argument of Knowledge}, mayormente conocido por sus siglas \textbf{zk-SNARKs},  destacan por su reducido tamaño de prueba y corto tiempo de verificación. Sin embargo, presentan la desventaja de requerir una fase inicial conocida como \textbf{configuración de confianza}.
+	\noindent \textit{Succinct Non-Interactive Argument of Knowledge}, mayormente conocido por sus siglas \textbf{zk-SNARKs}, son pruebas criptográficas las cuales permiten probar la veracidad de información sin revelar el contenido de la misma. \cite{binance_academy_zk}.
 	
 		\label{def:zk-snarks}
 	\end{definicion}
 	
+	\vspace{0.25cm}
+	\noindent Destacan por su reducido tamaño de prueba y corto tiempo de verificación. Sin embargo, presentan la desventaja de requerir una fase inicial conocida como \textbf{configuración de confianza}.
 	
 	\begin{definicion}[Configuración de confianza]
 	
-	\noindent Una configuración de confianza es una fase en la que se produce la generación de valores aleatorios que deben destruirse de forma inmediata. Si estos valores aleatorios son expuestos, se compromete la seguridad del sistema.
+	\noindent Una configuración de confianza es una fase en la que se produce la generación de valores aleatorios que deben destruirse de forma inmediata. Si estos valores aleatorios son expuestos, se compromete la seguridad del sistema \cite{binance_academy_zk}.
 	
 	
 	\label{def:confidence-configuration}
@@ -257,7 +258,7 @@ placement=H
 	
 	\vspace{0.3cm}
 	
-	\noindent Esta visión es fundamental, ya que las ZKP no pueden interpretar código directamente; requieren que la computación se exprese en una estructura de restricciones algebraicas denominada R1CS, que detallaremos en la sección  \hyperref[sec:r1cs]{\textbf{\ref{sec:r1cs}. R1CS}}.
+	\noindent Esta visión es fundamental, ya que las ZKP no pueden interpretar código directamente; requieren que la computación se exprese en una estructura de restricciones algebraicas denominadas R1CS, que detallaremos en la sección  \hyperref[sec:r1cs]{\textbf{Sección \ref{sec:r1cs}}}.
 	
 		
 	\vspace{0.3cm}
@@ -479,7 +480,7 @@ placement=H
 	
 	\vspace{0.25cm}
 	
-	\noindent Como se mostró previamente en la \hyperref[ex:zkp-transformacion]{\textit{ \ref{ex:zkp-transformacion} Figura}}, Snarkjs requiere de dos archivos para generar la prueba:
+	\noindent Como se mostró previamente en la \hyperref[ex:zkp-transformacion]{\textit{Figura \ref{ex:zkp-transformacion}}}, Snarkjs requiere de dos archivos para generar la prueba:
 	
 	\begin{itemize}
 		\item  \textit{Witness}, generado por el ejecutable C++/WASM.
@@ -488,7 +489,7 @@ placement=H
 	
 	\vspace{0.25cm}
 	
-	\noindent Una vez disponibles estos dos archivos y la \hyperref[def:confidence-configuration]{\textit{ \ref{def:confidence-configuration} Configuración de confianza}} finalizada, Snarkjs genera la prueba de conocimiento cero que permite que el Prover pueda demostrarle al Verifier la validez de su declaración.
+	\noindent Una vez disponibles estos dos archivos y la configuración de confianza finalizada, Snarkjs genera la prueba de conocimiento cero que permite que el Prover pueda demostrarle al Verifier la validez de su declaración.
 		
 	\section{Preámbulo del problema}
 	\label{sec:descripcion-problema}
@@ -514,10 +515,39 @@ placement=H
 	\noindent La funcionalidad de estos operadores es completamente diferente. Al principio, muchas personas que comienzan a programar en Circom no tienen clara la diferencia real entre estos operadores, desarrollando programas erróneos cuya prueba generada no es válida.
 	
 	\vspace{0.2cm}
-	\noindent Un uso incorrecto de estos operadores podría provocar problemas como el mencionado \hyperref[def:underconstrained-bug]{\ref{def:underconstrained-bug} \textit{Underconstrained Bug} }, de forma que si el usuario utiliza  \texttt{<-}\texttt{-} para añadir restricciones al sistema de ecuaciones en lugar de \texttt{<==} o \texttt{===}, habrá ecuaciones que no serán añadidas al archivo R1CS, y por tanto, no formarán parte del sistema de ecuaciones que describe el circuito, quedando incompleto.
+	\noindent Un uso incorrecto de estos operadores podría provocar problemas como el mencionado underconstrained bug, de forma que si el usuario utiliza  \texttt{<-}\texttt{-} para añadir restricciones al sistema de ecuaciones en lugar de \texttt{<==} o \texttt{===}, habrá ecuaciones que no serán añadidas al archivo R1CS, y por tanto, no formarán parte del sistema de ecuaciones que describe el circuito, quedando incompleto.
 	
 	\vspace{0.2cm}
-	\noindent Un ejemplo real de este tipo de error es el clásico juego de \textit{Hundir la flota} \cite{battlezips_circom}. Este juego desarrollado por terceros fue implementado prácticamente a la perfección. Sin embargo, en uno de los archivos Circom que formaban parte del programa, se hizo un uso incorrecto del operador \texttt{<-}\texttt{-}, provocando un \hyperref[def:underconstrained-bug]{ \textit{underconstrained bug}}.
+	\noindent Un ejemplo de este tipo de error es el siguiente bloque de código, cuyo objetivo es el de comprobar si una entrada es igual a cero:
+	
+	\vspace{0.2cm}
+	\begin{lstlisting}[
+		language=Circom, 
+		caption={Underconstrained bug}, 
+		label={cod:underc-bug}
+		]
+		template isZero() {
+			signal input a;
+			signal output b;
+			
+			signal inv;
+			
+			inv <-- a!= 0 ? 1/a : 0;
+			
+			b <== -a*inv * 1;
+		}
+		
+	\end{lstlisting}
+	
+	
+	\vspace{0.2cm}
+	\noindent Esta función, en apariencia correctamente implementada, presenta un mal uso del operador \texttt{<-}\texttt{-}, provocando el mencionado underconstrained bug. Al utilizar este operador para el calculo de la señal \texttt{inv}, se realiza una asignación pero no se añade una restricción al sistema de ecuaciones. 
+	
+	\vspace{0.2cm}
+	\noindent De esta forma, al no haber ninguna restriccion que oblique a que \texttt{inv} sea el inverso de \texttt{a}, el vínculo entre la entrada \texttt{a} con la salida \texttt{b} no se cumple totalmente. Por tanto, al no ser añadida la asignación \texttt{inv <-- a!= 0 ? 1/a : 0} al sistema de ecuaciones, no existe para el verifier y un prover malicioso  podría manipular el valor de \texttt{inv} para generar pruebas falsas que el sistema aceptaría.
+	 
+	\vspace{0.2cm}
+	\noindent Más allá del ejemplo expuesto, este error se repite de forma recurrente en muchos programas Circom, sobre todo aquellos desarrollados por principiantes en el lenguaje. Otros ejemplos donde este error está presente son en implementaciones de terceros que pueden encontrarse en repositorios como \textit{El juego de "Hundir la flota"} \cite{battlezips_circom}, \textit{Dark Forest} \cite{darkforest_circuits_2021}, \textit{Decoder template en Circomlib} \cite{iden3_multiplexer_2023}.
 	
 	
 	\vspace{0.2cm}
@@ -788,7 +818,7 @@ placement=H
 	\end{mi_ejemplo}
 	
 	\noindent Como se observa, incluso en una comprobación de igualdad, el usuario debe gestionar señales auxiliares e inversas (\texttt{inv}). Esta complejidad aumenta exponencialmente al definir las condiciones de victoria del jugador 1, en el
-	\hyperref[ex:victoriaj1]{\textbf{Ejemplo. \ref{ex:victoriaj1}}}.
+	\hyperref[ex:victoriaj1]{\textbf{Ejemplo \ref{ex:victoriaj1}}}.
 	
 	
 	\begin{mi_ejemplo}
@@ -873,7 +903,7 @@ placement=H
 	
 	\chapter{Desarrollo del problema}
 	
-	\section{Notación}
+	\section{Traducción}
 		\noindent A lo largo del documento estudiaremos cómo traducir instrucciones y expresiones generadas por un lenguaje imperativo simple en un conjunto de ecuaciones en formato R1CS equivalente definimos las siguientes funciones: 
 		
 		\vspace{0.4cm} 
@@ -888,7 +918,7 @@ placement=H
 			\end{itemize} 
 			
 			
-			\label{def:notacion}
+			\label{def:traducción}
 		\end{definicion}
 
 		
@@ -922,12 +952,14 @@ placement=H
 	
 	\subsection{Operadores Lógicos}
 	
-	
 		\vspace{0.2cm}
+		\noindent Los operadores lógicos se implementan por medio de la reproducción de las puertas lógicas \textit{AND}, \textit{OR} y \textit{NOT}. 
+		
+		\vspace{0.2cm}
+		\noindent Dicha lógica se aplica de la misma forma a los operadores lógicos bit a bit, con la diferencia de que cada operación se realiza sobre cada par de bits.
 		
 	\subsubsection{Traducción de operadores}
-	
-	
+		
 		\renewcommand{\arraystretch}{3}
 		\begin{longtable}{|l|c|}
 			\hline
@@ -1058,13 +1090,7 @@ placement=H
 			\hline
 			
 		\end{longtable}
-		
-		
-		\vspace{0.2cm}
-		\noindent La implementación de estos operadores se ciñe a la reproducción de las puertas lógicas \textit{AND}, \textit{OR} y \textit{NOT}. 
-		
-		\vspace{0.2cm}
-		\noindent La misma lógica aplica para los operadores bit a bit, con la única diferencia de que cada operación se realiza sobre cada par de bits, a diferencia de las operadores que trabajan números decimales.
+
 	
 	\subsection{Operadores de Comparación}
 		\subsubsection{Tratamiento de número negativos}
@@ -1930,9 +1956,11 @@ placement=H
 			\hline
 		\end{tabular}
 	
-	\subsection{Acceso a Arrays}
 	
 	\subsection{Expresiones condicionales}
+	
+	\subsection{Acceso a Arrays}
+	
 	
 	\section{Ejemplo con constraints generadas automáticamente}
 	

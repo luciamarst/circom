@@ -1,11 +1,19 @@
-This is BibTeX, Version 0.99d (TeX Live 2023/Debian)
+This is BibTeX, Version 0.99d
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: Documento final.aux
+Reallocating 'name_of_file' (item size: 1) to 6 items.
 The style file: unsrt.bst
+Reallocating 'name_of_file' (item size: 1) to 12 items.
 Database file #1: referencias.bib
+Warning--I didn't find a database entry for "wiki_zkp"
+Warning--I didn't find a database entry for "thesis_clara"
+Warning--I didn't find a database entry for "R1CS_cita"
+Warning--I didn't find a database entry for "circom_articulo_clara"
+Warning--I didn't find a database entry for "battlezips_circom"
+Warning--I didn't find a database entry for "rps_circom"
 You've used 1 entry,
             1791 wiz_defined-function locations,
-            451 strings with 3722 characters,
+            458 strings with 3808 characters,
 and the built_in function-call counts, 158 in all, are:
 = -- 13
 > -- 4
@@ -44,3 +52,4 @@ warning$ -- 0
 while$ -- 1
 width$ -- 2
 write$ -- 14
+(There were 6 warnings)
