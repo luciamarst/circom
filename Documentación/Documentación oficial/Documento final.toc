@@ -32,11 +32,14 @@
 \contentsline {subsubsection}{\numberline {3.2.4.2}Desplazamiento a la derecha}{31}{subsubsection.3.2.4.2}%
 \contentsline {subsubsection}{\numberline {3.2.4.3}Traducción de operadores}{32}{subsubsection.3.2.4.3}%
 \contentsline {subsection}{\numberline {3.2.5}Expresiones condicionales}{32}{subsection.3.2.5}%
-\contentsline {subsection}{\numberline {3.2.6}Acceso a Arrays}{32}{subsection.3.2.6}%
-\contentsline {section}{\numberline {3.3}Ejemplo con constraints generadas automáticamente}{32}{section.3.3}%
-\contentsline {chapter}{\numberline {4}Implementación}{33}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Explicación y ejemplo de la construcción de las reglas}{33}{section.4.1}%
-\contentsline {chapter}{\numberline {5}Experimentos}{34}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Aplicación de la generación automática sobre juegos simples}{34}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Aplicación de la generación automática sobre circomLib y comparación de constraints}{34}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Caso de uso, verificación y búsqueda de bugs}{34}{section.5.3}%
+\contentsline {subsubsection}{\numberline {3.2.5.1}Caso base: if-else}{33}{subsubsection.3.2.5.1}%
+\contentsline {subsection}{\numberline {3.2.6}Caso inductivo: Condicionales anidados}{33}{subsection.3.2.6}%
+\contentsline {subsubsection}{\numberline {3.2.6.1}Traducción de operadores}{36}{subsubsection.3.2.6.1}%
+\contentsline {subsection}{\numberline {3.2.7}Acceso a Arrays}{36}{subsection.3.2.7}%
+\contentsline {section}{\numberline {3.3}Ejemplo con constraints generadas automáticamente}{36}{section.3.3}%
+\contentsline {chapter}{\numberline {4}Implementación}{37}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Explicación y ejemplo de la construcción de las reglas}{37}{section.4.1}%
+\contentsline {chapter}{\numberline {5}Experimentos}{38}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Aplicación de la generación automática sobre juegos simples}{38}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Aplicación de la generación automática sobre circomLib y comparación de constraints}{38}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Caso de uso, verificación y búsqueda de bugs}{38}{section.5.3}%

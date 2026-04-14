@@ -9,6 +9,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[spanish]{babel}
 \usepackage[T1]{fontenc}
+\usepackage{varwidth}
 \usepackage{array}
 \usepackage{longtable}
 \usepackage{amsmath}
@@ -1976,6 +1977,210 @@ placement=H
 	
 	
 	\subsection{Expresiones condicionales}
+	
+	\noindent Como se ha mencionado anteriormente, en Circom cada señal representa un cable del circuito cuyo valor es único. Por esta razón, no pueden cambiar su valor de forma dinámica una vez establecidas, ya que el sistema de restricciones debe ser estático para su correcta verificación.
+	
+	\vspace{0.3cm}
+	
+	\noindent Para simular decisiones condicionales basadas en entradas, se deben usar expresiones aritméticas que implementen la lógica de selección, de manera que una señal no pueda reasignar su valor.
+	
+	\vspace{0.3cm}
+	% Tabla con codigo C y Circom
+	
+	\noindent Un ejemplo específico de conversión de un bloque condicional a sus equivalente utilizando restricciones en Circom sería el siguiente:
+	
+	\vspace{0.3cm}
+	
+	\begin{mi_ejemplo}
+		\caption{Comparación entre bloque condicional imperativo y declarativo}
+		\label{ex:c-circom-condicional}
+		\centering
+		\begin{tabular}{|>{\raggedright\arraybackslash}p{0.46\textwidth} | >{\raggedright\arraybackslash}p{0.46\textwidth}|}% Usar l para que el código no se estire de forma rara
+			\hline
+			\textbf{Programación Imperativa} & \textbf{Programación Declarativa (Circom} \\
+			\hline
+			\begin{minipage}[t]{0.48\textwidth}
+				\begin{lstlisting}[language=C,xleftmargin=-55pt,frame=none,numbers=none]
+					// Logica de control de flujo
+					if(entrada % 2 == 0){ 
+						printf("Es par");
+					} else {
+						printf("Es impar");
+					}
+				\end{lstlisting} 
+			\end{minipage}
+			&
+			\begin{minipage}[t]{0.48\textwidth}
+				\begin{lstlisting}[language=C,xleftmargin=-55pt,frame=none,numbers=none]
+					// Definicion de restricciones
+					signal input entrada;
+					signal output salida;
+					var var_div = entrada \ 2;
+					// Restriccion cuadratica
+					entrada === 2 * var_div + salida;
+					salida * (salida - 1) === 0;
+				\end{lstlisting}
+			\end{minipage}
+			\\ \hline
+		\end{tabular}
+	\end{mi_ejemplo}
+	
+	
+	\vspace{0.3cm}
+	\noindent El ejemplo anterior ilustra el proceso de transformación de una expresión condicional en una expresión aritmética equivalente, evitando reasignar la señal de salida.
+	
+	\vspace{0.3cm}
+	\noindent De la misma forma expuesta en el ejemplo, definiremos la inducción partiendo del caso base.
+	
+	\subsubsection{Caso base: if-else}
+	
+	
+	\begin{mi_ejemplo}
+		\caption{Caso base condicional}
+		\label{ex:caso-base-cond}
+		\begin{lstlisting}[language=C]
+			
+			// Codigo en C
+			if (age < 0) {
+				printf("Edad invalida.\n");
+			} else {
+				printf("Perfil: adulto mayor.\n");
+			}
+		\end{lstlisting} 
+		
+		\begin{lstlisting}[language=Circom]
+			
+			// Codigo en Circom
+			component less_0 = LessThan()(age,0);
+			
+			signal less_0 = less_0.out;
+			signal not_less_0 = 1 - less_0.out;
+			
+			mensaje <== less_0 * m1 + not_less_0 * m2;
+		\end{lstlisting}
+	\end{mi_ejemplo}
+	
+	\vspace{0.2cm}
+	\noindent El patrón de traducción identificado es el siguiente:
+	\begin{enumerate}
+		\item Crear una componente equivalente a la expresión lógica utilizada en el \texttt{if}
+		\item \texttt{if}: La restricción se activa cuando el resultado de dicho componente es igual a 1
+		\item \texttt{else}: La restricción se activa mediante la negación lógica de la expresión anterior
+	\end{enumerate}
+	
+	
+	\vspace{0.2cm}
+	\noindent Este ejemplo representa el caso base, el cual se aplica de manera inductiva para estructuras condicionales más complejas.
+	
+	\vspace{0.2cm}
+	\noindent La traducción formal de este caso es la siguiente:
+	
+	\vspace{0.3cm}
+	
+	\subsection{Caso inductivo: Condicionales anidados}
+	\noindent Partiendo del caso base, es trivial aplicar la inducción para alcanzar la transformación de bloques condicionales complejos en sistemas de ecuaciónes.
+	
+	\vspace{0.22cm}
+	\noindent A continuación, un ejemplo guiado donde aplicamos las hipótesis del caso base para llegar al resultado final.
+	
+	\begin{mi_ejemplo}
+	\caption{Caso inductivo condicional}
+	\label{ex:caso-inductivo-cond}
+	\begin{lstlisting}[language=C]
+		
+		// Codigo en C
+		
+		if (age < 20) {
+			if(age < 10){
+				printf("Perfil: ninyo.\n");
+			}
+			else{
+				printf("Perfil: adolescente.\n");
+			}
+		} else if(age < 40){
+			if(age < 30){
+				printf("Perfil: adulto joven.\n");
+			}
+			else {
+				printf("Perfil: adulto mayor.\n");
+			}
+		}
+		else{
+			printf("Perfil: adulto mayor.\n");
+		}
+	\end{lstlisting}
+	
+	
+	\begin{itemize}
+		\item Por cada condición de igualdad/desigualdad se crea un componente correspondiente, como en los casos anteriores.
+		
+		\begin{lstlisting}[language=Circom]
+			component less_10 = LessThan()(age,10);
+			component less_20 = LessThan()(age,20);
+			component less_30 = LessThan()(age,30);
+			component less_40 = LessThan()(age,40);
+		\end{lstlisting}
+		
+		\item Partiendo de lo citado an los apartados anteriores, tenemos que generar las condiciones excluyentes.
+		
+		\begin{lstlisting}[language=Circom]
+			signal is_less_20 = less_20.out;
+			signal is_less_10 = is_less_20 * less_10.out;
+			signal isnt_less_10 = is_less_20 * (1 - less_10.out);
+			
+			signal is_less_40 = less_40.out;
+			signal is_less_30 = is_less_40 * less_30.out;
+			signal isnt_less_30 = is_less_40 * (1 - less_30.out);
+			
+			
+			signal is_greater_40 = (1-is_less_40);
+		\end{lstlisting}
+		
+		\item Combinación ponderada de los mensajes:
+		\begin{lstlisting}[language=Circom]
+			mensaje <== is_less_10 * m1 + isnt_less_10 * m2 +
+			is_less_30 * m3 + isnt_less_30 * m4 +
+			is_greater_40 * m5;
+		\end{lstlisting}
+	\end{itemize}
+	
+	\end{mi_ejemplo}
+	
+	\noindent Aplicando la inducción, puede intuirse que siempre se repite el mismo patrón en el que cada condición utiliza la negación de las condiciones anteriores y el resultado de la comparación actual construir los bloques \texttt{if-else}
+	
+	
+	\vspace{0.2cm}
+	\noindent De esta manera, podemos transformas cualquier bloque condicional en un sistema de ecuaciones equivalente, cumpliendo con la naturaleza estática de Circom.
+	
+	\subsubsection{Traducción de operadores}
+	
+	
+	\renewcommand{\arraystretch}{2} 
+	\begin{tabular}{|>{\centering\arraybackslash}m{0.25\linewidth}|>{\centering\arraybackslash}m{0.70\linewidth}|}
+		\hline
+		\textbf{Operación} & \textbf{Deducción } \tabularnewline \hline
+		& \\[-2em] 
+		\texttt{if \textit{cond} then $e_1$ else $S$} & 
+		\begin{minipage}{0.85\linewidth}
+			\centering
+			\vspace{0.4cm}
+			\scalebox{0.75}{
+				\begin{prooftree}
+					\hypo{TC(cond) = (C_{cond}, cond')}
+					\hypo{TC(e_1) = (C_1, e'_1)}
+					\hypo{TC(S) = (C_S, e'_S)}
+					\infer3{
+						\begin{gathered}
+							TC(\text{if } cond \text{ then } e_1 \text{ else } S) = \\
+							(C_{cond} \wedge C_1 \wedge C_S \wedge \{v_{aux} = cond' \cdot e'_1 + (1-cond') \cdot e'_S\}, v_{aux})
+						\end{gathered}
+					}
+				\end{prooftree}
+			}
+			\vspace{0.4cm}
+		\end{minipage}
+		\tabularnewline \hline
+	\end{tabular}
 	
 	\subsection{Acceso a Arrays}
 	
