@@ -496,8 +496,6 @@ placement=H
 	
 	\noindent Circom es un lenguaje de programación cuyo aprendizaje y aplicación puede ser tedioso en sus inicios, sobre todo si no se tiene habilidad tratando con lenguajes lógicos basados en restricciones. Una de las causas principales de esta tediosidad son los conocidos como \textit{underconstrained bugs}. 
 	
-	TODO: PONER EJEMPLO MAS CORTO DE UNDERCONSRTAINED BUG
-	ISSUE CLARA
 	\begin{definicion}[Underconstrained bug]
 		\vspace{0.2cm}
 		\noindent Un underconstrained bug es un error producido cuando el usuario no introduce todas las ecuaciones necesarias en el fichero R1CS para reflejar el comportamiento del circuito.
@@ -544,10 +542,10 @@ placement=H
 	\noindent Esta función, en apariencia correctamente implementada, presenta un mal uso del operador \texttt{<-}\texttt{-}, provocando el mencionado underconstrained bug. Al utilizar este operador para el calculo de la señal \texttt{inv}, se realiza una asignación pero no se añade una restricción al sistema de ecuaciones. 
 	
 	\vspace{0.2cm}
-	\noindent De esta forma, al no haber ninguna restriccion que oblique a que \texttt{inv} sea el inverso de \texttt{a}, el vínculo entre la entrada \texttt{a} con la salida \texttt{b} no se cumple totalmente. Por tanto, al no ser añadida la asignación \texttt{inv <-- a!= 0 ? 1/a : 0} al sistema de ecuaciones, no existe para el verifier y un prover malicioso  podría manipular el valor de \texttt{inv} para generar pruebas falsas que el sistema aceptaría.
+	\noindent De esta forma, al no haber ninguna restricción que obligue a que \texttt{inv} sea el inverso de \texttt{a}, el vínculo entre la entrada \texttt{a} con la salida \texttt{b} no se cumple totalmente. Por tanto, al no ser añadida la asignación \texttt{inv <-}\texttt{- a!= 0 ? 1/a : 0} al sistema de ecuaciones, no existe para el verifier, permitiendo que un prover malicioso  pueda manipular el valor de \texttt{inv} para generar pruebas falsas que el sistema aceptaría.
 	 
 	\vspace{0.2cm}
-	\noindent Más allá del ejemplo expuesto, este error se repite de forma recurrente en muchos programas Circom, sobre todo aquellos desarrollados por principiantes en el lenguaje. Otros ejemplos donde este error está presente son en implementaciones de terceros que pueden encontrarse en repositorios como \textit{El juego de "Hundir la flota"} \cite{battlezips_circom}, \textit{Dark Forest} \cite{darkforest_circuits_2021}, \textit{Decoder template en Circomlib} \cite{iden3_multiplexer_2023}.
+	\noindent Más allá del ejemplo expuesto, este error se repite de forma recurrente en muchos programas Circom, sobre todo aquellos desarrollados por principiantes en el lenguaje. Otros ejemplos donde este error está presente son en implementaciones de terceros que pueden encontrarse en repositorios públicos como \textit{El juego de "Hundir la flota"} \cite{battlezips_circom}, \textit{Dark Forest} \cite{darkforest_circuits_2021} o \textit{Decoder template en Circomlib} \cite{iden3_multiplexer_2023}.
 	
 	
 	\vspace{0.2cm}
@@ -574,7 +572,16 @@ placement=H
 	\vspace{0.2cm}
 	\noindent Este último objetivo también incluye el aprendizaje, buscando reducir la complejidad inicial de Circom, permitiendo al usuario familiarizarse con el lenguaje de una forma más sencilla y eficiente.
 	
-	TODO: Añadir enumerate con lo que hemos hecho para llegar a esos objetivos
+	\vspace{0.2cm}
+	\noindent Para alcanzar los objetivos propuestos, hemos realizado las siguientes tareas durante el desarrollo del trabajo:
+	
+	\begin{enumerate}
+		\item Especificación de las reglas de traducción 
+		\item Implementación dentro del compilador de las reglas especificadas
+		\item Verificación de los sistemas de ecuaciones generados por las reglas
+		\item Aplicación de la nueva funcionalidad en casos reales
+		\item Desarrollo de la memoria para recoger textualmente todo lo anterior y analizar los resultados del trabajo
+	\end{enumerate}
 	
 	\subsection{Estructura del trabajo}
 	
@@ -636,13 +643,24 @@ placement=H
 	  	\label{ex:ejemplo-problema}
 	\end{mi_ejemplo}
 
-	TODO: Explicar el codigo ya que lo he puesto
+	\vspace{0,2cm}
+	\noindent Los códigos expuestos en \hyperref[ex:ejemplo-problema]{\textit{Ejemplo} \ref{ex:ejemplo-problema}} son equivalentes. El objetivo de ambos códigos es construir un sistema de ecuaciones para determinar si una entrada cualquiera es igual a cero.
 	
 	\vspace{0,2cm}
-	\noindent Los códigos expuestos en \hyperref[ex:ejemplo-problema]{\textit{Ejemplo} \ref{ex:ejemplo-problema}} son equivalentes. Ambos códigos buscan construir un sistema de ecuaciones para determinar si una entrada cualquiera es igual a cero.
-
-	\vspace{0,2cm}
 	\noindent La diferencia radica en que el primero ha sido implementado utilizando las características que ofrece Circom, mientras que el segundo se ha implementado utilizando las modificaciones realizadas en este trabajo sobre el compilador del lenguaje.
+	
+	
+	\vspace{0,2cm}
+	\noindent El primer bloque de código, a pesar de no hacer uso de la nueva funcionalidad, no genera un underconstrained bug  aunque utilice  el operador \texttt{<-}\texttt{-}.  Aludiendo al \hyperref[cod:underc-bug]{\textit{Código \ref{cod:underc-bug}}}, puede apreciarse que se diferencian exclusivamente en la restricción \texttt{a*b===0}.
+	
+	\vspace{0,2cm}
+	\noindent Esta restricción permite vincular completamente la entrada \texttt{a} con la salida \texttt{b}. Su ausencia en el código \ref{cod:underc-bug} es lo que provoca el mencionado underconstrained bug. Al añadirla, se soluciona el error, ya que, a pesar de que \texttt{inv} podría adoptar un valor distinto al que se le asignó, la señal \texttt{a} queda ahora limitada por el valor de \texttt{b} a través de la restricción \texttt{a*b===0}, la cual sí se incorpora al sistema de ecuaciones. De este modo, existe una restricción que obliga a la señal \texttt{a} a adoptar un único valor, garantizando así un circuito seguro.
+	
+	\vspace{0,2cm}
+	\noindent Por otro lado, el segundo bloque de código es equivalente al sistema de ecuaciones generado por el primer bloque de código, salvo que este último aprovecha la nueva funcionalidad del compilador.
+	
+	\vspace{0,2cm}
+	\noindent A través del análisis del código de este segundo bloque, se distingue la sencillez de un bloque básico \texttt{if-else} que tiene como objetivo determinar si la entrada \texttt{a} es igual a cero o no.
 	
 	\vspace{0,2cm}
 	\noindent Puede apreciarse que la lógica necesaria para implementar una función tan primaria sin las modificaciones se convierte en una tarea más tediosa, mientras que con las modificaciones esta lógica se convierte en un simple bloque condicional que cualquier persona familiarizada con la programación sabría hacer.
