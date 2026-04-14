@@ -2077,7 +2077,7 @@ placement=H
 	
 	\vspace{0.3cm}
 	
-	\subsection{Caso inductivo: Condicionales anidados}
+	\subsubsection{Caso inductivo: Condicionales anidados}
 	\noindent Partiendo del caso base, es trivial aplicar la inducción para alcanzar la transformación de bloques condicionales complejos en sistemas de ecuaciónes.
 	
 	\vspace{0.22cm}
@@ -2086,6 +2086,9 @@ placement=H
 	\begin{mi_ejemplo}
 	\caption{Caso inductivo condicional}
 	\label{ex:caso-inductivo-cond}
+	
+	\lstset{basicstyle=\footnotesize\ttfamily, aboveskip=1pt, belowskip=1pt}
+	
 	\begin{lstlisting}[language=C]
 		
 		// Codigo en C
@@ -2160,19 +2163,19 @@ placement=H
 		\hline
 		\textbf{Operación} & \textbf{Deducción } \tabularnewline \hline
 		& \\[-2em] 
-		\texttt{if \textit{cond} then $e_1$ else $S$} & 
+		\texttt{if \textit{cond} then $S_1$ else $S_2$} & 
 		\begin{minipage}{0.85\linewidth}
 			\centering
 			\vspace{0.4cm}
 			\scalebox{0.75}{
 				\begin{prooftree}
 					\hypo{TC(cond) = (C_{cond}, cond')}
-					\hypo{TC(e_1) = (C_1, e'_1)}
-					\hypo{TC(S) = (C_S, e'_S)}
+					\hypo{TC(S_1) = (C_1, S'_1)}
+					\hypo{TC(S_2) = (C_S, S'_2)}
 					\infer3{
 						\begin{gathered}
-							TC(\text{if } cond \text{ then } e_1 \text{ else } S) = \\
-							(C_{cond} \wedge C_1 \wedge C_S \wedge \{v_{aux} = cond' \cdot e'_1 + (1-cond') \cdot e'_S\}, v_{aux})
+							TC(\text{if } cond \text{ then } S_1 \text{ else } S_2) = \\
+							(C_{cond} \wedge C_1 \wedge C_S \wedge \{v_{aux} = cond' \cdot S'_1 + (1-cond') \cdot S'_2\}, v_{aux})
 						\end{gathered}
 					}
 				\end{prooftree}
