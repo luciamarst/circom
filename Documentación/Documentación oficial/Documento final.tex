@@ -386,8 +386,6 @@ placement=H
 	
 
 	\vspace{0.3cm}
-	
-
 	\vspace{0.5cm}
 	
 	\noindent Como hemos mencionado anteriormente, las señales son las restricciones establecidas por el programador, las cuáles quiere verificar. A continuación se muestra un ejemplo de un programa Circom y su representación en un circuito lógico, en el que se añade la restricción $a*b=c$.
@@ -446,7 +444,19 @@ placement=H
 	\noindent \textit{Rank-1 Constraint System} (conocido como \textbf{R1CS}), es un sistema de representación matemático diseñado para transformar tareas computacionales complejas en un conjunto de restricciones algebraicas. Su relevancia incide en la propiedad de que generar la solución a un problema puede ser caro, mientras que su \textbf{verificación es muy eficiente y rápida}, clave en las pruebas de conocimiento cero \cite{R1CS_cita}.
 	
 	\vspace{0.25cm}
+	\noindent Para que este sistema de representación sea funcional, las restricciones de R1CS se definen sobre un cuerpo finito $\mathbb{F}_p$.
+		
+	\vspace{0.25cm}
+	\noindent 
 	
+	\begin{definicion}[Cuerpo finito]
+	\textcolor{red}{En el álgebra abstracta, un cuerpo finito es una estructura algebraica que contiene un número finito de elementos. Esto significa que las operaciones aplicadas sobre estos elementos se realizan usando aritmética modular en un rango [0,p$-$1], con p siendo un número primo que determina el orden del cuerpo \cite{wikipedia_cuerpo_finito}.}
+		
+		\label{def:cuerpo-finito}
+	\end{definicion}
+	
+		
+	\vspace{0.25cm}
 	\noindent R1CS impone restricciones matemáticas complejas. Las ecuaciones, aparte de no poder exceder el segundo grado (\textit{condición necesaria, pero no suficiente}), tienen que poder expresarse como el producto de dos combinaciones lineales de variables, teniendo como resultado una tercera combinación lineal:
 	
 	\begin{equation*}
@@ -883,8 +893,34 @@ placement=H
 		\end{center}
 	\end{mi_ejemplo}
 	
-	\noindent Como se observa, incluso en una comprobación de igualdad, el usuario debe gestionar señales auxiliares e inversas (\texttt{inv}). Esta complejidad aumenta exponencialmente al definir las condiciones de victoria del jugador 1, en el
-	\hyperref[ex:victoriaj1]{\textbf{Ejemplo \ref{ex:victoriaj1}}}.
+	
+	\noindent Como puede observarse, incluso en una verificación de igualdad como es el empate, el usuario debe manejar señales auxiliares e inversas (\texttt{inv}). 
+	
+	\vspace{0.2cm}
+	\noindent \textcolor{red}{Para implementar la representación de la lógica del empate sin recurrir al uso de la nueva funcionalidad, es necesario implementar un flujo utilizando operaciones de suma y multiplicación. Como hemos mencionado, en este juego, solo pueden ocurrir tres circunstancias de empate.}
+	
+	\vspace{0.2cm}
+	\noindent \textcolor{red}{Por lo tanto, es necesario crear un componente para cada circunstancia que represente ese empate. Esta lógica se consigue multiplicando el valor de las señales \texttt{jugador1} y \texttt{jugador2} en la correspondiente situación de empate. }
+	
+	\vspace{0.2cm}
+	\noindent \textcolor{red}{Únicamente se activará una señal \texttt{$eq_n$} cuando la salida del componente correspondiente sea 1 para ambos jugadores; de lo contrario, si solo un jugador la tiene activa, el resultado de la multiplicación será 0}
+	
+	\vspace{0.2cm}
+	\noindent \textcolor{red}{De la misma forma, sería imposible que varias señales estuviesen activas, ya que esta situación de empate solo puede darse para una señal \texttt{$eq_n$}.}
+	
+	
+	\vspace{0.2cm}
+	\noindent \textcolor{red}{Por ejemplo, en la situación de empate piedra$-$piedra, el valor de \texttt{eq0} sería 1. En esta situación, \texttt{eq} debe ser exclusivamente 1; si \texttt{eq0} es 1 (debido a que \texttt{J1\_0.out=1} y \texttt{J2\_0.out=1}), se imposibilita que \texttt{eq1} o \texttt{eq2} sean 1, ya que un jugador no puede haber seleccionado dos elementos simultáneamente.	}
+	
+	\vspace{0.2cm}
+	\noindent \textcolor{red}{Esta necesidad de asegurar la exclusividad entre las distintas señales mediante restricciones aritméticas añade una carga de complejidad considerable, la cual se elimina por completo con la nueva funcionalidad.}
+	
+	\vspace{0.2cm}
+	\noindent \textcolor{red}{Sin embargo, toda esta complejidad lógica se reduce considerablemente haciendo uso de la nueva modificación, ya que se minimiza esta dificultad. Al permitir el uso de operadores como \texttt{==} y expresiones condicionales, únicamente es necesaria una condición que compruebe si \texttt{jugador1 == jugador2} y, en tal caso, asignar qué valor tendrá la señal \texttt{ganador}.}
+	
+	\vspace{0.2cm}
+	\noindent Esta complejidad aumenta exponencialmente al definir las condiciones de victoria del jugador 1, en el
+	\hyperref[ex:victoriaj1]{\textbf{Ejemplo \ref{ex:victoriaj1}}}. 
 	
 	
 	\begin{mi_ejemplo}
@@ -974,23 +1010,20 @@ placement=H
 		
 		\vspace{0.4cm} 
 		
+		\textcolor{red}{
 		\begin{definicion}[Traducción de expresiones]
-			
-			Definimos la función de traducción de expresiones \textit{TC : $\text{Expr} \rightarrow C \times \text{Expr}$} siendo:
-			
+			Definimos la función de traducción de expresiones $TC: \text{Expr} \rightarrow \mathcal{C} \times \text{Expr}$ donde, para una expresión $e$:
 			\begin{itemize} 
-			\item \textit C un sistema de ecuación en formato R1CS
-			\item \textit C es una expresión lineal 
+				\item $\mathcal{C}$ es el conjunto de restricciones en formato R1CS generadas.
+				\item $e'$ es una expresión lineal que representa el valor de $e$ en el circuito.
 			\end{itemize} 
-			
-			
-			\label{def:traducción}
+			\label{def:traduccion}
 		\end{definicion}
-
+	}
 		
 		\vspace{0.2cm} 
 		
-		\noindent La intuición es que en caso de que las constraints C se verifiquen, entonces e y $e'$ siempre tienen el mismo valor.
+		\noindent La intuición reside en que en caso de que las constraints C se verifiquen, entonces e y $e'$ siempre tienen el mismo valor.
 		
 		\vspace{0.2cm} 
 		
@@ -1016,6 +1049,149 @@ placement=H
 	\vspace{0.2cm}
 	\noindent Las reglas de transformación especificadas abarcan los operadores lógicos, de comparación, aritméticos, de desplazamiento además del acceso a arrays y las expresiones condicionales.
 	
+		
+	\subsection{Operadores Aritméticos}
+	
+	
+	\subsubsection{Suma, resta y multiplicación}
+	
+	\noindent Los operadores de suma y resta son los más sencillos de implementar debido a su naturaleza, ya que ninguna de estas operaciones corre el riesgo de generar una declaración que exceda el segundo grado. Por tanto, siempre cumplirán el formato R1CS y no se requerirán señales intermedias para asegurar el cumplimiento de los estándares algebraicos.
+	
+	\vspace{0.2cm}
+	\noindent Esto no aplica a la multiplicación. El motivo de esta diferencia con respecto a la suma y resta se debe a que existe una incertidumbre respecto al grado de la declaración. Al tratarse de un producto, no se puede garantizar que sus operandos no provengan de otra operación cuyo grado sea cuadrático.
+	
+	\vspace{0.2cm}
+	\noindent En consecuencia, cualquier operador que corra el riesgo de exceder el segundo grado en una declaración, y por tanto de incumplir el formato establecido por R1CS, debe utilizar señales intermedias para así cumplir dicho formato.
+	
+	\vspace{0.2cm}
+	\noindent Por otro lado, operadores como la división y el módulo plantean una implementación más compleja, ya que para ambos operadores es necesario el desarrollo y cumplimiento del \textit{teorama de la división}, el cual dice lo siguiente.
+	
+	\begin{definicion}[Teorema de la división]
+		\label{def:teo-div}
+		Dados dos enteros $a$ (dividendo) y $b$ (divisor), con $b \neq 0$, existen unos únicos enteros $q$ (cociente) y $r$ (resto) tales que:
+		\begin{equation*} 
+			\begin{aligned}
+				a &= b \cdot q + r \\ 
+				0 &\leq r < |b|
+			\end{aligned}
+		\end{equation*}
+		Donde:
+		\begin{itemize}
+			\item $q$ representa el \textbf{cociente} y $r$ representa el \textbf{resto}.
+		\end{itemize}
+	\end{definicion}
+	
+	\vspace{0.2cm}
+	\noindent Conociendo este teorema, el cuál presenta dos condiciones necesarias, en las siguientes secciones se especificará la aplicación de este teorema para conseguir la traducción a restricciones algebraicas deseada.
+	
+	\vspace{0.3cm}
+	
+	\subsubsection{División}
+	
+	\noindent Partiendo de la ecuación \(a = b * q + r\), podemos llegar al resultado de la operación \(a / b\) forzando a que se cumpla, pero despreciando el resto (ya que se trata de división entera).
+	
+	\vspace{0.3cm}
+	
+	\noindent El término ''forzar'' hace referencia a usar una señal auxiliar, de forma que partiendo del dividendo y del divisor, el cociente sea obligado a tomar el valor que buscamos, ya que de lo contrario la ecuación no podrá satisfacerse.
+	
+	\vspace{0.3cm}
+	\noindent
+	Ejemplo de código en Circom:
+	
+	\vspace{0.3cm}
+	
+	\begin{lstlisting}[language=Circom]
+		template IntegerDivision() {
+			signal input a; // Dividendo
+			signal input b; // Divisor
+			signal output c; // Cociente q
+			
+			var q;
+			a === b * q;
+			c <== q;
+		}
+		
+		component main = IntegerDivision();
+	\end{lstlisting}
+	
+	\subsubsection{Módulo}
+	
+	\noindent Partiendo de la ecuación \(a = b * q + r\), podemos llegar al resultado de la operación \(a \% b\) con la variable r, la que representa el resto de una división.
+	
+	\vspace{0.2cm}
+	
+	\begin{align}
+		a &= b \cdot q + r \\
+		r &= a - (b \cdot q) \\
+		r &= a - (b \cdot ( a / b) )
+	\end{align}
+	
+	
+	\subsubsection{Traducción de operadores}
+	\begin{tabular}{|c|>{\centering\arraybackslash}p{14cm}|}
+		\hline
+		\textbf{Operación} & \textbf{Deducción} \\
+		\hline
+		
+		\texttt{$e= e_1 + e_2$} & 
+		\makecell[c]{ 
+			$$ 
+			\begin{prooftree} 
+				\hypo{TC(e_1) = (C_1, e_1')} 
+				\hypo {TC(e_2) = (C_2, e_2')} 
+				\infer2{TC(e_1 + e_2) = (C_1 \wedge C_2,  e_1' + e_2')}
+			\end{prooftree} 
+			$$} \\
+		
+		\hline
+		
+		\texttt{$e= e_1 - e_2$} & 
+		\makecell[c]{ 
+			$$ 
+			\begin{prooftree} 
+				\hypo{TC(e_1) = (C_1, e_1')} 
+				\hypo {TC(e_2) = (C_2, e_2')} 
+				\infer2{TC(e_1 + e_2) = (C_1 \wedge C_2, e_1' - e_2')}
+			\end{prooftree} 
+			$$} \\
+		\hline
+		
+		\texttt{$e= e_1 * e_2$} & 
+		\makecell[c]{ 
+			$$ 
+			\begin{prooftree} 
+				\hypo{TC(e_1) = (C_1, e_1')} 
+				\hypo {TC(e_2) = (C_2, e_2')} 
+				\infer2{TC(e_1 + e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} = e_1' * e_2'\}, v_{aux})}
+			\end{prooftree} 
+			$$} \\
+		\hline
+		
+		\texttt{$e= a / b$} & 
+		\makecell[c]{ 
+			$$ 
+			\begin{prooftree} 
+				\hypo{TC(a) = (C_1, a')} 
+				\hypo {TC(b) = (C_2, b')} 
+				\infer2{TC(a / b) = (C_1 \wedge C_2 \wedge \{v_{aux} = b' * q'\}, a' = v_{aux} + r')}
+			\end{prooftree} 
+			$$} \\
+		
+		\hline
+		
+		\texttt{$e = a \% b$} & 
+		\makecell[c]{ 
+			$$ 
+			\begin{prooftree} 
+				\hypo{TC(a) = (C_1, a')} 
+				\hypo {TC(b) = (C_2, b')} 
+				\infer2{TC(a \% b) = (C_1 \wedge C_2 \wedge \{v_{aux} = a'/b'\} \wedge \{v_{aux_2} = b * v_{aux}\}, a' - v_{aux_2})}
+			\end{prooftree} 
+			$$} \\
+		\hline
+	\end{tabular}
+	
+	
 	\subsection{Operadores Lógicos}
 	
 		\vspace{0.2cm}
@@ -1024,6 +1200,7 @@ placement=H
 		\vspace{0.2cm}
 		\noindent Dicha lógica se aplica de la misma forma a los operadores lógicos bit a bit, con la diferencia de que cada operación se realiza sobre cada par de bits.
 		
+	
 	\subsubsection{Traducción de operadores}
 		
 		\renewcommand{\arraystretch}{3}
@@ -1164,7 +1341,7 @@ placement=H
 		\noindent Un detalle destacable en la función \textit{LessThanEq()}, utilizada para hacer posible la traducción de los operadores de comparación $<, \leq, > \ y \ \geq$ a restricciones algebraicas, es que para números negativos podría dificultar su uso si no se tienen en cuenta ciertos aspectos determinantes.
 		
 		\vspace{0.2cm}
-		\noindent El motivo reside en trabajamos sobre un cuerpo finito $\mathbb{F}_p$, de forma que los números negativos realmente no existen. En su lugar, se representan mediante el módulo del campo.
+		\noindent El motivo reside en trabajamos sobre un \hyperref[def:cuerpo-finito]{cuerpo finito $\mathbb{F}_p$}, de forma que los números negativos realmente no existen. En su lugar, se representan mediante el módulo del campo.
 		
 		\vspace{0.2cm}
 		\noindent Por ejemplo, el valor $- 1$ se interpreta como $p - 1$, un número extremadamente grande que se aproxima al orden del primo del campo.
@@ -1204,7 +1381,30 @@ placement=H
 		\vspace{0.2cm}
 		\noindent \textit{Observación: Gracias a la constraint lc1 === in (fuerza a que la entrada cumpla el rango \([0,2^n -1]\)), podemos evitar el uso de número negativos, ya que estos no cumplirán tal restricción.}
 		
+		
+		\textcolor{red}{	
 		\vspace{0.2cm}
+		\noindent Un ejemplo para ilustrar el comportamiento de la función en caso de número negativo es el siguiente:}
+		
+		\textcolor{red}{Todo el ejemplo este nuevo}
+		\begin{mi_ejemplo}
+			\caption{\textcolor{red}{Comportamiento Num2Bits()}}
+			\label{ex:num2bits}
+			\begin{enumerate}
+				
+				\item Partimos de un número negativo, por ejemplo -3. Este valor, al trabajar sobre un cuerpo finito se codifica como p$-$3.
+				\item La función ejecuta un bucle de n iteraciones, en el que en cada iteración se aplica un desplazamiento a la derecha sobre \texttt{in} en i posiciones, extrayendo el bit menos significativo mediante el and binario, aplicando AND 1. De esta forma, conseguimos que \texttt{out[i]} adquiera la conversión de decimal a binario. 
+				
+				\item Es imprescindible añadir explícitamente la restricción \texttt{out[i] * (out[i] - 1) === 0}. Esta ecuación sí se integra en el sistema de restricciones, asegurando que la señal solo pueda adoptar los valores lógicos 0 o 1. Sin embargo, \texttt{out[i]} \texttt{<-} \texttt{-}\texttt{ (in}$\gg$\texttt{i) \& 1} solo asigna y no es añadida al sistema de ecuaciones.
+				
+				\item Una vez realizadas la asignación y restricción de \texttt{out[i]}, se produce la reconstrucción del valor de entrada, este caso el -3. Es en este punto donde la funcion\textit{Num2Bits()} nos permite determinar si el número es negativo. 
+				
+				\item Como hemos mencionado, al trabajar con un cuerpo finito $\mathbb{F}_p$, el valor $-3$ se representa como $p-3$, un número positivo extremadamente grande que requiere cerca de 254 bits para ser expresado. Dado que el tamaño máximo permitido es 253, el bucle de reconstrucción solo sumará los pesos de a lo sumo 253 bits. 
+				
+				\item Como consecuencia, el resultado final de la reconstrucción en \texttt{lc1} será un valor que nunca igualará al valor de entrada \texttt{in} ($p-3$). Al no cumplirse la restricción \texttt{lc1 === in}, el circuito resultará insatisfacible, detectando así que el número original no es representable con $n$ bits y, por tanto, se comporta como un valor fuera de rango o "negativo".
+			\end{enumerate}
+			
+		\end{mi_ejemplo}
 		
 		\begin{codigo}
 			\textbf{\textit{Num2Bits(n):}}	
@@ -1237,6 +1437,12 @@ placement=H
 				
 		\subsubsection{Tamaño de los números comparados}
 		\noindent El tamaño de los números comparados es un factor importante, ya que dicho tamaño puede ser por un lado conocido e igual, mientras que por otro lado puede ser desconocido o de diferentes tamaños.
+		
+		\vspace{0.2cm}	
+		\noindent \textcolor{red}{Un tamaño es desconocido cuando una señal no tiene una restricción de bits predefinida, existiendo únicamente como un valor dentro del rango del cuerpo finito $\mathbb{F}_p$ ([0,$p-1$]). Esto ocurre porque en la los circuitos lógicos los cables que lo conforman no tienen un tamaño fijo. }
+		
+		\vspace{0.2cm}	
+		\noindent \textcolor{red}{Por tanto, el circuito ignora el tamaño real de la entrada hasta que se requiere conocer el rango al que pertenece dicho tamaño. Sin esta imposición, el sistema no puede diferenciar si una entrada es un entero pequeño o un valor enorme cercano al primo p.}
 		
 		\vspace{0.2cm}	
 		\noindent Para resolver este problema, vamos a definir un complemento opcional por cada operador de comparación existente.
@@ -1290,8 +1496,19 @@ placement=H
 				\label{ex:uso-complemento-opc}
 		\end{mi_ejemplo}
 		
+		
 		\vspace{0.2cm}	
-		\noindent
+		\noindent \textcolor{red}{Siguiendo el ejemplo anterior, la introducción del operador \textit{op\_(n)} permite limitar el tamaño en bits de los operadores \texttt{>} y \texttt{==}, restringiendo así el tamaño de las señales \texttt{a} y \texttt{b} a n=2.}
+		
+		\vspace{0.2cm}	
+		\noindent \textcolor{red}{Este operador resulta de gran utilidad cuando el programador conoce previamente el tamaño de las señales. Si no estuviese disponible, el sistema utilizaría por defecto el tamaño máximo de 253 bits.}
+		 
+		\vspace{0.2cm}	
+		\noindent \textcolor{red}{Si este operador no estuviese disponible, aunque el usuario supiese que el tamaño de las señales es 2, tendría que programar codificar el programa con el tamaño predefindo de 253 bits.}
+		
+		\vspace{0.2cm}	
+		\noindent \textcolor{red}{Por ello, si el usuario es conocedor del tamaño, es una herramienta que reduce considerablemente el número de restricciones generadas. Al acotar el tamaño a solo 2 bits en lugar de los 253 predefinidos, se evita la generación de  de ecuaciones innecesarias que se producirían al descomponer y verificar cada bit de una señal cuyo tamaño ya era conocido por el usuario.}
+	
 		
 		\subsubsection{Operadores $<, \leq, > \ y \ \geq$}
 		\noindent Para la implementación de dichos operadores únicamente es necesaria la función \textit{SecureLessThanEq(n)}.
@@ -1347,7 +1564,7 @@ placement=H
 		\subsubsection{Operadores == y !=}
 		\label{sss:ops-eq-neq}
 		\vspace{0.2cm}
-		\noindent Los operadores $== \ y \ !=$ plantean una implementación alejada del complemento a 2, estrategia empleada en los anteriores operadores. La estrategia aplicada en este caso es simplemente establecer dos restricciones claves:
+		\noindent Los operadores $== \ y \ !=$ plantean una implementación alejada del complemento a 2. La estrategia aplicada en este caso es simplemente establecer dos restricciones claves:
 		
 		\begin{itemize}
 			\item \texttt{(in1-in2) $*$ equal\_signal = 0}
@@ -1355,11 +1572,11 @@ placement=H
 		\end{itemize}
 		
 		\vspace{0.2cm}
-		\noindent Estas dos ecuaciones son imprescindibles, ya que las usaremos para determinar si in1 == in2 o $in1 \neq in2$, utilizando  \texttt{equal\_signal} como indicador.
+		\noindent Estas dos ecuaciones son imprescindibles, ya que las usaremos para determinar si \texttt{in1 == in2} o \texttt{in1}$\neq$\texttt{in2}, utilizando  \texttt{equal\_signal} como indicador.
 		
 		% No se si aqui meter referencia al capitulo de circom por lo de la señal
 		\vspace{0.2cm}
-		\noindent La señal  \texttt{equal\_signal} será 1 cuando in1 == in2, o será 0 cuando $in1 \neq in2$. Este comportamiento se consigue por medio de las dos ecuaciones descritas anteriormente.
+		\noindent La señal  \texttt{equal\_signal} será 1 cuando \texttt{in1 == in2}, o será 0 cuando \texttt{in1}$\neq$\texttt{in2}. Este comportamiento se consigue por medio de las dos ecuaciones descritas anteriormente.
 		
 		\vspace{0.2cm}
 		\noindent \texttt{(in1-in2) $*$ equal\_signal = 0} es imprescindible para obtener que  \texttt{equal\_signal} sea 0 cuando in1 e in2 sean diferentes. Esto se debe a que si in1 es distinto a in2, entonces el resultado de su diferencia será distinto a 0. Por tanto, la ecuación quedaría así:
@@ -1403,7 +1620,7 @@ placement=H
 		\end{equation}
 			
 		\vspace{0.2cm}
-		\noindent Como puede observarse, aunque en la primera ecuación para in1 == in2 la señal equal\_signal pueda tener cualquier valor, con esta segunda ecuación forzamos a que su valor sea 0, en caso de que in1!=in2, o bien 1, si in1==in2.
+		\noindent Como puede observarse, aunque en la primera ecuación para in1 == in2 la señal equal\_signal puede tener cualquier valor, con esta segunda ecuación forzamos a que su valor sea 0, en caso de que in1!=in2, o bien 1, si in1==in2.
 		
 		\vspace{0.2cm}
 		\noindent En caso de que $in1 \neq in2$, entonces \texttt{equal\_signal} sería 0, obteniendo un comportamiento diferente:
@@ -1785,159 +2002,13 @@ placement=H
 		\noindent Por otro lado, EQI denota las siglas \textit{Equality Indicator}, haciendo referencia a una función que encargada de imitar al comportamiento explicado en la \hyperref[sss:ops-eq-neq]{\textit{Sección} \ref{sss:ops-eq-neq}} para dos entradas.
 		
 	\newpage
-	
-	\subsection{Operadores Aritméticos}
-	
-	
-	\subsubsection{Suma, resta y multiplicación}
-	
-	\noindent Los operadores de suma y resta son los más sencillos de implementar debido a su naturaleza, ya que ninguna de estas operaciones corre el riesgo de generar una declaración que exceda el segundo grado. Por tanto, siempre cumplirán el formato R1CS y no se requerirán señales intermedias para asegurar el cumplimiento de los estándares algebraicos.
-	
-	\vspace{0.2cm}
-	\noindent Por otro lado, esto no aplica a la multiplicación. El motivo de esta diferencia con respecto a la suma y resta se debe a que existe una incertidumbre respecto al grado de la declaración. Al tratarse de un producto, no se puede garantizar que sus operandos no provengan de otra operación cuyo grado sea cuadrático.
-	
-	\vspace{0.2cm}
-	\noindent En consecuencia, cualquier operador que corra el riesgo de exceder el segundo grado en una declaración, y por tanto de incumplir el formato establecido por R1CS, debe utilizar señales intermedias para así cumplir dicho formato.
-	
-	\vspace{0.2cm}
-	\noindent Por otro lado, operadores como la división y el módulo plantean una implementación más compleja, ya que para ambos operadores es necesario el desarrollo y cumplimiento del \textit{teorama de la división}, el cual dice lo siguiente.
-	
-	\begin{definicion}[Teorema de la división]
-		\label{def:teo-div}
-		\begin{equation*} % Usamos equation* para que esté centrado y en modo matemático
-			\begin{aligned}
-				a &= b \cdot q + r \\ 
-				0 &\leq r < b \\
-				b &\neq 0
-			\end{aligned}
-		\end{equation*}
-	\end{definicion}
-	
-	\vspace{0.2cm}
-	\noindent Conociendo este teorema, el cuál presenta dos condiciones necesarias, en las siguientes secciones se especificará la aplicación de este teorema para conseguir la traducción a restricciones algebraicas deseada.
-	
-	\vspace{0.3cm}
-	
-	\subsubsection{División}
-	
-	\noindent Partiendo de la ecuación \(a = b * q + r\), podemos llegar al resultado de la operación \(a / b\) forzando a que se cumpla, pero despreciando el resto (ya que se trata de división entera).
-	
-	\vspace{0.3cm}
-	
-	\noindent El término ''forzar'' hace referencia a usar una señal auxiliar, de forma que partiendo del dividendo y del divisor, el cociente sea obligado a tomar el valor que buscamos, ya que de lo contrario la ecuación no podrá satisfacerse.
-	
-	\vspace{0.3cm}
-	\noindent
-	Ejemplo de código en Circom:
-	
-	\vspace{0.3cm}
-	
-	\begin{lstlisting}[language=Circom]
-		template IntegerDivision() {
-			signal input a; // Dividendo
-			signal input b; // Divisor
-			signal output c; // Cociente q
-			
-			var q;
-			a === b * q;
-			c <== q;
-		}
-		
-		component main = IntegerDivision();
-	\end{lstlisting}
-	
-	\subsubsection{Módulo}
-	
-	\noindent Partiendo de la ecuación \(a = b * q + r\), podemos llegar al resultado de la operación \(a \% b\) con la variable r, la que representa el resto de una división.
-	
-	\vspace{0.2cm}
-	
-	\begin{align}
-		a &= b \cdot q + r \\
-		r &= a - (b \cdot q) \\
-		r &= a - (b \cdot ( a / b) )
-	\end{align}
-	
-		
-	\subsubsection{Traducción de operadores}
-	\begin{tabular}{|c|>{\centering\arraybackslash}p{14cm}|}
-		\hline
-		\textbf{Operación} & \textbf{Deducción} \\
-		\hline
-		
-		\texttt{$e= e_1 + e_2$} & 
-		\makecell[c]{ 
-			$$ 
-			\begin{prooftree} 
-				\hypo{TC(e_1) = (C_1, e_1')} 
-				\hypo {TC(e_2) = (C_2, e_2')} 
-				\infer2{TC(e_1 + e_2) = (C_1 \wedge C_2,  e_1' + e_2')}
-			\end{prooftree} 
-			$$} \\
-		
-		\hline
-		
-		\texttt{$e= e_1 - e_2$} & 
-		\makecell[c]{ 
-			$$ 
-			\begin{prooftree} 
-				\hypo{TC(e_1) = (C_1, e_1')} 
-				\hypo {TC(e_2) = (C_2, e_2')} 
-				\infer2{TC(e_1 + e_2) = (C_1 \wedge C_2, e_1' - e_2')}
-			\end{prooftree} 
-			$$} \\
-		\hline
-		
-		\texttt{$e= e_1 * e_2$} & 
-		\makecell[c]{ 
-			$$ 
-			\begin{prooftree} 
-				\hypo{TC(e_1) = (C_1, e_1')} 
-				\hypo {TC(e_2) = (C_2, e_2')} 
-				\infer2{TC(e_1 + e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} = e_1' * e_2'\}, v_{aux})}
-			\end{prooftree} 
-			$$} \\
-		\hline
-		
-			\texttt{$e= a / b$} & 
-		\makecell[c]{ 
-			$$ 
-			\begin{prooftree} 
-				\hypo{TC(a) = (C_1, a')} 
-				\hypo {TC(b) = (C_2, b')} 
-				\infer2{TC(a / b) = (C_1 \wedge C_2 \wedge \{v_{aux} = b' * q'\}, a' = v_{aux} + r')}
-			\end{prooftree} 
-			$$} \\
-		
-		\hline
-		
-		\texttt{$e = a \% b$} & 
-		\makecell[c]{ 
-			$$ 
-			\begin{prooftree} 
-				\hypo{TC(a) = (C_1, a')} 
-				\hypo {TC(b) = (C_2, b')} 
-				\infer2{TC(a \% b) = (C_1 \wedge C_2 \wedge \{v_{aux} = a'/b'\} \wedge \{v_{aux_2} = b * v_{aux}\}, a' - v_{aux_2})}
-			\end{prooftree} 
-			$$} \\
-		\hline
-	\end{tabular}
-	
-	
+
 	\subsection{Operadores de desplazamiento}
 	
 		\noindent La operación de desplazamiento implica la transformación de un número determinado al sistema binario y, después de estar en este sistema, desplazar el número binario por una cantidad específica de bits, indicada por el usuario.
 		
-		%\vspace{0.2cm} 
-		%\noindent Un ejemplo de como funciona este tipos de operadores para $2 \ll 2$ sería el siguiente:
-	
-		
-		%	\vspace{0.1cm}
-			
-		%	\noindent \textit{Observación:} Podemos observar que para obtener el número equivalente del desplazamiento de bits en decimal se consigue con $x * 2^n$ en el caso de desplazamiento a la izquierda y con $x / 2^n$ en el caso de desplazamiento a la derecha. Sin embargo, estas operaciones son muy costosas, por lo que optaremos por otra opción.
-		
 		\vspace{0.2cm}
-		\noindent Para imitar el comportamiento descrito anteriormente, haremos uso de la función \hyperref[cod:num2bits]{Num2Bits()} descrita anteriormente para obtener el número a desplazar en binario y poder aplicar las transformaciones diferentes.
+		\noindent Para imitar el comportamiento descrito anteriormente, haremos uso de la función \hyperref[cod:num2bits]{\textit{Num2Bits()}} descrita anteriormente para obtener el número a desplazar en binario y poder aplicar las transformaciones diferentes.
 		
 		\vspace{0.2cm}
 		\noindent Los pasos posteriores a la transformación numérica son dependientes al tipo de desplazamiento. En función de si se trata de un desplazamiento a la izquierda o a la derecha, la construcción del sistema de ecuaciones será diferente.
@@ -1972,10 +2043,10 @@ placement=H
 		\noindent De manera similar al desplazamiento a la izquierda, el objetivo es desplazar un número X de bits (especificados por el usuario) desde las posiciones más significativas hacia las menos significativas; es decir, hacia la derecha.
 		
 		\vspace{0.2cm}
-		\noindent Para lograr este comportamiento, los espacios que quedan vacios en la parte más significativa son sustituidos por 0.
+		\noindent Para lograr este comportamiento, los espacios que quedan vacíos en la parte más significativa son sustituidos por 0.
 		
 		\vspace{0.2cm}
-		\noindent Esta explicación se complementa con el siguiente ejemplo, que describe el comportamiento de un desplazamiento a la derecha para la operacion $11 \gg 2$:
+		\noindent Esta explicación se complementa con el siguiente ejemplo, que describe el comportamiento de un desplazamiento a la derecha para la operación $11 \gg 2$:
 		
 		\begin{itemize}
 			\item Dado un número decimal, lo convertimos a binario, en este caso 11: \texttt{00001011}
