@@ -1,0 +1,52 @@
+		template piedra_papel_tijera () {
+			signal input jugador1;
+			signal input jugador2;
+			signal output ganador;
+			
+			signal eq; signal inv;
+			signal out; signal j1; signal j2;
+			
+			// Jugador 1
+			component J1_0 = igualdadRepetida(0);
+			J1_0.in <== jugador1;
+			component J1_1 = igualdadRepetida(1);
+			J1_1.in <== jugador1;
+			component J1_2 = igualdadRepetida(2);
+			J1_2.in <== jugador1;
+			
+			// Jugador 2
+			component J2_0 = igualdadRepetida(0);
+			J2_0.in <== jugador2;
+			component J2_1 = igualdadRepetida(1);
+			J2_1.in <== jugador2;
+			component J2_2 = igualdadRepetida(2);
+			J2_2.in <== jugador2;
+			
+			// Igualdad (empate)
+			signal eq0; signal eq1; signal eq2;
+			eq0 <== (J1_0.out) * (J2_0.out);
+			eq1 <== (J1_1.out) * (J2_1.out);
+			eq2 <== (J1_2.out) * (J2_2.out);
+			eq <== eq0 + eq1 + eq2;
+			
+			// Inversion de empate
+			inv <== (1 - eq);
+			
+			// Ganadoras Jugador 1
+			signal j1_0; signal j1_1; signal j1_2;
+			j1_0 <== (J1_0.out) * (J2_2.out);
+			j1_1 <== (J1_1.out) * (J2_0.out);
+			j1_2 <== (J1_2.out) * (J2_1.out);
+			j1 <== j1_0 + j1_1 + j1_2;
+			
+			// Ganadoras Jugador 2
+			signal j2_0; signal j2_1; signal j2_2;
+			j2_0 <== (J1_0.out) * (J2_1.out);
+			j2_1 <== (J1_1.out) * (J2_2.out);
+			j2_2 <== (J1_2.out) * (J2_0.out);
+			j2 <== j2_0 + j2_1 + j2_2;
+			
+			// Calculo final
+			out <== j2;
+			ganador <== ((1-inv)*2) + (out*inv);
+		}

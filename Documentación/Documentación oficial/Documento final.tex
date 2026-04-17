@@ -21,6 +21,7 @@
 \usepackage{xcolor}
 \usepackage{graphicx} 
 \usepackage{tikz}
+\usepackage{multicol}
 \usepackage{circuitikz}
 \usepackage{enumitem}
 \usepackage{geometry}
@@ -37,6 +38,8 @@
 \usepackage[hidelinks]{hyperref} 
 \setcounter{secnumdepth}{3}
 \setcounter{tocdepth}{3}
+\usepackage[most]{tcolorbox}
+\tcbuselibrary{listings}
 \geometry{top=3cm, bottom=3cm, left=3cm, right=3cm}
 
 % Comandos
@@ -195,7 +198,7 @@ placement=H
 	
 	\vspace{0.2cm}
 		
-	\noindent No obstante, si observamos $0,1*0,1 = 0,01$, se reduce la probabilidad inicial de 0,1 a 0,01. Es decir, a medida que las repeticiones aumentan, menor es la probabilidad de que se acierte al azar, ya que ésta converge a 0, alcanzando así una certeza práctica sin haber revelado ni un solo dígito del décimo.
+	\noindent Si repetimos la prueba una segunda vez ($0,1*0,1 = 0,01$), se reduce la probabilidad inicial de 0,1 a 0,01. Es decir, a medida que las repeticiones aumentan, menor es la probabilidad de que se acierte al azar, ya que ésta converge a 0, alcanzando así una certeza práctica sin haber revelado ni un solo dígito del décimo.
 	
 	\end{minipage}
 	\caption{Zero Knowledge Proof} 
@@ -223,7 +226,7 @@ placement=H
 	\end{definicion}
 	
 	\vspace{0.25cm}
-	\noindent Destacan por su reducido tamaño de prueba y corto tiempo de verificación. Sin embargo, presentan la desventaja de requerir una fase inicial conocida como \textbf{configuración de confianza}.
+	\noindent Estas pruebas destacan por su reducido tamaño de prueba y corto tiempo de verificación. Sin embargo, presentan la desventaja de requerir una fase inicial conocida como \textbf{configuración de confianza}.
 	
 	\begin{definicion}[Configuración de confianza]
 	
@@ -259,7 +262,7 @@ placement=H
 	
 	\vspace{0.3cm}
 	
-	\noindent Esta visión es fundamental, ya que las ZKP no pueden interpretar código directamente; requieren que la computación se exprese en una estructura de restricciones algebraicas denominadas R1CS, que detallaremos en la sección  \hyperref[sec:r1cs]{\textbf{Sección \ref{sec:r1cs}}}.
+	\noindent Esta visión es fundamental, ya que las ZKP no pueden interpretar código directamente; requieren que la computación se exprese en una estructura de restricciones algebraicas denominadas R1CS, que detallaremos en la \hyperref[sec:r1cs]{\textbf{Sección \ref{sec:r1cs}}}.
 	
 		
 	\vspace{0.3cm}
@@ -273,113 +276,116 @@ placement=H
 	
 	\vspace{0.3cm}
 	
-	\noindent Una característica fundamental de Circom es que es un lenguaje basado en circuitos, donde la estructura del mismo debe ser estática; esto implica que cualquier valor determinante en la estructura del circuito (como tamaños de arrays, número de iteraciones de un bucle, etc..) \textbf{debe conocerse en tiempo de compilación}. Esto se debe a que el archivo R1CS contiene las restricciones algebraicas que describen el circuito, las cuales no pueden depender de los valores de las señales de entrada.
-	
-	\vspace{0.3cm}
-	
 	\noindent Partiendo de estos dos archivos, podemos generar la prueba por medio de \textbf{Snarkjs}. Esta herramienta toma el archivo R1CS y el Witness obtenidos tras la compilación de un programa Circom para generar la prueba asociada. Analizaremos en detalle su funcionamiento y comandos específicos en la \hyperref[sec:snarkjs]{\textbf{Sección \ref{sec:snarkjs}}}.
 	
+		\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
+	
+	\begin{figura}[H]
+		\centering
+		\resizebox{0.45\textwidth}{!}{
+			\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+				%uncomment if require: \path (0,517); %set diagram left start at 0, and has height of 517
+				
+				%Rounded Rect [id:dp05875085235019617] 
+				\draw   (275,40.5) .. controls (275,33.04) and (281.04,27) .. (288.5,27) -- (379.63,27) .. controls (387.08,27) and (393.13,33.04) .. (393.13,40.5) -- (393.13,81) .. controls (393.13,88.46) and (387.08,94.5) .. (379.63,94.5) -- (288.5,94.5) .. controls (281.04,94.5) and (275,88.46) .. (275,81) -- cycle ;
+				%Straight Lines [id:da06402967877759314] 
+				\draw [line width=1.5]    (333.5,94.5) -- (334.5,135.5) ;
+				%Shape: Rectangle [id:dp8085143403557636] 
+				\draw  [dash pattern={on 4.5pt off 4.5pt}] (280,137) -- (387.5,137) -- (387.5,177) -- (280,177) -- cycle ;
+				%Straight Lines [id:da5899123595041729] 
+				\draw [line width=1.5]    (280,177) -- (235.37,233.15) ;
+				\draw [shift={(233.5,235.5)}, rotate = 308.48] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=1.5]    (14.21,-4.28) .. controls (9.04,-1.82) and (4.3,-0.39) .. (0,0) .. controls (4.3,0.39) and (9.04,1.82) .. (14.21,4.28)   ;
+				%Straight Lines [id:da1590131005098081] 
+				\draw [line width=1.5]    (387.5,177) -- (437.51,233.26) ;
+				\draw [shift={(439.5,235.5)}, rotate = 228.37] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=1.5]    (14.21,-4.28) .. controls (9.04,-1.82) and (4.3,-0.39) .. (0,0) .. controls (4.3,0.39) and (9.04,1.82) .. (14.21,4.28)   ;
+				%Shape: Rectangle [id:dp4149414273363945] 
+				\draw  [line width=1.5]  (180,235) -- (291.5,235) -- (291.5,289) -- (180,289) -- cycle ;
+				%Shape: Rectangle [id:dp6656795684081461] 
+				\draw  [line width=1.5]  (387,235) -- (498.5,235) -- (498.5,289) -- (387,289) -- cycle ;
+				%Straight Lines [id:da5108600083542064] 
+				\draw [line width=1.5]    (236.5,289.5) -- (236.5,329.5) ;
+				\draw [shift={(236.5,332.5)}, rotate = 270] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=1.5]    (14.21,-4.28) .. controls (9.04,-1.82) and (4.3,-0.39) .. (0,0) .. controls (4.3,0.39) and (9.04,1.82) .. (14.21,4.28)   ;
+				%Straight Lines [id:da97309796419649] 
+				\draw [line width=1.5]    (445.5,290.5) -- (446.45,347.5) ;
+				\draw [shift={(446.5,350.5)}, rotate = 269.05] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=1.5]    (14.21,-4.28) .. controls (9.04,-1.82) and (4.3,-0.39) .. (0,0) .. controls (4.3,0.39) and (9.04,1.82) .. (14.21,4.28)   ;
+				%Shape: Rectangle [id:dp05069346026332677] 
+				\draw  [dash pattern={on 4.5pt off 4.5pt}] (401,349) -- (493.5,349) -- (493.5,389) -- (401,389) -- cycle ;
+				%Rounded Rect [id:dp7496026716421088] 
+				\draw  [line width=1.5]  (187,345.26) .. controls (187,339.04) and (192.04,334) .. (198.26,334) -- (274.24,334) .. controls (280.46,334) and (285.5,339.04) .. (285.5,345.26) -- (285.5,379.03) .. controls (285.5,385.25) and (280.46,390.29) .. (274.24,390.29) -- (198.26,390.29) .. controls (192.04,390.29) and (187,385.25) .. (187,379.03) -- cycle ;
+				%Straight Lines [id:da7117949724826909] 
+				\draw [line width=1.5]    (400.5,364.5) -- (290.5,364.5) ;
+				\draw [shift={(287.5,364.5)}, rotate = 360] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=1.5]    (14.21,-4.28) .. controls (9.04,-1.82) and (4.3,-0.39) .. (0,0) .. controls (4.3,0.39) and (9.04,1.82) .. (14.21,4.28)   ;
+				%Straight Lines [id:da5960434606703144] 
+				\draw [line width=1.5]    (238.5,390.5) -- (239.45,443.5) ;
+				\draw [shift={(239.5,446.5)}, rotate = 268.98] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=1.5]    (14.21,-4.28) .. controls (9.04,-1.82) and (4.3,-0.39) .. (0,0) .. controls (4.3,0.39) and (9.04,1.82) .. (14.21,4.28)   ;
+				%Shape: Rectangle [id:dp8763181436266994] 
+				\draw  [line width=1.5]  (205,450) -- (275,450) -- (275,490) -- (205,490) -- cycle ;
+				
+				% Text Node
+				\draw (291,39) node [anchor=north west][inner sep=0.75pt]   [align=left] {\begin{minipage}[lt]{59.86pt}\setlength\topsep{0pt}
+						\begin{center}
+							{\large \textbf{Programa}}\\\textbf{{\large Circom}}
+						\end{center}
+						
+				\end{minipage}};
+				% Text Node
+				\draw (334,156.5) node   [align=left] {\begin{minipage}[lt]{68pt}\setlength\topsep{0pt}
+						\begin{center}
+							{\small Compilador}\\{\small Circom}
+						\end{center}
+						
+				\end{minipage}};
+				% Text Node
+				\draw (442.75,262) node   [align=left] {\begin{minipage}[lt]{68pt}\setlength\topsep{0pt}
+						\begin{center}
+							Ejecutable\\(C++/WASM)
+						\end{center}
+						
+				\end{minipage}};
+				% Text Node
+				\draw (235.75,262) node   [align=left] {\begin{minipage}[lt]{68pt}\setlength\topsep{0pt}
+						\begin{center}
+							Archivo \\R1CS
+						\end{center}
+						
+				\end{minipage}};
+				% Text Node
+				\draw (447.25,369) node   [align=left] {\begin{minipage}[lt]{46.58pt}\setlength\topsep{0pt}
+						\begin{center}
+							Witness
+						\end{center}
+						
+				\end{minipage}};
+				% Text Node
+				\draw (236.25,362.14) node   [align=left] {\begin{minipage}[lt]{59.5pt}\setlength\topsep{0pt}
+						\begin{center}
+							\textbf{{\large Snarkjs}}
+						\end{center}
+						
+				\end{minipage}};
+				% Text Node
+				\draw (240,470) node   [align=left] {\begin{minipage}[lt]{42.5pt}\setlength\topsep{0pt}
+						\begin{center}
+							\textbf{{\large ZKP}}
+						\end{center}
+						
+				\end{minipage}};
+				
+				
+			\end{tikzpicture}
+		}
+		\caption{Proceso de transformación a ZKP desde Circom} 
+		\label{ex:zkp-transformacion}
+	\end{figura}
+	
+	
 	\vspace{0.3cm}
 	
-	\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
+	\noindent Una característica fundamental de Circom es que es un lenguaje basado en circuitos, donde la estructura del mismo debe ser estática; esto implica que cualquier valor determinante en la estructura del circuito (como tamaños de arrays, número de iteraciones de un bucle, etc..) \textbf{debe conocerse en tiempo de compilación}. Esto se debe a que el archivo R1CS contiene las restricciones algebraicas que describen el circuito, las cuales no pueden depender de los valores de las señales de entrada.
 	
-\begin{figura}[H]
-	\centering
-	\resizebox{0.45\textwidth}{!}{
-	\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
-		%uncomment if require: \path (0,517); %set diagram left start at 0, and has height of 517
-		
-		%Rounded Rect [id:dp05875085235019617] 
-		\draw   (275,40.5) .. controls (275,33.04) and (281.04,27) .. (288.5,27) -- (379.63,27) .. controls (387.08,27) and (393.13,33.04) .. (393.13,40.5) -- (393.13,81) .. controls (393.13,88.46) and (387.08,94.5) .. (379.63,94.5) -- (288.5,94.5) .. controls (281.04,94.5) and (275,88.46) .. (275,81) -- cycle ;
-		%Straight Lines [id:da06402967877759314] 
-		\draw [line width=1.5]    (333.5,94.5) -- (334.5,135.5) ;
-		%Shape: Rectangle [id:dp8085143403557636] 
-		\draw  [dash pattern={on 4.5pt off 4.5pt}] (280,137) -- (387.5,137) -- (387.5,177) -- (280,177) -- cycle ;
-		%Straight Lines [id:da5899123595041729] 
-		\draw [line width=1.5]    (280,177) -- (235.37,233.15) ;
-		\draw [shift={(233.5,235.5)}, rotate = 308.48] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=1.5]    (14.21,-4.28) .. controls (9.04,-1.82) and (4.3,-0.39) .. (0,0) .. controls (4.3,0.39) and (9.04,1.82) .. (14.21,4.28)   ;
-		%Straight Lines [id:da1590131005098081] 
-		\draw [line width=1.5]    (387.5,177) -- (437.51,233.26) ;
-		\draw [shift={(439.5,235.5)}, rotate = 228.37] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=1.5]    (14.21,-4.28) .. controls (9.04,-1.82) and (4.3,-0.39) .. (0,0) .. controls (4.3,0.39) and (9.04,1.82) .. (14.21,4.28)   ;
-		%Shape: Rectangle [id:dp4149414273363945] 
-		\draw  [line width=1.5]  (180,235) -- (291.5,235) -- (291.5,289) -- (180,289) -- cycle ;
-		%Shape: Rectangle [id:dp6656795684081461] 
-		\draw  [line width=1.5]  (387,235) -- (498.5,235) -- (498.5,289) -- (387,289) -- cycle ;
-		%Straight Lines [id:da5108600083542064] 
-		\draw [line width=1.5]    (236.5,289.5) -- (236.5,329.5) ;
-		\draw [shift={(236.5,332.5)}, rotate = 270] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=1.5]    (14.21,-4.28) .. controls (9.04,-1.82) and (4.3,-0.39) .. (0,0) .. controls (4.3,0.39) and (9.04,1.82) .. (14.21,4.28)   ;
-		%Straight Lines [id:da97309796419649] 
-		\draw [line width=1.5]    (445.5,290.5) -- (446.45,347.5) ;
-		\draw [shift={(446.5,350.5)}, rotate = 269.05] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=1.5]    (14.21,-4.28) .. controls (9.04,-1.82) and (4.3,-0.39) .. (0,0) .. controls (4.3,0.39) and (9.04,1.82) .. (14.21,4.28)   ;
-		%Shape: Rectangle [id:dp05069346026332677] 
-		\draw  [dash pattern={on 4.5pt off 4.5pt}] (401,349) -- (493.5,349) -- (493.5,389) -- (401,389) -- cycle ;
-		%Rounded Rect [id:dp7496026716421088] 
-		\draw  [line width=1.5]  (187,345.26) .. controls (187,339.04) and (192.04,334) .. (198.26,334) -- (274.24,334) .. controls (280.46,334) and (285.5,339.04) .. (285.5,345.26) -- (285.5,379.03) .. controls (285.5,385.25) and (280.46,390.29) .. (274.24,390.29) -- (198.26,390.29) .. controls (192.04,390.29) and (187,385.25) .. (187,379.03) -- cycle ;
-		%Straight Lines [id:da7117949724826909] 
-		\draw [line width=1.5]    (400.5,364.5) -- (290.5,364.5) ;
-		\draw [shift={(287.5,364.5)}, rotate = 360] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=1.5]    (14.21,-4.28) .. controls (9.04,-1.82) and (4.3,-0.39) .. (0,0) .. controls (4.3,0.39) and (9.04,1.82) .. (14.21,4.28)   ;
-		%Straight Lines [id:da5960434606703144] 
-		\draw [line width=1.5]    (238.5,390.5) -- (239.45,443.5) ;
-		\draw [shift={(239.5,446.5)}, rotate = 268.98] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=1.5]    (14.21,-4.28) .. controls (9.04,-1.82) and (4.3,-0.39) .. (0,0) .. controls (4.3,0.39) and (9.04,1.82) .. (14.21,4.28)   ;
-		%Shape: Rectangle [id:dp8763181436266994] 
-		\draw  [line width=1.5]  (205,450) -- (275,450) -- (275,490) -- (205,490) -- cycle ;
-		
-		% Text Node
-		\draw (291,39) node [anchor=north west][inner sep=0.75pt]   [align=left] {\begin{minipage}[lt]{59.86pt}\setlength\topsep{0pt}
-				\begin{center}
-					{\large \textbf{Programa}}\\\textbf{{\large Circom}}
-				\end{center}
-				
-		\end{minipage}};
-		% Text Node
-		\draw (334,156.5) node   [align=left] {\begin{minipage}[lt]{68pt}\setlength\topsep{0pt}
-				\begin{center}
-					{\small Compilador}\\{\small Circom}
-				\end{center}
-				
-		\end{minipage}};
-		% Text Node
-		\draw (442.75,262) node   [align=left] {\begin{minipage}[lt]{68pt}\setlength\topsep{0pt}
-				\begin{center}
-					Ejecutable\\(C++/WASM)
-				\end{center}
-				
-		\end{minipage}};
-		% Text Node
-		\draw (235.75,262) node   [align=left] {\begin{minipage}[lt]{68pt}\setlength\topsep{0pt}
-				\begin{center}
-					Archivo \\R1CS
-				\end{center}
-				
-		\end{minipage}};
-		% Text Node
-		\draw (447.25,369) node   [align=left] {\begin{minipage}[lt]{46.58pt}\setlength\topsep{0pt}
-				\begin{center}
-					Witness
-				\end{center}
-				
-		\end{minipage}};
-		% Text Node
-		\draw (236.25,362.14) node   [align=left] {\begin{minipage}[lt]{59.5pt}\setlength\topsep{0pt}
-				\begin{center}
-					\textbf{{\large Snarkjs}}
-				\end{center}
-				
-		\end{minipage}};
-		% Text Node
-		\draw (240,470) node   [align=left] {\begin{minipage}[lt]{42.5pt}\setlength\topsep{0pt}
-				\begin{center}
-					\textbf{{\large ZKP}}
-				\end{center}
-				
-		\end{minipage}};
-		
-		
-	\end{tikzpicture}
-	}
-	\caption{Proceso de transformación a ZKP desde Circom} 
-	\label{ex:zkp-transformacion}
-\end{figura}
+
+	\vspace{0.3cm}
+	
 
 	\vspace{0.5cm}
 	
@@ -477,7 +483,7 @@ placement=H
 	\section{Snarkjs}
 	\label{sec:snarkjs}
 	
-	\noindent Snarkjs es una librería de JavaScript creada para la generación y verificación de pruebas de conocimiento cero partiendo de las restricciones en formato R1CS correspondientes, que puede ser ejecutado tanto en dispositivos como en servidores con \textit{Node.js}, materializando el concepto de \hyperref[def:zk-snarks]{\textit{ \ref{def:zk-snarks} zk-SNARKS}} nombrado anteriormente \cite{thesis_clara}\cite{circom_articulo_clara}.
+	\noindent Snarkjs es una librería de JavaScript creada para la generación y verificación de pruebas de conocimiento cero partiendo de las restricciones en formato R1CS correspondientes, que puede ser ejecutado tanto en dispositivos móviles como en servidores con \textit{Node.js}, materializando el concepto de \hyperref[def:zk-snarks]{\textit{ \ref{def:zk-snarks} zk-SNARKS}} nombrado anteriormente \cite{thesis_clara}\cite{circom_articulo_clara}.
 	
 	\vspace{0.25cm}
 	
@@ -495,7 +501,7 @@ placement=H
 	\section{Preámbulo del problema}
 	\label{sec:descripcion-problema}
 	
-	\noindent Circom es un lenguaje de programación cuyo aprendizaje y aplicación puede ser tedioso en sus inicios, sobre todo si no se tiene habilidad tratando con lenguajes lógicos basados en restricciones. Una de las causas principales de esta tediosidad son los conocidos como \textit{underconstrained bugs}. 
+	\noindent Circom es un lenguaje de programación cuyo aprendizaje y aplicación puede ser complejo inicialmente, sobre todo si se carece de habilidad tratando con lenguajes lógicos basados en restricciones. Una de las razones principales de esta complejidad son los conocidos como \textit{underconstrained bugs}. 
 	
 	\begin{definicion}[Underconstrained bug]
 		\vspace{0.2cm}
@@ -546,7 +552,7 @@ placement=H
 	\noindent De esta forma, al no haber ninguna restricción que obligue a que \texttt{inv} sea el inverso de \texttt{a}, el vínculo entre la entrada \texttt{a} con la salida \texttt{b} no se cumple totalmente. Por tanto, al no ser añadida la asignación \texttt{inv <-}\texttt{- a!= 0 ? 1/a : 0} al sistema de ecuaciones, no existe para el verifier, permitiendo que un prover malicioso  pueda manipular el valor de \texttt{inv} para generar pruebas falsas que el sistema aceptaría.
 	 
 	\vspace{0.2cm}
-	\noindent Más allá del ejemplo expuesto, este error se repite de forma recurrente en muchos programas Circom, sobre todo aquellos desarrollados por principiantes en el lenguaje. Otros ejemplos donde este error está presente son en implementaciones de terceros que pueden encontrarse en repositorios públicos como \textit{El juego de "Hundir la flota"} \cite{battlezips_circom}, \textit{Dark Forest} \cite{darkforest_circuits_2021} o \textit{Decoder template en Circomlib} \cite{iden3_multiplexer_2023}.
+	\noindent Más allá del ejemplo expuesto, este error se repite de forma recurrente en muchos programas Circom, sobre todo aquellos desarrollados por principiantes en el lenguaje. Otros ejemplos donde este error está presente son en implementaciones de terceros que pueden encontrarse en repositorios públicos como el juego de \textit{"Hundir la flota"} \cite{battlezips_circom}, \textit{Dark Forest} \cite{darkforest_circuits_2021} o \textit{Decoder template en Circomlib} \cite{iden3_multiplexer_2023}.
 	
 	
 	\vspace{0.2cm}
@@ -559,6 +565,8 @@ placement=H
 	\vspace{0.2cm}
 	\noindent De este modo, \textbf{el compilador actuaría como un puente}, transformando automáticamente el flujo imperativo en un sistema de restricciones.
 		
+	\vspace{0.4cm}
+	\noindent Dicha transformación se consigue mediante la traducción de las reglas existentes en el flujo imperativo de Circom. Este proceso consiste en analizar los recursos existentes y especificar una regla de traducción para cada uno de ellos. De esta forma, el compilador consigue transformar automáticamente lo implementado en un sistema de restricciones.
 		
 	\section{Objetivos y Estructura del trabajo}
 	
@@ -577,11 +585,11 @@ placement=H
 	\noindent Para alcanzar los objetivos propuestos, hemos realizado las siguientes tareas durante el desarrollo del trabajo:
 	
 	\begin{enumerate}
-		\item Especificación de las reglas de traducción 
+		\item Diseño y especificación de las reglas de traducción
 		\item Implementación dentro del compilador de las reglas especificadas
 		\item Verificación de los sistemas de ecuaciones generados por las reglas
 		\item Aplicación de la nueva funcionalidad en casos reales
-		\item Desarrollo de la memoria para recoger textualmente todo lo anterior y analizar los resultados del trabajo
+		\item Desarrollo de la memoria para recoger todo lo anterior y analizar los resultados del trabajo
 	\end{enumerate}
 	
 	\subsection{Estructura del trabajo}
@@ -589,7 +597,7 @@ placement=H
 	\noindent Para alcanzar los objetivos propuestos, este documento se ha estructurado en los siguientes capítulos:
 	
 	\begin{itemize}
-		\item Capítulo 1 (Introducción a Circom): Contexto sobre la tecnología que vamos a tratar y ofrecer una visión general de lo que pretendemos hacer con ella a lo largo del trabajo.
+		\item Capítulo 1 (Introducción a Circom): Se introduce el contexto sobre la tecnología que vamos a tratar y ofrecer una visión general de lo que pretendemos hacer con ella a lo largo del trabajo.
 		\item Capítulo 2 (Definición del problema): Se definirá el problema y se presentará un ejemplo.
 		\item Capítulo 3 (Desarrollo del problema): Especificación técnica de las modificaciones que se llevarán a cabo en el compilador del lenguaje.
 		\item Capítulo 4 (Implementación): 
@@ -617,7 +625,7 @@ placement=H
 	
 	\begin{enumerate}
 		\item \textbf{Asimilar el paradigma de verificación frente al de ejecución}, comprender que el objetivo principal no es realizar un cálculo o cómputo, sino generar un sistema de restricciones con el objetivo de verificar la validez de una demostración.
-		\item  \textbf{La restricción de recursos y diseño algebraico}, implicando diseñar circuitos donde cada operación debe ser expresada mediante restricciones algebraicas, garantizando que cualquier solución sea verificable así como asumir la naturaleza estática del circuito.
+		\item  \textbf{Adaptarse a la complejidad del diseño algebraico}, procedimiento que implica crear circuitos en los que cada operación tiene que ser expresada a través de restricciones algebraicas lineales, asegurando de esta manera el cumplimiento del formato R1CS y la descomposición de la lógica algebraica.
 	\end{enumerate}
 	
 	
@@ -625,10 +633,10 @@ placement=H
 	\noindent De esta manera, puede observarse que Circom es un lenguaje que presenta una curva de aprendizaje elevada, de forma que requiere de tiempo y dedicación para desarrollar habilidad y destreza. 
 	
 	\vspace{0.2cm}
-	\noindent Por tanto, para aquellas personas que requieran el uso de este lenguaje, pero se enfrenten a la dificultad del cambio de paradigma, aún teniendo experiencia en lenguajes imperativos, se expone una solución cuyo objetivo es facilitar el uso de Circom, explotando su cualidad imperativa.
+	\noindent Por tanto, para aquellas personas que requieran el uso de este lenguaje, pero se enfrenten a la dificultad del cambio de paradigma se expone una solución cuyo objetivo es facilitar el uso de Circom, explotando su cualidad imperativa.
 	
 	\vspace{0.2cm}
-	\noindent La propuesta radica en la modificación del compilador de Circom para incorporar una nueva funcionalidad que habilita la traducción del cuerpo imperativo desarrollado en un programa Circom a ecuaciones algebraicas en formato R1CS equivalentes.
+	\noindent La propuesta radica en la modificación del compilador de Circom para incorporar una nueva funcionalidad que habilite la traducción del cuerpo imperativo desarrollado en un programa Circom a ecuaciones algebraicas en formato R1CS equivalentes.
 	
 	\vspace{0.2cm}
 	\noindent El cuerpo imperativo tras la modificación del compilador no sería únicamente funcional para la generación del testigo, sino que con dicha propuesta se permitiría la conversión del código correspondiente tal y como se haría si dicho cuerpo fuera el equivalente al generador de las restricciones R1CS.
@@ -645,10 +653,7 @@ placement=H
 	\end{mi_ejemplo}
 
 	\vspace{0,2cm}
-	\noindent Los códigos expuestos en \hyperref[ex:ejemplo-problema]{\textit{Ejemplo} \ref{ex:ejemplo-problema}} son equivalentes. El objetivo de ambos códigos es construir un sistema de ecuaciones para determinar si una entrada cualquiera es igual a cero.
-	
-	\vspace{0,2cm}
-	\noindent La diferencia radica en que el primero ha sido implementado utilizando las características que ofrece Circom, mientras que el segundo se ha implementado utilizando las modificaciones realizadas en este trabajo sobre el compilador del lenguaje.
+	\noindent Los códigos expuestos en \hyperref[ex:ejemplo-problema]{\textit{Ejemplo} \ref{ex:ejemplo-problema}} son equivalentes. El objetivo de ambos códigos es construir un sistema de ecuaciones para determinar si una entrada cualquiera es igual a cero. La diferencia radica en que el primero ha sido implementado utilizando las características que ofrece Circom, mientras que el segundo se ha implementado utilizando las modificaciones realizadas en este trabajo sobre el compilador del lenguaje.
 	
 	
 	\vspace{0,2cm}
@@ -672,7 +677,7 @@ placement=H
 	\vspace{0.2cm}
 	\noindent Para ejemplificar de manera práctica las restricciones mencionadas y la dificultad que supone definir manualmente limitaciones más allá del \hyperref[ex:ejemplo-problema]{\textit{Ejemplo} \ref{ex:ejemplo-problema}}, se presenta a continuación un ejemplo que contrasta el flujo actual de Circom frente a la solución propuesta. 
 	
-	\section{Ejemplo del problema}
+	\section{Ejemplo: Piedra, Papel y Tijera}
 	
 	
 	\vspace{0.2cm}
@@ -695,88 +700,87 @@ placement=H
 	\noindent Con el fin de aclarar esta transición entre la lógica del juego y su implementación técnica, se ha desarrollado un repositorio específico que alberga el código fuente del circuito, implementado tanto con la nueva funcionalidad del compilador como sin ella \cite{rps_circom}. A continuación, se muestra un fragmento de este programa Circom equivalente a la lógica del juego:
 	
 	\vspace{0.3cm}
+	\begin{figure}[H]
+		\centering
+		\hrule 
+		\vspace{5pt} 
 		
-	\begin{lstlisting}[
-		language=Circom, 
-		caption={Implementación declarativa de Piedra, papel y tijera en Circom}, 
-		label={cod:piedra-papel-tijera-declarativa}
-		]
-		template piedra_papel_tijera () {
-			
-			// Piedra -> 0, Papel -> 1, Tijera -> 2
-			signal input jugador1; // Representa el estado del jugador 1
-			signal input jugador2; // Representa el estado del jugador 2
-			signal output ganador; // 0 -> jugador1; 1 -> jugador2, 2 -> empate
-			
-			signal eq;
-			signal inv;
-			signal out;
-			signal j1;
-			signal j2;
-			
-			// --- Comparaciones de cada jugador y estado ---
-			
-			// Jugador 1
-			component J1_0 = igualdadRepetida(0);
-			J1_0.in <== jugador1; 
-			
-			component J1_1 = igualdadRepetida(1);
-			J1_1.in <== jugador1;
-			
-			component J1_2 = igualdadRepetida(2);
-			J1_2.in <== jugador1;
-			
-			// Jugador 2
-			component J2_0 = igualdadRepetida(0);
-			J2_0.in <== jugador2;
-			
-			component J2_1 = igualdadRepetida(1);
-			J2_1.in <== jugador2;
-			
-			component J2_2 = igualdadRepetida(2);
-			J2_2.in <== jugador2;
-			
-			// Igualdad entre jugadores (empate)
-			signal eq0;
-			signal eq1;
-			signal eq2;
-			
-			eq0 <== (J1_0.out) * (J2_0.out);
-			eq1 <== (J1_1.out) * (J2_1.out);
-			eq2 <== (J1_2.out) * (J2_2.out);  
-			eq <== eq0 + eq1 + eq2;       
-			
-			// Inversion de empate
-			inv <== (1 - eq);
-			
-			// Combinaciones ganadoras Jugador 1
-			signal j1_0;
-			signal j1_1;
-			signal j1_2;
-			
-			j1_0 <== (J1_0.out) * (J2_2.out);
-			j1_1 <== (J1_1.out) * (J2_0.out);
-			j1_2 <== (J1_2.out) * (J2_1.out);
-			
-			j1 <== j1_0 + j1_1 + j1_2;
-			
-			// Combinaciones ganadoras Jugador 2
-			signal j2_0;
-			signal j2_1;
-			signal j2_2;
-			
-			j2_0 <== (J1_0.out) * (J2_1.out);
-			j2_1 <== (J1_1.out) * (J2_2.out);
-			j2_2 <== (J1_2.out) * (J2_0.out);
-			
-			j2 <== j2_0 + j2_1 + j2_2;
-			
-			// Calculo final del ganador
-			out <== j2; // Simplificado: j2*1 + j1*0 es igual a j2
-			
-			ganador <== ((1 - inv) * 2) + (out * inv);
-		}
-	\end{lstlisting}
+		\begin{minipage}{\textwidth}
+			\begin{multicols}{2}
+				\begin{lstlisting}[
+					language=Circom,
+					basicstyle=\fontsize{8}{9.5}\selectfont\ttfamily,
+					numbers=none,
+					frame=none, 
+					breaklines=true,
+					xleftmargin=5pt
+					]
+					template piedra_papel_tijera () {
+						signal input jugador1; 
+						signal input jugador2; 
+						signal output ganador; 
+						
+						signal eq; signal inv;
+						signal out; signal j1; 
+						signal j2;
+						
+						// Jugador 1
+						component J1_0 = igualdad(0);
+						J1_0.in <== jugador1; 
+						component J1_1 = igualdad(1);
+						J1_1.in <== jugador1;
+						component J1_2 = igualdad(2);
+						J1_2.in <== jugador1;
+						
+						// Jugador 2
+						component J2_0 = igualdad(0);
+						J2_0.in <== jugador2;
+						component J2_1 = igualdad(1);
+						J2_1.in <== jugador2;
+						component J2_2 = igualdad(2);
+						J2_2.in <== jugador2;
+						
+						// Igualdad (empate)
+						signal eq0; signal eq1; 
+						signal eq2;
+						eq0 <== (J1_0.out)*(J2_0.out);
+						eq1 <== (J1_1.out)*(J2_1.out);
+						eq2 <== (J1_2.out)*(J2_2.out);  
+						eq <== eq0 + eq1 + eq2;       
+						
+						// Inversion de empate
+						inv <== (1 - eq);
+						
+						// Ganadoras Jugador 1
+						signal j1_0; signal j1_1; 
+						signal j1_2;
+						j1_0 <== (J1_0.out)*(J2_2.out);
+						j1_1 <== (J1_1.out)*(J2_0.out);
+						j1_2 <== (J1_2.out)*(J2_1.out);
+						j1 <== j1_0+j1_1+j1_2;
+						
+						// Ganadoras Jugador 2
+						signal j2_0; signal j2_1; 
+						signal j2_2;
+						j2_0 <== (J1_0.out)*(J2_1.out);
+						j2_1 <== (J1_1.out)*(J2_2.out);
+						j2_2 <== (J1_2.out)*(J2_0.out);
+						j2 <== j2_0+j2_1+j2_2;
+						
+						// Calculo final
+						out <== j2; 
+						ganador <== ((1-inv)*2)+(out*inv);
+					}
+				\end{lstlisting}
+			\end{multicols}
+		\end{minipage}
+		
+		\vspace{2pt}
+		\caption{Implementación de Piedra, papel y tijera}
+		\label{cod:piedra-papel-tijera-declarativa}
+		\vspace{5pt}
+		\hrule 
+	\end{figure}
 	
 	\vspace{0.2cm}
 	\noindent Tras la introducción del código equivalente a la lógica del juego, puede apreciarse a simple vista la complejidad de describir flujos lógicos usando Circom, requiriendo tanto de maestría en su sintaxis y recursos, como de destreza para reflejar fielmente la lógica del juego.
@@ -2190,13 +2194,18 @@ placement=H
 	
 	\section{Ejemplo con constraints generadas automáticamente}
 	
+	
 	\chapter{Implementación}
 	\section{Explicación y ejemplo de la construcción de las reglas}
+	
+	\chapter{Verificación de los operadores}
+	
 	
 	\chapter{Experimentos}
 	\section{Aplicación de la generación automática sobre juegos simples}
 	\section{Aplicación de la generación automática sobre circomLib y comparación de constraints}
 	\section{Caso de uso, verificación y búsqueda de bugs}
+	
 	
 	
 	\bibliographystyle{unsrt} % Estilo sencillo que numera por orden de aparición
