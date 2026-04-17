@@ -198,7 +198,7 @@ placement=H
 	
 	\vspace{0.2cm}
 		
-	\noindent Si repetimos la prueba una segunda vez ($0,1*0,1 = 0,01$), se reduce la probabilidad inicial de 0,1 a 0,01. Es decir, a medida que las repeticiones aumentan, menor es la probabilidad de que se acierte al azar, ya que ésta converge a 0, alcanzando así una certeza práctica sin haber revelado ni un solo dígito del décimo.
+	\noindent \textcolor{red}{Sí repetimos la prueba una segunda vez ($0,1*0,1 = 0,01$)}, se reduce la probabilidad inicial de 0,1 a 0,01. Es decir, a medida que las repeticiones aumentan, menor es la probabilidad de que se acierte al azar, ya que ésta converge a 0, alcanzando así una certeza práctica sin haber revelado ni un solo dígito del décimo.
 	
 	\end{minipage}
 	\caption{Zero Knowledge Proof} 
@@ -226,7 +226,7 @@ placement=H
 	\end{definicion}
 	
 	\vspace{0.25cm}
-	\noindent Estas pruebas destacan por su reducido tamaño de prueba y corto tiempo de verificación. Sin embargo, presentan la desventaja de requerir una fase inicial conocida como \textbf{configuración de confianza}.
+	\noindent \textcolor{red}{Estas pruebas destacan} por su reducido tamaño de prueba y corto tiempo de verificación. Sin embargo, presentan la desventaja de requerir una fase inicial conocida como \textbf{configuración de confianza}.
 	
 	\begin{definicion}[Configuración de confianza]
 	
@@ -378,6 +378,7 @@ placement=H
 		\label{ex:zkp-transformacion}
 	\end{figura}
 	
+	\textcolor{red}{Reestructurado para evitar espacio en blanco}
 	
 	\vspace{0.3cm}
 	
@@ -483,7 +484,7 @@ placement=H
 	\section{Snarkjs}
 	\label{sec:snarkjs}
 	
-	\noindent Snarkjs es una librería de JavaScript creada para la generación y verificación de pruebas de conocimiento cero partiendo de las restricciones en formato R1CS correspondientes, que puede ser ejecutado tanto en dispositivos móviles como en servidores con \textit{Node.js}, materializando el concepto de \hyperref[def:zk-snarks]{\textit{ \ref{def:zk-snarks} zk-SNARKS}} nombrado anteriormente \cite{thesis_clara}\cite{circom_articulo_clara}.
+	\noindent Snarkjs es una librería de JavaScript creada para la generación y verificación de pruebas de conocimiento cero partiendo de las restricciones en formato R1CS correspondientes, que puede ser ejecutado tanto en dispositivos \textcolor{red}{móviles} como en servidores con \textit{Node.js}, materializando el concepto de \hyperref[def:zk-snarks]{\textit{ \ref{def:zk-snarks} zk-SNARKS}} nombrado anteriormente \cite{thesis_clara}\cite{circom_articulo_clara}.
 	
 	\vspace{0.25cm}
 	
@@ -501,7 +502,8 @@ placement=H
 	\section{Preámbulo del problema}
 	\label{sec:descripcion-problema}
 	
-	\noindent Circom es un lenguaje de programación cuyo aprendizaje y aplicación puede ser complejo inicialmente, sobre todo si se carece de habilidad tratando con lenguajes lógicos basados en restricciones. Una de las razones principales de esta complejidad son los conocidos como \textit{underconstrained bugs}. 
+	
+	\noindent \textcolor{red}{Circom es un lenguaje de programación cuyo aprendizaje y aplicación puede ser complejo inicialmente, sobre todo si se carece de habilidad tratando con lenguajes lógicos basados en restricciones. Una de las razones principales de esta complejidad son los conocidos como \textit{underconstrained bugs}. }
 	
 	\begin{definicion}[Underconstrained bug]
 		\vspace{0.2cm}
@@ -552,7 +554,7 @@ placement=H
 	\noindent De esta forma, al no haber ninguna restricción que obligue a que \texttt{inv} sea el inverso de \texttt{a}, el vínculo entre la entrada \texttt{a} con la salida \texttt{b} no se cumple totalmente. Por tanto, al no ser añadida la asignación \texttt{inv <-}\texttt{- a!= 0 ? 1/a : 0} al sistema de ecuaciones, no existe para el verifier, permitiendo que un prover malicioso  pueda manipular el valor de \texttt{inv} para generar pruebas falsas que el sistema aceptaría.
 	 
 	\vspace{0.2cm}
-	\noindent Más allá del ejemplo expuesto, este error se repite de forma recurrente en muchos programas Circom, sobre todo aquellos desarrollados por principiantes en el lenguaje. Otros ejemplos donde este error está presente son en implementaciones de terceros que pueden encontrarse en repositorios públicos como el juego de \textit{"Hundir la flota"} \cite{battlezips_circom}, \textit{Dark Forest} \cite{darkforest_circuits_2021} o \textit{Decoder template en Circomlib} \cite{iden3_multiplexer_2023}.
+	\noindent Más allá del ejemplo expuesto, este error se repite de forma recurrente en muchos programas Circom, sobre todo aquellos desarrollados por principiantes en el lenguaje. Otros ejemplos donde este error está presente son en implementaciones de terceros que pueden encontrarse en repositorios públicos como \textcolor{red}{el juego de} \textit{"Hundir la flota"} \cite{battlezips_circom}, \textit{Dark Forest} \cite{darkforest_circuits_2021} o \textit{Decoder template en Circomlib} \cite{iden3_multiplexer_2023}.
 	
 	
 	\vspace{0.2cm}
@@ -566,7 +568,7 @@ placement=H
 	\noindent De este modo, \textbf{el compilador actuaría como un puente}, transformando automáticamente el flujo imperativo en un sistema de restricciones.
 		
 	\vspace{0.4cm}
-	\noindent Dicha transformación se consigue mediante la traducción de las reglas existentes en el flujo imperativo de Circom. Este proceso consiste en analizar los recursos existentes y especificar una regla de traducción para cada uno de ellos. De esta forma, el compilador consigue transformar automáticamente lo implementado en un sistema de restricciones.
+	\noindent \textcolor{red}{Dicha transformación se consigue mediante la traducción de las reglas existentes en el flujo imperativo de Circom. Este proceso consiste en analizar los recursos existentes y especificar una regla de transformación para cada uno de ellos. De esta forma, el compilador consigue traducir automáticamente lo implementado a un sistema de restricciones.}
 		
 	\section{Objetivos y Estructura del trabajo}
 	
@@ -585,7 +587,7 @@ placement=H
 	\noindent Para alcanzar los objetivos propuestos, hemos realizado las siguientes tareas durante el desarrollo del trabajo:
 	
 	\begin{enumerate}
-		\item Diseño y especificación de las reglas de traducción
+		\item \textcolor{red}{Diseño y} especificación de las reglas de traducción
 		\item Implementación dentro del compilador de las reglas especificadas
 		\item Verificación de los sistemas de ecuaciones generados por las reglas
 		\item Aplicación de la nueva funcionalidad en casos reales
@@ -597,11 +599,12 @@ placement=H
 	\noindent Para alcanzar los objetivos propuestos, este documento se ha estructurado en los siguientes capítulos:
 	
 	\begin{itemize}
-		\item Capítulo 1 (Introducción a Circom): Se introduce el contexto sobre la tecnología que vamos a tratar y ofrecer una visión general de lo que pretendemos hacer con ella a lo largo del trabajo.
+		\item Capítulo 1 (Introducción a Circom): \textcolor{red}{Se introduce el} contexto sobre la tecnología que vamos a tratar y ofrecer una visión general de lo que pretendemos hacer con ella a lo largo del trabajo.
 		\item Capítulo 2 (Definición del problema): Se definirá el problema y se presentará un ejemplo.
 		\item Capítulo 3 (Desarrollo del problema): Especificación técnica de las modificaciones que se llevarán a cabo en el compilador del lenguaje.
 		\item Capítulo 4 (Implementación): 
-		\item Capítulo 5 (Experimentos):
+		\item Capítulo 5 (Verificación de operadores): 
+		\item Capítulo 6 (Experimentos):
 	\end{itemize}
 	
 	
@@ -625,7 +628,7 @@ placement=H
 	
 	\begin{enumerate}
 		\item \textbf{Asimilar el paradigma de verificación frente al de ejecución}, comprender que el objetivo principal no es realizar un cálculo o cómputo, sino generar un sistema de restricciones con el objetivo de verificar la validez de una demostración.
-		\item  \textbf{Adaptarse a la complejidad del diseño algebraico}, procedimiento que implica crear circuitos en los que cada operación tiene que ser expresada a través de restricciones algebraicas lineales, asegurando de esta manera el cumplimiento del formato R1CS y la descomposición de la lógica algebraica.
+		\item  \textcolor{red}{\textbf{Adaptarse a la complejidad del diseño algebraico}, procedimiento que implica construir circuitos en los que cada operación tiene que ser expresada a través de restricciones algebraicas lineales, asegurando de esta manera el cumplimiento del formato R1CS y la descomposición de la lógica algebraica.}
 	\end{enumerate}
 	
 	
@@ -636,7 +639,7 @@ placement=H
 	\noindent Por tanto, para aquellas personas que requieran el uso de este lenguaje, pero se enfrenten a la dificultad del cambio de paradigma se expone una solución cuyo objetivo es facilitar el uso de Circom, explotando su cualidad imperativa.
 	
 	\vspace{0.2cm}
-	\noindent La propuesta radica en la modificación del compilador de Circom para incorporar una nueva funcionalidad que habilite la traducción del cuerpo imperativo desarrollado en un programa Circom a ecuaciones algebraicas en formato R1CS equivalentes.
+	\noindent La propuesta radica en la modificación del compilador de Circom para incorporar una nueva funcionalidad que \textcolor{red}{habilite} la traducción del cuerpo imperativo desarrollado en un programa Circom a ecuaciones algebraicas en formato R1CS equivalentes.
 	
 	\vspace{0.2cm}
 	\noindent El cuerpo imperativo tras la modificación del compilador no sería únicamente funcional para la generación del testigo, sino que con dicha propuesta se permitiría la conversión del código correspondiente tal y como se haría si dicho cuerpo fuera el equivalente al generador de las restricciones R1CS.
@@ -663,7 +666,7 @@ placement=H
 	\noindent Esta restricción permite vincular completamente la entrada \texttt{a} con la salida \texttt{b}. Su ausencia en el código \ref{cod:underc-bug} es lo que provoca el mencionado underconstrained bug. Al añadirla, se soluciona el error, ya que, a pesar de que \texttt{inv} podría adoptar un valor distinto al que se le asignó, la señal \texttt{a} queda ahora limitada por el valor de \texttt{b} a través de la restricción \texttt{a*b===0}, la cual sí se incorpora al sistema de ecuaciones. De este modo, existe una restricción que obliga a la señal \texttt{a} a adoptar un único valor, garantizando así un circuito seguro.
 	
 	\vspace{0,2cm}
-	\noindent Por otro lado, el segundo bloque de código es equivalente al sistema de ecuaciones generado por el primer bloque de código, salvo que este último aprovecha la nueva funcionalidad del compilador.
+	\noindent \textcolor{red}{Por otro lado, el segundo bloque tiene el mismo comportamiento operacional que el primero, con la única diferencia de que éste hace uso de autocomplete. De esta forma se genera un sistema de ecuaciones equivalente al del primer bloque.}
 	
 	\vspace{0,2cm}
 	\noindent A través del análisis del código de este segundo bloque, se distingue la sencillez de un bloque básico \texttt{if-else} que tiene como objetivo determinar si la entrada \texttt{a} es igual a cero o no.
@@ -782,6 +785,46 @@ placement=H
 		\hrule 
 	\end{figure}
 	
+	
+	
+	\vspace{0.2cm}
+	\noindent \textcolor{red}{Para simular la lógica del juego partimos de 2 señales de entrada, que representan los dos jugadores del juego (\texttt{jugador1} y \texttt{jugador2}), y una señal de salida (\texttt{ganador}).}
+	
+	\vspace{0.2cm}
+	\noindent \textcolor{red}{Las señales \texttt{jugador1} y \texttt{jugador2} representan cuál ha sido el elemento escogido por cada jugador. Estas señales pueden tener únicamente 3 valores, cuyo significado es el siguiente:}
+	
+	\textcolor{red}{
+	\begin{enumerate}
+		\item Piedra: 0
+		\item Papel: 1
+		\item Tijera: 2
+	\end{enumerate}
+}
+	
+	\vspace{0.2cm}
+	\noindent \textcolor{red}{Como se ha mencionado en el capítulo anterior, las variables deben conocerse en tiempo de compilación para poder construir correctamente el circuito lógico. Por esta razón, para determinar qué elemento ha elegido cada jugador, es necesario crear un componente por cada alternativa disponible (tijera, papel o piedra) y hacer lo mismo con los dos jugadores.}
+	
+	\vspace{0.2cm}
+	\noindent \textcolor{red}{De esta manera, seremos capaces de determinar cuál fue el elemento elegido por cada jugador y, basándonos en las reglas del juego, podremos establecer si se trata de una victoria del jugador 1, una victoria del jugador 2 o un empate.}
+	
+	
+	\vspace{0.2cm}
+	\noindent \textcolor{red}{Por otro lado, la señal \texttt{ganador} representa el resultado final del juego, teniendo la posibilidad de tomar tres valores distintos dependiendo del desempeño del juego:}
+	
+	\textcolor{red}{
+	\begin{enumerate}
+		\item Victoria del Jugador 1: 0
+		\item Victoria del Jugador 2: 1
+		\item Empate: 2
+	\end{enumerate}}
+	
+	\vspace{0.2cm}
+	\noindent \textcolor{red}{Una vez definida la función de cada señal y el significado de cada componente, la estrategia para reproducir la lógica del juego resulta directa. }
+	
+	\vspace{0.2cm}
+	\noindent \textcolor{red}{Mediante la combinación de señales de igualdad y operaciones de suma y producto, el circuito calcula el resultado de manera sistemática. Así, la determinación del ganador se consigue por medio de la interacción entre las señales activadas.}
+	
+
 	\vspace{0.2cm}
 	\noindent Tras la introducción del código equivalente a la lógica del juego, puede apreciarse a simple vista la complejidad de describir flujos lógicos usando Circom, requiriendo tanto de maestría en su sintaxis y recursos, como de destreza para reflejar fielmente la lógica del juego.
 	
