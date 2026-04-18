@@ -1,4 +1,4 @@
-\begin{thebibliography}{11}
+\begin{thebibliography}{14}
 
 \bibitem{wiki_zkp}
 Wikipedia. (2026).
@@ -56,7 +56,7 @@ Dark Forest Team. (2021).
 
 \bibitem{iden3_multiplexer_2023}
 Iden3. (2023).
-\newblock \emph{Multiplexer circuit - circomlib}.
+\newblock \emph{Circuits/multiplexer.circom}.
 \newblock \url{https://github.com/iden3/circomlib/blob/master/circuits/multiplexer.circom}.
 \newblock Accedido: 09-04-2026.
 
@@ -65,5 +65,21 @@ Martínez, L. (2026).
 \newblock \emph{zk-rock-paper-scissors: A Zero-Knowledge implementation in Circom} [Software].
 \newblock \url{https://github.com/luciamarst/zk-rock-paper-scissors}.
 \newblock Accedido: 03-04-2026.
+
+\bibitem{studocu_division_entera}
+Studocu. (s. f.).
+\newblock \emph{Teorema de la división entera}. Universitat Politècnica de València.
+\newblock \url{https://www.studocu.com/es/document/universitat-politecnica-de-valencia/matematicas/teorema-de-la-division-entera/59857285}.
+\newblock Accedido: 18-04-2026.
+
+\bibitem{circomlib_comparators}
+Iden3. (s. f.). 
+\newblock \emph{Circuits/comparators.circom} [Código fuente]. GitHub. 
+\newblock \url{https://github.com/iden3/circomlib/blob/master/circuits/comparators.circom}
+
+\bibitem{circomlib_bitify}
+Iden3. (s. f.). 
+\newblock \emph{Circuits/bitify.circom} [Código fuente]. GitHub. 
+\newblock \url{https://github.com/iden3/circomlib/blob/master/circuits/bitify.circom}
 
 \end{thebibliography}

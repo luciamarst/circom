@@ -1053,9 +1053,7 @@ placement=H
 	\subsection{Operadores Aritméticos}
 	
 	
-	\subsubsection{Suma, resta y multiplicación}
-	
-	\noindent Los operadores de suma y resta son los más sencillos de implementar debido a su naturaleza, ya que ninguna de estas operaciones corre el riesgo de generar una declaración que exceda el segundo grado. Por tanto, siempre cumplirán el formato R1CS y no se requerirán señales intermedias para asegurar el cumplimiento de los estándares algebraicos.
+	\noindent Los operadores de suma y resta son los más sencillos de implementar debido a su naturaleza, ya que ninguna de estas operaciones corre el riesgo de generar declaraciones que incumplan el formato R1CS. Por tanto, no se requerirán señales intermedias para asegurar el cumplimiento de los estándares algebraicos.
 	
 	\vspace{0.2cm}
 	\noindent Esto no aplica a la multiplicación. El motivo de esta diferencia con respecto a la suma y resta se debe a que existe una incertidumbre respecto al grado de la declaración. Al tratarse de un producto, no se puede garantizar que sus operandos no provengan de otra operación cuyo grado sea cuadrático.
@@ -1068,7 +1066,8 @@ placement=H
 	
 	\begin{definicion}[Teorema de la división]
 		\label{def:teo-div}
-		Dados dos enteros $a$ (dividendo) y $b$ (divisor), con $b \neq 0$, existen unos únicos enteros $q$ (cociente) y $r$ (resto) tales que:
+		\textcolor{red}{
+		Dados dos enteros $a$ (dividendo) y $b$ (divisor), con $b \neq 0$, existen únicamente dos enteros $q$ y $r$ tales que:
 		\begin{equation*} 
 			\begin{aligned}
 				a &= b \cdot q + r \\ 
@@ -1079,115 +1078,202 @@ placement=H
 		\begin{itemize}
 			\item $q$ representa el \textbf{cociente} y $r$ representa el \textbf{resto}.
 		\end{itemize}
+	}
 	\end{definicion}
 	
 	\vspace{0.2cm}
-	\noindent Conociendo este teorema, el cuál presenta dos condiciones necesarias, en las siguientes secciones se especificará la aplicación de este teorema para conseguir la traducción a restricciones algebraicas deseada.
+	\noindent Conociendo este teorema \cite{studocu_division_entera}, en las siguientes secciones se especificará la aplicación de este teorema para conseguir la traducción a las restricciones algebraicas deseadas para los operadores división y módulo.
 	
 	\vspace{0.3cm}
 	
 	\subsubsection{División}
 	
-	\noindent Partiendo de la ecuación \(a = b * q + r\), podemos llegar al resultado de la operación \(a / b\) forzando a que se cumpla, pero despreciando el resto (ya que se trata de división entera).
+	\noindent Partiendo de la ecuación \(a = b * q + r\), podemos llegar al resultado de la operación \(a / b\) mediante el cociente y el resto.
 	
 	\vspace{0.3cm}
-	
-	\noindent El término ''forzar'' hace referencia a usar una señal auxiliar, de forma que partiendo del dividendo y del divisor, el cociente sea obligado a tomar el valor que buscamos, ya que de lo contrario la ecuación no podrá satisfacerse.
-	
-	\vspace{0.3cm}
-	\noindent
-	Ejemplo de código en Circom:
+	\noindent En Circom, al trabajar sobre un cuerpo finito $\mathbb{F}_p$ implica que el valor de todas las señales debe ser un elemento del mismo, restringiendo de esta manera los valores al conjunto de los enteros. Por este motivo, la división decimal nunca existirá en este contexto.
 	
 	\vspace{0.3cm}
+	\noindent Por tanto, en esta situación es el cociente $q$ el valor que buscamos para esta operación. Esto no significa que el resto $r$ sea despreciado, ya que es fundamental para satisfacer las restricciones  $a = b \cdot q + r $ y $0 \leq r < |b|$. Únicamente con el cumplimiento de estas restricciones se garantiza que el valor de $q$ sea único y correcto según el teorema.
 	
-	\begin{lstlisting}[language=Circom]
-		template IntegerDivision() {
-			signal input a; // Dividendo
-			signal input b; // Divisor
-			signal output c; // Cociente q
+	\vspace{0.3cm}
+	\noindent De forma que el resto $r$ tomará el valor correspondiente para satisfacer la expresión $a = b \cdot q + r $, al igual que el cociente $q$, cumpliendo así el teorema y obteniendo el valor $q$ buscado.
+	
+	
+	\vspace{0.3cm}
+	\noindent Para simular el comportamiento de este operador, el sistema de ecuaciones no solo define $a = b \cdot q + r $, sino que impone las condiciones $b \neq 0$ y $0 \leq r < |b|$ para garantizar la satisfacibilidad del sistema de ecuaciones.
+	
+	\vspace{0.3cm}
+	\noindent De esta manera, para conseguir que el cociente $q$ obtenga el valor esperado, se realizan las siguientes transformaciones sobre la expresión del teorema: 
+	
+	\begin{align}
+		a = b \cdot q + r \\
+		a - (b \cdot q + r) = 0 
+	\end{align}
+	
+	\vspace{0.3cm}
+	\noindent Así, al obligar a que la expresión sea igual a cero, garantizamos que el cociente $q$ y el resto $r$ tomen los valores exactos que satisfacen el teorema dentro del sistema.
+	
+	\vspace{0.3cm}
+	\begin{mi_ejemplo}
+		\caption{Pseudocódigo división}
+		\label{ex:pseudocodigo-div}
+		\begin{lstlisting}[language=Circom]
+			template IntegerDivision() {
+				signal input a; // Dividendo
+				signal input b; // Divisor
+				signal output c; // Cociente q
+				
+				signal r;
+				signal q;
+				
+				// Comprobamos que b!= 0
+				component eq = IsZero();
+				
+				eq.in <== b;
+				eq.out === 0;
+				
+				// Comprobamos que 0<= r < |b|
+				// 0 <= r no se comprueba porque es implicito
+				
+				component lt = LessThan();
+				lt[0].in<==r;
+				lt[1].in<==b;
+				lt.out === 1;
+				
+				// Forzamos a que se cumpla a - (b*q+r) = 0
+				a === b * q + r;
+				c <== q;
+			}
 			
-			var q;
-			a === b * q;
-			c <== q;
-		}
-		
-		component main = IntegerDivision();
-	\end{lstlisting}
+			component main = IntegerDivision();
+		\end{lstlisting}
+	\end{mi_ejemplo}
+	
+	\noindent Las funciones \texttt{IsZero()} y \texttt{LessThan()} pertenecen a la librería \texttt{circomlib} \cite{circomlib_comparators}.
 	
 	\subsubsection{Módulo}
 	
-	\noindent Partiendo de la ecuación \(a = b * q + r\), podemos llegar al resultado de la operación \(a \% b\) con la variable r, la que representa el resto de una división.
+	\noindent El comportamiento del operador módulo se obtiene de manera equivalente a la división, con la diferencia de que el valor buscado ya no es el cociente $q$, sino el resto $r$. Por tanto, el sistema de ecuaciones es exactamente el mismo, pero devolviendo como valor final dicho resto.
 	
 	\vspace{0.2cm}
 	
-	\begin{align}
-		a &= b \cdot q + r \\
-		r &= a - (b \cdot q) \\
-		r &= a - (b \cdot ( a / b) )
-	\end{align}
+	\vspace{0.3cm}
+	\begin{mi_ejemplo}
+		\caption{Pseudocódigo módulo}
+		\label{ex:pseudocodigo-mod}
+		\begin{lstlisting}[language=Circom]
+			template IntegerDivision() {
+				signal input a; // Dividendo
+				signal input b; // Divisor
+				signal output c; // Resto r
+				
+				signal r;
+				signal q;
+				
+				// Comprobamos que b!= 0
+				component eq = IsZero();
+				
+				eq.in <== b;
+				eq.out === 0;
+				
+				// Comprobamos que 0<= r < |b|
+				// 0 <= r no se comprueba porque es implicito
+				
+				component lt = LessThan();
+				lt[0].in<==r;
+				lt[1].in<==b;
+				lt.out === 1;
+				
+				// Forzamos a que se cumpla a - (b*q+r) = 0
+				a === b * q + r;
+				c <== r; //Observar que ya no es q 
+			}
+			
+			component main = IntegerDivision();
+		\end{lstlisting}
+	\end{mi_ejemplo}
+	
+	\noindent Las funciones \texttt{IsZero()} y \texttt{LessThan()} pertenecen a la librería \texttt{circomlib} \cite{circomlib_comparators}.
 	
 	
 	\subsubsection{Traducción de operadores}
-	\begin{tabular}{|c|>{\centering\arraybackslash}p{14cm}|}
+	\renewcommand{\arraystretch}{5}
+	\begin{tabular}{|c|>{\centering\arraybackslash}m{13cm}|}
 		\hline
 		\textbf{Operación} & \textbf{Deducción} \\
 		\hline
 		
-		\texttt{$e= e_1 + e_2$} & 
+		\texttt{e = a $+$ b} & 
 		\makecell[c]{ 
 			$$ 
 			\begin{prooftree} 
-				\hypo{TC(e_1) = (C_1, e_1')} 
-				\hypo {TC(e_2) = (C_2, e_2')} 
-				\infer2{TC(e_1 + e_2) = (C_1 \wedge C_2,  e_1' + e_2')}
+				\hypo{TC(a) = (C_1, a_1')} 
+				\hypo {TC(b) = (C_2, b_2')} 
+				\infer2{TC(a + b) = (C_1 \wedge C_2,  a' + b')}
 			\end{prooftree} 
 			$$} \\
 		
 		\hline
 		
-		\texttt{$e= e_1 - e_2$} & 
-		\makecell[c]{ 
-			$$ 
-			\begin{prooftree} 
-				\hypo{TC(e_1) = (C_1, e_1')} 
-				\hypo {TC(e_2) = (C_2, e_2')} 
-				\infer2{TC(e_1 + e_2) = (C_1 \wedge C_2, e_1' - e_2')}
-			\end{prooftree} 
-			$$} \\
-		\hline
-		
-		\texttt{$e= e_1 * e_2$} & 
-		\makecell[c]{ 
-			$$ 
-			\begin{prooftree} 
-				\hypo{TC(e_1) = (C_1, e_1')} 
-				\hypo {TC(e_2) = (C_2, e_2')} 
-				\infer2{TC(e_1 + e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} = e_1' * e_2'\}, v_{aux})}
-			\end{prooftree} 
-			$$} \\
-		\hline
-		
-		\texttt{$e= a / b$} & 
+		\texttt{e= a $-$ b} & 
 		\makecell[c]{ 
 			$$ 
 			\begin{prooftree} 
 				\hypo{TC(a) = (C_1, a')} 
 				\hypo {TC(b) = (C_2, b')} 
-				\infer2{TC(a / b) = (C_1 \wedge C_2 \wedge \{v_{aux} = b' * q'\}, a' = v_{aux} + r')}
+				\infer2{TC(a + b) = (C_1 \wedge C_2, a' - b')}
 			\end{prooftree} 
 			$$} \\
-		
 		\hline
 		
-		\texttt{$e = a \% b$} & 
+		\texttt{e= a $*$ b} & 
 		\makecell[c]{ 
 			$$ 
 			\begin{prooftree} 
 				\hypo{TC(a) = (C_1, a')} 
 				\hypo {TC(b) = (C_2, b')} 
-				\infer2{TC(a \% b) = (C_1 \wedge C_2 \wedge \{v_{aux} = a'/b'\} \wedge \{v_{aux_2} = b * v_{aux}\}, a' - v_{aux_2})}
+				\infer2{TC(a + b) = (C_1 \wedge C_2 \wedge \{v_{aux} = a' * b'\}, v_{aux})}
 			\end{prooftree} 
 			$$} \\
+		\hline
+		
+		\texttt{e = a $/$ b} & 
+		\makecell[c]{ 
+			\begin{prooftree} 
+				\hypo{TC(a) = (C_1, a')} 
+				\hypo{TC(b) = (C_2, b')} 
+				\hypo{q', r' \text{ son señales intermedias}} 
+				\infer3{TC(a / b) = (C_1 \wedge C_2 \wedge \left\{ 
+					\begin{array}{l} 
+						b' \neq 0, \\
+						0 \leq r' < |b'|, \\
+						v_{aux} = b' \cdot q',\\
+						a' === v_{aux} + r'
+					\end{array} 
+					\right\}, 
+					q')}
+			\end{prooftree} 
+		} \\
+		\hline
+		
+		\texttt{e = a \% b} & 
+		\makecell[c]{ 
+			\begin{prooftree} 
+				\hypo{TC(a) = (C_1, a')} 
+				\hypo{TC(b) = (C_2, b')} 
+				\hypo{q', r' \text{ son señales intermedias}} 
+				\infer3{TC(a / b) = (C_1 \wedge C_2 \wedge \left\{ 
+					\begin{array}{l} 
+						b' \neq 0, \\
+						0 \leq r' < |b'|, \\
+						v_{aux} = b' \cdot q',\\
+						a' === v_{aux} + r'
+					\end{array} 
+					\right\}, 
+					r')}
+			\end{prooftree} 
+		} \\
 		\hline
 	\end{tabular}
 	
@@ -1431,7 +1517,11 @@ placement=H
 			\label{cod:num2bits}
 		\end{codigo}
 		
-		\noindent \textit{Observación}: Esta implementación se trata de un pseudocódigo equivalente a la implementación del sistema de ecuaciones desarrollado en el compilador.
+		
+		\noindent \textcolor{red}{Este bloque de código corresponde a la plantilla \textit{Num2Bits()} de la librería \texttt{circomlib} \cite{circomlib_bitify}.}
+		
+		\vspace{0.25cm}
+		\noindent \textcolor{red}{Esta función ha sido el modelo de referencia para implementar la conversión decimal$-$binaria dentro de la nueva funcionalidad del compilador desarrollado.}
 		\vspace{0.5cm}
 		
 				
@@ -1638,6 +1728,8 @@ placement=H
 		
 		\vspace{0.2cm}
 		\noindent Gracias a la señal \texttt{inv\_signal}, incluso cuando ambas entradas son diferentes, la restricción puede satisfacerse ajustando el valor de la señal al inverso de la diferencia, para así obtener como producto de estas el 1.
+		
+		\newpage
 		
 		\subsubsection{Traducción de operadores}
 		\noindent A continuación, definiremos para cada operador su inferencia.
@@ -2001,7 +2093,6 @@ placement=H
 		\vspace{0.2cm} 
 		\noindent Por otro lado, EQI denota las siglas \textit{Equality Indicator}, haciendo referencia a una función que encargada de imitar al comportamiento explicado en la \hyperref[sss:ops-eq-neq]{\textit{Sección} \ref{sss:ops-eq-neq}} para dos entradas.
 		
-	\newpage
 
 	\subsection{Operadores de desplazamiento}
 	
