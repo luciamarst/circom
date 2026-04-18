@@ -203,6 +203,8 @@ placement=H
 	\end{minipage}
 	\caption{Zero Knowledge Proof} 
 	\label{ex:loteria}
+	
+	\hspace*{\fill} $\blacksquare$
 \end{mi_ejemplo}
 	
 	\vspace{0.25cm}
@@ -431,6 +433,8 @@ placement=H
 
 	\caption{Ilustración comparativa código-circuito}
 	\label{ex:varA-dist-zero}
+	
+	\hspace*{\fill} $\blacksquare$
 \end{mi_ejemplo}
 
 \vspace{0.2cm}
@@ -469,21 +473,23 @@ placement=H
 	
 	\noindent Siguiendo el \hyperref[ex:varA-dist-zero]{\textit{Ejemplo \ref{ex:varA-dist-zero}}}, la restricción \texttt{c <== a*b} se traduce al formato R1CS como el producto de dos combinaciones lineales A y B, forzando así que el valor de la suma de las señales a y b sea c.
 	
-\begin{mi_ejemplo}[H]
-	Dada la declaración:
-	\begin{equation*}
-		(a) \times (b) = (c)
-	\end{equation*}
-	Donde la estructura $A \cdot B = C$ se satisface asignando:
-	\begin{itemize}
-		\item $A = a$ (Combinación lineal 1)
-		\item $B = b$ (Combinación lineal 2)
-		\item $C = c$ (Resultado de la restricción)
-	\end{itemize}
-	
-	\caption{Transformación de var\_zero.circom a formato R1CS}
-	\label{ex:var_zero-to-R1CS}	
-\end{mi_ejemplo}
+	\begin{mi_ejemplo}[H]
+		\caption{Transformación de multiplicación formato R1CS}
+		\label{ex:var_zero-to-R1CS}	
+		
+		Dada la declaración:
+		\begin{equation*}
+			(a) \times (b) = (c)
+		\end{equation*}
+		Donde la estructura $A \cdot B = C$ se satisface asignando:
+		\begin{itemize}
+			\item $A = a$ (Combinación lineal 1)
+			\item $B = b$ (Combinación lineal 2)
+			\item $C = c$ (Resultado de la restricción)
+		\end{itemize}
+		
+		\hspace*{\fill} $\blacksquare$
+	\end{mi_ejemplo}
 
 	\vspace{0.3cm}
 	
@@ -663,11 +669,15 @@ placement=H
 		\includegraphics[width=1.0\textwidth]{imagenes/codigos_equiv.png}
 
 	  	\label{ex:ejemplo-problema}
+	  	
+	  	\hspace*{\fill} $\blacksquare$
 	\end{mi_ejemplo}
+	
+	\vspace{0,2cm}
+	\noindent El código de la izquierda emplea Circom sin hacer uso de la nueva funcionalidad, donde el programador debe definir explícitamente las restricciones necesarias para reproducir la lógica buscada. Por otro lado, el código de la derecha utiliza la nueva funcionalidad introducida en el compilador del lenguaje, permitiendo el uso de estructuras condicionales así como operadores lógicos. En este caso, el compilador modificado es el encargado de traducir esa lógica imperativa a restricciones aritméticas equivalentes.
 
 	\vspace{0,2cm}
-	\noindent Los códigos expuestos en \hyperref[ex:ejemplo-problema]{\textit{Ejemplo} \ref{ex:ejemplo-problema}} son equivalentes. El objetivo de ambos códigos es construir un sistema de ecuaciones para determinar si una entrada cualquiera es igual a cero. La diferencia radica en que el primero ha sido implementado utilizando las características que ofrece Circom, mientras que el segundo se ha implementado utilizando las modificaciones realizadas en este trabajo sobre el compilador del lenguaje.
-	
+	\noindent Por esto, ambos bloques de código son equivalentes, ya que el código de la izquierda declara manualmente el sistema de ecuaciones que el código de la derecha va a construir automáticamente.
 	
 	\vspace{0,2cm}
 	\noindent El primer bloque de código, a pesar de no hacer uso de la nueva funcionalidad, no genera un underconstrained bug  aunque utilice  el operador \texttt{<-}\texttt{-}.  Aludiendo al \hyperref[cod:underc-bug]{\textit{Código \ref{cod:underc-bug}}}, puede apreciarse que se diferencian exclusivamente en la restricción \texttt{a*b===0}.
@@ -891,6 +901,8 @@ placement=H
 			\end{minipage}
 			\rule{\textwidth}{0.8pt} 
 		\end{center}
+		
+		\hspace*{\fill} $\blacksquare$
 	\end{mi_ejemplo}
 	
 	
@@ -982,6 +994,8 @@ placement=H
 			\vspace{1cm}
 			\rule{\textwidth}{0.8pt} % Linea inferior continua
 		\end{center}
+		
+		\hspace*{\fill} $\blacksquare$
 	\end{mi_ejemplo}
 	
 
@@ -1148,6 +1162,8 @@ placement=H
 			
 			component main = IntegerDivision();
 		\end{lstlisting}
+		
+		\hspace*{\fill} $\blacksquare$
 	\end{mi_ejemplo}
 	
 	\noindent Las funciones \texttt{IsZero()} y \texttt{LessThan()} pertenecen a la librería \texttt{circomlib} \cite{circomlib_comparators}.
@@ -1192,6 +1208,8 @@ placement=H
 			
 			component main = IntegerDivision();
 		\end{lstlisting}
+		
+		\hspace*{\fill} $\blacksquare$
 	\end{mi_ejemplo}
 	
 	\noindent Las funciones \texttt{IsZero()} y \texttt{LessThan()} pertenecen a la librería \texttt{circomlib} \cite{circomlib_comparators}.
@@ -1490,6 +1508,8 @@ placement=H
 				\item Como consecuencia, el resultado final de la reconstrucción en \texttt{lc1} será un valor que nunca igualará al valor de entrada \texttt{in} ($p-3$). Al no cumplirse la restricción \texttt{lc1 === in}, el circuito resultará insatisfacible, detectando así que el número original no es representable con $n$ bits y, por tanto, se comporta como un valor fuera de rango o "negativo".
 			\end{enumerate}
 			
+			
+			\hspace*{\fill} $\blacksquare$
 		\end{mi_ejemplo}
 		
 		\begin{codigo}
@@ -1584,6 +1604,8 @@ placement=H
 			
 				\caption{Caso de uso del complemento opcional de tamaño}
 				\label{ex:uso-complemento-opc}
+				
+				\hspace*{\fill} $\blacksquare$
 		\end{mi_ejemplo}
 		
 		
@@ -1601,6 +1623,8 @@ placement=H
 	
 		
 		\subsubsection{Operadores $<, \leq, > \ y \ \geq$}
+		\label{sssec:less-greater}
+		
 		\noindent Para la implementación de dichos operadores únicamente es necesaria la función \textit{SecureLessThanEq(n)}.
 		
 		\vspace{0.2cm}
@@ -1768,11 +1792,10 @@ placement=H
 						\begin{array}{l} 
 							EQI(253).in[0] = e'_1, \\ 
 							EQI(253).in[1] = e'_2, \\ 
-							EQI(253).out = v_{aux}, \\ 
-							v_{aux} == 1
+							EQI(253).out = v_{aux}, 
 						\end{array} 
 						\right\}, 
-						1- v_{aux}
+						v_{aux}
 						\right) 
 					} 
 				\end{prooftree}
@@ -1793,11 +1816,10 @@ placement=H
 						\begin{array}{l} 
 							EQI(n).in[0] = e'_1, \\ 
 							EQI(n).in[1] = e'_2, \\ 
-							EQI(n).out = v_{aux}, \\ 
-							v_{aux} == 1
+							EQI(n).out = v_{aux}, 
 						\end{array} 
 						\right\}, 
-						1- v_{aux}
+						v_{aux}
 						\right) 
 					} 
 				\end{prooftree}
@@ -1818,11 +1840,10 @@ placement=H
 						\begin{array}{l} 
 							EQI.in[0] = e'_1, \\ 
 							EQI.in[1] = e'_2, \\ 
-							EQI.out = v_{aux}, \\ 
-							v_{aux} == 0
+							EQI.out = v_{aux}, 
 						\end{array} 
 						\right\}, 
-						v_{aux}
+						1- v_{aux}
 						\right) 
 					} 
 				\end{prooftree}
@@ -1844,11 +1865,10 @@ placement=H
 						\begin{array}{l} 
 							EQI(n).in[0] = e'_1, \\ 
 							EQI(n).in[1] = e'_2, \\ 
-							EQI(n).out = v_{aux}, \\ 
-							v_{aux} == 0
+							EQI(n).out = v_{aux}, 
 						\end{array} 
 						\right\}, 
-						v_{aux}
+						1- v_{aux}
 						\right) 
 					} 
 				\end{prooftree}
@@ -1870,8 +1890,7 @@ placement=H
 						\begin{array}{l}
 							\{SLTEq(253).in1 = e_2', \\
 							SLTEq(253).in2 = e_1', \\
-							SLTEq(253).out = v_{aux} \\
-							v_{aux} == 0
+							SLTEq(253).out = v_{aux} 
 							\}, 
 						\end{array}
 						\right\}, 
@@ -1897,8 +1916,7 @@ placement=H
 						\begin{array}{l}
 							\{SLTEq(n).in1 = e_2', \\
 							SLTEq(n).in2 = e_1', \\
-							SLTEq(n).out = v_{aux} \\
-							v_{aux} == 0
+							SLTEq(n).out = v_{aux} 
 							\}, 
 						\end{array}
 						\right\}, 
@@ -1926,8 +1944,7 @@ placement=H
 						\begin{array}{l}
 							\{SLTEq(253).in1 = e_1', \\
 							SLTEq(253).in2 = e_2', \\
-							SLTEq(253).out = v_{aux} \\
-							v_{aux} == 1
+							SLTEq(253).out = v_{aux} 
 							\}, 
 						\end{array}
 						\right\}, 
@@ -1955,8 +1972,7 @@ placement=H
 						\begin{array}{l}
 							\{SLTEq(n).in1 = e_1', \\
 							SLTEq(n).in2 = e_2', \\
-							SLTEq(n).out = v_{aux} \\
-							v_{aux} == 1
+							SLTEq(n).out = v_{aux} 
 							\}, 
 						\end{array}
 						\right\}, 
@@ -1984,8 +2000,7 @@ placement=H
 						\begin{array}{l}
 							\{SLTEq(253).in1 = e_1', \\
 							SLTEq(253).in2 = e_2', \\
-							SLTEq(253).out = v_{aux} \\
-							v_{aux} == 0
+							SLTEq(253).out = v_{aux} 
 							\}, 
 						\end{array}
 						\right\}, 
@@ -2013,8 +2028,7 @@ placement=H
 						\begin{array}{l}
 							\{SLTEq(n).in1 = e_1', \\
 							SLTEq(n).in2 = e_2', \\
-							SLTEq(n).out = v_{aux} \\
-							v_{aux} == 0
+							SLTEq(n).out = v_{aux} 
 							\}, 
 						\end{array}
 						\right\}, 
@@ -2042,8 +2056,7 @@ placement=H
 						\begin{array}{l}
 							\{SLTEq(253).in1 = e_2', \\
 							SLTEq(253).in2 = e_1', \\
-							SLTEq(253).out = v_{aux} \\
-							v_{aux} == 1
+							SLTEq(253).out = v_{aux} 
 							\}, 
 						\end{array}
 						\right\}, 
@@ -2071,8 +2084,7 @@ placement=H
 						\begin{array}{l}
 							\{SLTEq(n).in1 = e_2', \\
 							SLTEq(n).in2 = e_1', \\
-							SLTEq(n).out = v_{aux} \\
-							v_{aux} == 1
+							SLTEq(n).out = v_{aux} 
 							\}, 
 						\end{array}
 						\right\}, 
@@ -2086,12 +2098,14 @@ placement=H
 			\hline 
 		\end{longtable} 
 		
+		\vspace{0.2cm} 
+		\noindent Las siglas \textit{SLTEq} denotan \textit{SecureLessThanEq()}, función que simula el comportamiento explicado en la \hyperref[sssec:less-greater]{\textbf{Sección \ref{sssec:less-greater}}} para dos entradas.
 	
 		\vspace{0.2cm} 
 		\noindent \textit{Observación}: Es importante darse cuanta que podemos hacer uso de la misma función para los operadores $<, \leq, > \ y \ \geq$ explotando su carácter reflexivo. Para ello, notesé que las llamadas de los operadores $\le \ y \geq $ se invierten.
 		
 		\vspace{0.2cm} 
-		\noindent Por otro lado, EQI denota las siglas \textit{Equality Indicator}, haciendo referencia a una función que encargada de imitar al comportamiento explicado en la \hyperref[sss:ops-eq-neq]{\textit{Sección} \ref{sss:ops-eq-neq}} para dos entradas.
+		\noindent Por otro lado, EQI denota las siglas \textit{Equality Indicator}, haciendo referencia a una función encargada de imitar al comportamiento explicado en la \hyperref[sss:ops-eq-neq]{\textbf{Sección \ref{sss:ops-eq-neq}}} para dos entradas.
 		
 
 	\subsection{Operadores de desplazamiento}
@@ -2127,6 +2141,8 @@ placement=H
 				
 				\item Al transformarse los últimos dos bits en 0, el objetivo es agregar n ceros al final del array, completando así la representación binaria tras el desplazamiento.
 			\end{itemize}
+			
+			\hspace*{\fill} $\blacksquare$
 		\end{mi_ejemplo}
 		
 			
@@ -2232,6 +2248,9 @@ placement=H
 			\end{minipage}
 			\\ \hline
 		\end{tabular}
+		
+		\vspace{0.2cm}
+		\hspace*{\fill} $\blacksquare$
 	\end{mi_ejemplo}
 	
 	
@@ -2267,6 +2286,8 @@ placement=H
 			
 			mensaje <== less_0 * m1 + not_less_0 * m2;
 		\end{lstlisting}
+		
+		\hspace*{\fill} $\blacksquare$
 	\end{mi_ejemplo}
 	
 	\vspace{0.2cm}
@@ -2356,6 +2377,7 @@ placement=H
 		\end{lstlisting}
 	\end{itemize}
 	
+	\hspace*{\fill} $\blacksquare$
 	\end{mi_ejemplo}
 	
 	\noindent Aplicando la inducción, puede intuirse que siempre se repite el mismo patrón en el que cada condición utiliza la negación de las condiciones anteriores y el resultado de la comparación actual construir los bloques \texttt{if-else}
