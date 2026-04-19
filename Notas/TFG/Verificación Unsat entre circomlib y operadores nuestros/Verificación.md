@@ -34,4 +34,8 @@ Para ello, tenemos que generar los archivos $*$.smt2:
 
 EL verbose es necesario porque hay un bloque de código en Rust que pone que si no utilizamos el verbose lo que hace ffsol es generar el archivo smt2, usarlo para verificar y una vez acabe eliminarlo. Al añadir el verbose lo crea y no lo elimina al acabar.
 
+```
+../ZK-GENVER/target/release/zkgenver ej_eq.r1cs --solver ffsol --check_equivalence ej_eq_circomlib.r1cs
+```
+
 

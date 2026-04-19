@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Compilador.md",
+                "file": "Verificación Unsat entre circomlib y operadores nuestros/Verificación.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Compilador"
+              "title": "Verificación"
             }
           },
           {
@@ -93,12 +93,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Memoria.md",
+                "file": "Reuniones/Reunión 24-11-2025/Dudas.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Memoria"
+              "title": "Dudas"
             }
           },
           {
@@ -116,7 +116,7 @@
             }
           }
         ],
-        "currentTab": 6
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -264,19 +264,20 @@
       "bases:Crear nueva base": false
     }
   },
-  "active": "9a8605c39a8fdbb4",
+  "active": "f6f864863f332ac6",
   "lastOpenFiles": [
     "Compilador.md",
+    "Reuniones/Reunión 24-11-2025/Dudas.md",
+    "Reuniones/Reunión 24-11-2025/Imágenes/Pasted image 20251123131539.png",
     "Bienvenido.md",
-    "Reuniones/07-04-2026/Cambios alejandro.md",
     "Memoria.md",
+    "Verificación Unsat entre circomlib y operadores nuestros/Verificación.md",
+    "Reuniones/07-04-2026/Cambios alejandro.md",
     "Reuniones/07-04-2026/Pasted image 20260415205032.png",
     "Reuniones/07-04-2026/Pasted image 20260415205119.png",
     "Reuniones/07-04-2026/Pasted image 20260415205100.png",
-    "Reuniones/Reunión 24-11-2025/Imágenes/Pasted image 20251123131539.png",
     "Reuniones/07-04-2026",
     "Reuniones",
-    "Verificación Unsat entre circomlib y operadores nuestros/Verificación.md",
     "Reuniones/07-04-2026/Pasted image 20260416195544.png",
     "Verificación Unsat entre circomlib y operadores nuestros/Imagenes",
     "Verificación Unsat entre circomlib y operadores nuestros",

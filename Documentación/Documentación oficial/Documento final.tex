@@ -57,17 +57,17 @@
 	morecomment=[l]{//},
 	morecomment=[s]{/*}{*/},
 	morestring=[b]",
-	otherkeywords={<==, ==>, ===, <--, -->, ==}
+	otherkeywords={<==, ==>, ===, <--, -->}
 }
 
 \lstset{
 	language=Circom,
 	keywordstyle=\color{blue}\bfseries,
+	otherkeywords={<==, ==>, ===, <--, -->},
 	commentstyle=\color{green!50!black}\ttfamily,
 	stringstyle=\color{red}\ttfamily,
 	identifierstyle=\color{black},
 	classoffset=1,
-	otherkeywords={<==, ==>, ===, <--, -->, ==},
 	keywordstyle=\color{orange!80!black}\bfseries,
 	classoffset=0,
 	basicstyle=\small\ttfamily,
@@ -1101,6 +1101,7 @@ placement=H
 	\vspace{0.3cm}
 	
 	\subsubsection{División}
+	\label{sss:division}
 	
 	\noindent Partiendo de la ecuación \(a = b * q + r\), podemos llegar al resultado de la operación \(a / b\) mediante el cociente y el resto.
 	
@@ -1169,6 +1170,7 @@ placement=H
 	\noindent Las funciones \texttt{IsZero()} y \texttt{LessThan()} pertenecen a la librería \texttt{circomlib} \cite{circomlib_comparators}.
 	
 	\subsubsection{Módulo}
+	\label{sss:modulo}
 	
 	\noindent El comportamiento del operador módulo se obtiene de manera equivalente a la división, con la diferencia de que el valor buscado ya no es el cociente $q$, sino el resto $r$. Por tanto, el sistema de ecuaciones es exactamente el mismo, pero devolviendo como valor final dicho resto.
 	
@@ -1538,7 +1540,7 @@ placement=H
 		\end{codigo}
 		
 		
-		\noindent \textcolor{red}{Este bloque de código corresponde a la plantilla \textit{Num2Bits()} de la librería \texttt{circomlib} \cite{circomlib_bitify}.}
+		\noindent \textcolor{red}{Este bloque de código corresponde a la plantilla \textit{Num2Bits()} de la librería \texttt{circomlib} \cite{iden3_circomlib_bitify}.}
 		
 		\vspace{0.25cm}
 		\noindent \textcolor{red}{Esta función ha sido el modelo de referencia para implementar la conversión decimal$-$binaria dentro de la nueva funcionalidad del compilador desarrollado.}
@@ -2426,6 +2428,296 @@ placement=H
 	\section{Explicación y ejemplo de la construcción de las reglas}
 	
 	\chapter{Verificación de los operadores}
+	
+	\noindent La verificación de los operadores es un paso fundamental en este trabajo. Este proceso es necesario para garantizar que la nueva funcionalidad implementada construye sistemas de ecuaciones equivalentes a los generados naturalmente por el lenguaje Circom.
+	
+	\vspace{0.2cm}
+	\noindent Para realizar esta verificación de forma segura y fiable se ha empleado la herramienta \textit{ZK-GENVER}, desarrollada por el grupo de investigación Costa \cite{costa_group_zkgenver}.
+	
+	
+	\begin{definicion}
+		 ZK-GENVER es una herramienta diseñada para la verificación de sistemas de ecuaciones en formato R1CS. 
+	\end{definicion}
+	
+	\noindent Esta herramienta permite tanto la verificación determinista de un sistema de ecuaciones, es decir, si para una entrada hay solo una salida, como la comparación de equivalencia entre dos archivos R1CS. Esto posibilita comparar el código Circom base frente al que utiliza la nueva funcionalidad.
+	
+	\vspace{0.2cm}
+	\noindent Antes de pasar a la comparación de equivalencia entre cada par de códigos, se realizó una comprobación determinista para cada operador implementado, confirmando que todos cumplen con esta propiedad
+	
+	\vspace{0.2cm}
+	\noindent Por tanto, al conocer la naturaleza determinista de cada uno de los operadores, el siguiente paso es asegurar que la implementación de cada uno de ellos realmente construye un sistema de restricciones que sigue la lógica del mismo.
+	
+	\vspace{0.2cm}
+	\noindent Con este fin, se ha utilizado la herramienta \textit{ZK-GENVER} para comparar la equivalencia entre los sistemas de ecuaciones generados por los operadores de la \texttt{circomlib} y los generados por la nueva funcionalidad, validando así su correcto comportamiento \cite{iden3_circomlib}.
+	
+	\vspace{0.2cm}
+	\noindent De esta manera, si ambos códigos son equivalentes podremos confirmar que la nueva funcionalidad implementada realmente describe la lógica buscada.
+	
+	\section{Operadores Aritméticos}
+	\noindent Dentro del conjunto de operadores aritméticos, la verificación de equivalencia se ha centrado en los operadores de división y módulo. El motivo es que las operaciones de suma, resta y multiplicación no requieren restricciones adicionales a las que ya define un programa Circom de forma natural. Por lo tanto, al emplear la \texttt{circomlib}, los sistemas de ecuaciones generados son idénticos y su equivalencia está garantizada por construcción. 
+	
+	\vspace{0.2cm}
+	\noindent En cambio, la división y el módulo implican una lógica de restricciones más compleja, ya que no son operadores atómicos de Circom, requiriendo de esta manera restricciones adicionales para simular su comportamiento. Por ello, es indispensable validar que la nueva funcionalidad y la \texttt{circomlib} converjan en el mismo sistema de ecuaciones equivalente.
+	
+	
+	\vspace{0.2cm}
+	\noindent  La librería \texttt{circomlib} no ofrece funciones específicas para los operadores de división y módulo, pero podemos construirlas utilizando funciones que la propia \texttt{circomlib} ofrece para construir el comportamiento de estos operadores.
+	
+	\subsubsection{División}
+	\vspace{0.2cm}
+	\noindent El operador división, como se explico en la \hyperref[sss:division]{\textbf{Sección \ref{sss:division}}}, se basa en el teorema de la división para poder simular el comportamiento de este operador. 
+	
+	\vspace{0.2cm}
+	\noindent Por tanto, al no existir una función que imite este comportamiento en la \texttt{circomlib}, se implemento haciendo uso de las funciones \texttt{IsZero} y \texttt{LessThan(n)} que la librería ofrece.
+	
+	\vspace{0.2cm}
+	\noindent Estas funciones son usadas para asegurar que las restricciones $b\neq0$ y $0<=r<|b|$ se cumplen.
+	
+	\vspace{0.2cm}
+	\noindent De esta forma, el resultado del código sería el siguiente:
+	
+	
+	
+	\begin{mi_ejemplo}
+		\caption{Creación de división usando funciones de circomlib}
+		\label{ex:div-circomlib}
+	\begin{lstlisting}[
+			language=Circom,
+			basicstyle=\scriptsize\ttfamily, 
+			lineskip=-2pt,                  
+			aboveskip=5pt,                  
+			belowskip=5pt,                  
+			xleftmargin=10pt
+		]
+		template circomlibDivision(){
+			signal input a;
+			signal input b;
+			signal output salida; //Cociente
+			
+			
+			// Necesitamos que las senales tengan un valor para poder operar con ellas
+			// Este calculo no es anadido al sistema de ecuaciones
+			signal q<--a\b; //Cociente
+			signal r<--a%b; //Resto
+			
+			// Comprobamos que b!=0
+			component is_zero = IsZero();
+			is_zero.in<==b;
+			is_zero.out === 0;
+			
+			
+			// Comprobamos que 0<=r<|b|; 0 <= r no hace falta porque al estar en campo finito se entiende
+			// r < |b|
+			component lt = LessThan(2);
+			lt.in[0] <== r;
+			lt.in[1] <== b;
+			lt.out === 1;
+			
+			// Una vez hecho eso, comprobamos que se cumple a === b*q+r
+			
+			a === b*q +r;
+			salida <==q; 
+		}
+		
+		component main = circomlibDivision();
+		
+		
+	\end{lstlisting}
+	\end{mi_ejemplo}
+	
+	\vspace{0.2cm}
+	\noindent \textit{Observación: } El bloque de código expuesto es muy similar al pseudocódigo presentado en la \hyperref[sss:division]{\textbf{Sección \ref{sss:division}}}.
+	
+	\vspace{0.2cm}
+	\noindent TODO: No he podido comprobarlo porque al generar el smt con ZK-GENVER me da timeout aunque ponga n = 1 :(
+	
+	\subsubsection{Módulo}
+	\noindent El operador módulo seguiría una lógica similar a la expuesta en la división, con la única diferencia que la salida sería el resto en lugar del cociente, ya que en este caso es el valor esperado para esta operación.
+	
+	\noindent TODO: Lo mismo que div por el timeout porque solo sería cambiar q por r en la salida.
+	
+	\section{Operadores Lógicos}
+	\noindent La verificación de los operadores lógicos es sencilla. La librería \texttt{circomlib} dispone de un sección exclusiva de puertas lógicas, las cuales utilizamos para simular el comportamiento de este tipo de operadores \cite{iden3_gates_circom}.
+	
+	\vspace{0.2cm}
+	\noindent \textit{Observación} La verificaciones se realizaran sobre los códigos a comparar con tamaño $n=1$. El motivo de este tamaño es generar el número mínimo de restricciones necesarias, ya que al exceder un determinado límite, \textit{ZK-GENVER} no podría verificarlo correctamente, obteniendo como resultado \textbf{timeout}
+	
+	\subsection{Operador NOT}
+	
+	\noindent Equivalentes :)
+	
+	\subsection{Operador AND}
+	
+	\noindent Equivalentes :)
+	
+	\subsection{Operador OR}
+	
+	\noindent Equivalentes :)
+	
+	\subsection{Operador AND binario}
+	\noindent La librería \texttt{circomlib} no contiene una función explícita dedicada al operador \texttt{AND} bit a bit, por lo que para verificar la equivalencia entre ambos códigos, se ha implementado una función utilizando otras funciones pertenecientes a la librería para simular este comportamiento.
+	
+	\vspace{0.2cm}
+	\noindent Para dicha implementación serán necesarias las funciones \texttt{Num2Bits(n)} y \texttt{Bits2Num(n)} de la librería, ubicadas en el archivo \textit{bitify.circom}.
+	
+	\vspace{0.2cm}
+	\noindent Con la ayuda de estas funciones se ha podido implementar la siguiente función para el operador \texttt{AND} bit a bit.
+	
+	\begin{mi_ejemplo}
+		\caption{Creación de AND bit a bit usando funciones de circomlib}
+		\label{ex:andb-circomlib}
+		\begin{lstlisting}[
+			language=Circom,
+			basicstyle=\scriptsize\ttfamily, 
+			lineskip=-2pt,                  
+			aboveskip=5pt,                  
+			belowskip=5pt,                  
+			xleftmargin=10pt
+			]
+			template BitwiseAnd(n) {
+				signal input a;
+				signal input b;
+				signal output out;
+				
+				// Pasamos a
+				component n2b_a = Num2Bits(n);
+				component n2b_b = Num2Bits(n);
+				component b2n = Bits2Num(n);
+				
+				n2b_a.in <== a;
+				n2b_b.in <== b;
+				
+				// Aplicamos el && a cada par de bits con una multiplicacion
+				// Metemos el resultado en bits2num directamente, el resultado devuelto es decimal
+				for (var i = 0; i < n; i++) {
+					b2n.in[i] <== n2b_a.out[i] * n2b_b.out[i];
+				}
+				
+				out <== b2n.out;
+			}
+			
+			component main = BitwiseAnd(1);
+			
+		\end{lstlisting}
+	\end{mi_ejemplo}
+	
+	\vspace{0.2cm}
+	\noindent Una vez implementada esta función, se verifico su determinismo, obteniendo un resultado positivo.
+	
+	\begin{table}[h!]
+		\caption{Comparativa de la operación OR bit a bit (1 bit) entre la implementación estándar y el uso de autocompletado.}
+		\label{tab:comparativa-andb}
+		
+		\centering
+		\small % Tamaño de fuente adecuado para el ancho de página
+		\begin{tabular}{|p{0.46\textwidth}|p{0.46\textwidth}|}
+			\hline
+			\centering \textbf{Implementación Circomlib (Manual)} & \centering \textbf{Implementación Autocomplete} \cr \hline
+			\begin{lstlisting}[language=Circom, basicstyle=\tiny\ttfamily, numbers=none, frame=none, xleftmargin=0pt]
+				template BitwiseOr(n) {
+					signal input a, b;
+					signal output out;
+					
+					component n2b_a = Num2Bits(n);
+					component n2b_b = Num2Bits(n);
+					component b2n = Bits2Num(n);
+					
+					n2b_a.in <== a;
+					n2b_b.in <== b;
+					
+					for (var i = 0; i < n; i++) {
+						b2n.in[i] <== n2b_a.out[i] * n2b_b.out[i];
+					}
+					out <== b2n.out;
+				}
+			\end{lstlisting} 
+			& 
+			\begin{lstlisting}[language=Circom, basicstyle=\tiny\ttfamily, numbers=none, frame=none, xleftmargin=0pt]
+				template orb() autocomplete {
+					signal input a;
+					signal input b;
+					signal output c;
+					
+					// Operacion bitwise OR 
+					// inferida automaticamente
+					c <-- a &_(1) b;
+				}
+			\end{lstlisting} \\ \hline
+		\end{tabular}
+		
+	\end{table}
+	
+	\vspace{0.2cm}
+	\noindent Tras la comprobación determinista de ambos códigos mediante el análisis de restricciones R1CS, se procedió a la verificación de equivalencia. Los resultados obtenidos confirman que ambos circuitos son equivalentes, demostrando que la nuevo funcionalidad construye un sistema de ecuaciones que simula la verdadera lógica de este operador.
+	
+	
+	
+	\subsection{Operador OR binario}
+	\noindent EL operador \texttt{OR} bit a bit presenta el mismo problema que \texttt{AND}, ya que en la \texttt{circomlib} no hay una función explícita dedicada a estos operadores. Para solucionarlo, seguimos los mismos pasos que para el operador \texttt{AND} bit a bit, por lo que implementamos una función similar para \texttt{OR} bit a bit.
+	
+	\vspace{0.2cm}
+	\noindent De esta forma, los códigos implementados son prácticamente iguales:
+	
+		\begin{table}[h!]
+		\caption{Comparativa de la operación OR bit a bit (1 bit) entre la implementación estándar y el uso de autocompletado.}
+		\label{tab:comparativa-orb}
+		
+		\centering
+		\small % Tamaño de fuente adecuado para el ancho de página
+		\begin{tabular}{|p{0.46\textwidth}|p{0.46\textwidth}|}
+			\hline
+			\centering \textbf{Implementación Circomlib (Manual)} & \centering \textbf{Implementación Autocomplete} \cr \hline
+			\begin{lstlisting}[language=Circom, basicstyle=\tiny\ttfamily, numbers=none, frame=none, xleftmargin=0pt]
+				template BitwiseOr(n) {
+					signal input a, b;
+					signal output out;
+					
+					component n2b_a = Num2Bits(n);
+					component n2b_b = Num2Bits(n);
+					component b2n = Bits2Num(n);
+					
+					n2b_a.in <== a;
+					n2b_b.in <== b;
+					
+					for (var i = 0; i < n; i++) {
+						b2n.in[i] <== n2b_a.out[i] + n2b_b.out[i] - n2b_a.out[i] * n2b_b.out[i];
+					}
+					out <== b2n.out;
+				}
+			\end{lstlisting} 
+			& 
+			\begin{lstlisting}[language=Circom, basicstyle=\tiny\ttfamily, numbers=none, frame=none, xleftmargin=0pt]
+				template orb() autocomplete {
+					signal input a;
+					signal input b;
+					signal output c;
+					
+					// Operacion bitwise OR 
+					// inferida automaticamente
+					c <-- a |_(1) b;
+				}
+			\end{lstlisting} \\ \hline
+		\end{tabular}
+		
+	\end{table}
+	
+	\vspace{0.2cm}
+	\noindent Siguiendo la similitud con el operador \texttt{AND} bit a bit, el resultado de la verificación de equivalencia indicó que ambos códigos son equivalentes.
+	
+	\section{Operadores de Comparación}
+	
+	\subsection{Operador LessThan}
+	\subsection{Operador LessThanEq}
+	\subsection{Operador GreaterThan}
+	\subsection{Operador GreaterThanEq}
+	
+	\subsection{Operador Igualdad}
+	\noindent Equivalentes :)
+	
+	\subsection{Operador Distinto}
+	\noindent Equivalentes :)
+	
+	\section{Operadores de Desplazamiento}
 	
 	
 	\chapter{Experimentos}

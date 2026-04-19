@@ -1,4 +1,4 @@
-\begin{thebibliography}{14}
+\begin{thebibliography}{17}
 
 \bibitem{wiki_zkp}
 Wikipedia. (2026).
@@ -77,9 +77,27 @@ Iden3. (s. f.).
 \newblock \emph{Circuits/comparators.circom} [Código fuente]. GitHub. 
 \newblock \url{https://github.com/iden3/circomlib/blob/master/circuits/comparators.circom}
 
-\bibitem{circomlib_bitify}
+\bibitem{iden3_circomlib_bitify}
 Iden3. (s. f.). 
 \newblock \emph{Circuits/bitify.circom} [Código fuente]. GitHub. 
 \newblock \url{https://github.com/iden3/circomlib/blob/master/circuits/bitify.circom}
+
+\bibitem{costa_group_zkgenver}
+Costa Group. (2024).
+\newblock \emph{ZK-GENVER: A tool for zero-knowledge circuit generation and verification} [Software].
+\newblock \url{https://github.com/costa-group/ZK-GENVER}.
+\newblock Accedido: 19-04-2026.
+
+\bibitem{iden3_circomlib}
+Iden3. (2023).
+\newblock \emph{circomlib: Library of basic circuits for Circom} [Software].
+\newblock \url{https://github.com/iden3/circomlib}.
+\newblock Accedido: 19-04-2026.
+
+\bibitem{iden3_gates_circom}
+Iden3. (s. f.).
+\newblock \emph{Circuits/gates.circom} [Código fuente]. GitHub.
+\newblock \url{https://github.com/iden3/circomlib/blob/master/circuits/gates.circom}.
+\newblock Accedido: 19-04-2026.
 
 \end{thebibliography}
