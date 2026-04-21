@@ -2439,19 +2439,31 @@ placement=H
 		 ZK-GENVER es una herramienta diseñada para la verificación de sistemas de ecuaciones en formato R1CS. 
 	\end{definicion}
 	
-	\noindent Esta herramienta permite tanto la verificación determinista de un sistema de ecuaciones, es decir, si para una entrada hay solo una salida, como la comparación de equivalencia entre dos archivos R1CS. Esto posibilita comparar el código Circom base frente al que utiliza la nueva funcionalidad.
+	\noindent Esta herramienta ofrece tres funcionalidades principales. En primer lugar, la verificación determinista del sistema de ecuaciones, comprobando que cada entrada produce una única salida. En segundo lugar, la generación de archivos \texttt{smt2}, que contienen las ecuaciones del circuito, las cuales pueden ser alteradas manualmente para así asignar valores de entrada específicos con el fin de consultar la salida correspondiente y validar así que la lógica es la esperada. Por último, la comparación de equivalencia entre dos archivos R1CS, transformándolos a archivos \texttt{smt2}, lo que posibilita contrastar el código base de Circom con el que incorpora la nueva funcionalidad.
 	
 	\vspace{0.2cm}
-	\noindent Antes de pasar a la comparación de equivalencia entre cada par de códigos, se realizó una comprobación determinista para cada operador implementado, confirmando que todos cumplen con esta propiedad
+	\noindent Por tanto, para llevar a cabo una verificación exhaustiva de cada operador implementado, se emplearán las tres funcionalidades que \textit{ZK-GENVER} ofrece, siguiendo el mismo orden en el que han sido expuestas:
+	
+	\begin{enumerate}
+		\item Verificación determinista
+		\item Validación de la lógica mediante los archivos \texttt{smt2} generados 
+		\item Comparación de equivalencia entre los archivos R1CS convertidos a \texttt{smt2}.
+	\end{enumerate}
 	
 	\vspace{0.2cm}
-	\noindent Por tanto, al conocer la naturaleza determinista de cada uno de los operadores, el siguiente paso es asegurar que la implementación de cada uno de ellos realmente construye un sistema de restricciones que sigue la lógica del mismo.
+	\noindent La forma en la que \textit{ZK-GENVER} realiza la comprobación determinista de un sistema de ecuaciones se basa en la restricción \texttt{out1 $\neq$ out2}. Si el sistema resultante es insatisfactible, es decir, no admite ninguna solución, se concluye que no existe ninguna combinación de entradas que produzca salidas distintas para el mismo circuito, confirmando así su naturaleza determinista.
 	
 	\vspace{0.2cm}
-	\noindent Con este fin, se ha utilizado la herramienta \textit{ZK-GENVER} para comparar la equivalencia entre los sistemas de ecuaciones generados por los operadores de la \texttt{circomlib} y los generados por la nueva funcionalidad, validando así su correcto comportamiento \cite{iden3_circomlib}.
+	\noindent En cuanto a la segunda funcionalidad, \textit{ZK-GENVER} genera un archivo \texttt{smt2}, el cual contiene las ecuaciones del sistema de restricciones. Asignando manualmente valores de entrada en dicho archivo es posible consultar la salida esperada y comprobar así que la lógica del operador es la correcta.
 	
 	\vspace{0.2cm}
-	\noindent De esta manera, si ambos códigos son equivalentes podremos confirmar que la nueva funcionalidad implementada realmente describe la lógica buscada.
+	\noindent Gracias a la tercera funcionalidad de \textit{ZK-GENVER}, ambos archivos R1CS son convertidos a formato \texttt{smt2} para comparar directamente los sistemas de restricciones generados por la nueva funcionalidad con los generados por los operadores equivalentes de la librería \texttt{circomlib}, estos últimos implementados en Circom sin hacer uso de dicha funcionalidad \cite{iden3_circomlib}.
+	
+	\vspace{0.2cm}
+	\noindent De esta forma, si ambos sistemas de restricciones son equivalentes, obtenemos una confirmación adicional de que la nueva funcionalidad describe correctamente la lógica esperada, reforzando así los resultados obtenidos previamente mediante la validación con los archivos \texttt{smt2} de cada operador.
+
+	\vspace{0.2cm}
+	\noindent A continuación se presentan los resultados obtenidos para cada operador siguiendo el proceso de verificación descrito.
 	
 	\section{Operadores Aritméticos}
 	\noindent Dentro del conjunto de operadores aritméticos, la verificación de equivalencia se ha centrado en los operadores de división y módulo. El motivo es que las operaciones de suma, resta y multiplicación no requieren restricciones adicionales a las que ya define un programa Circom de forma natural. Por lo tanto, al emplear la \texttt{circomlib}, los sistemas de ecuaciones generados son idénticos y su equivalencia está garantizada por construcción. 
@@ -2489,10 +2501,18 @@ placement=H
 			belowskip=5pt,                  
 			xleftmargin=10pt
 		]
-		template circomlibDivision(){
+		template circomlibDivision(n){
 			signal input a;
 			signal input b;
 			signal output salida; //Cociente
+			
+			
+			// Asegurar que no son numeros negativos
+			component n2b_a = Num2Bits(2);
+			n2b_a.in <== a;
+			
+			component n2b_b = Num2Bits(2);
+			n2b_b.in <== b;
 			
 			
 			// Necesitamos que las senales tengan un valor para poder operar con ellas
@@ -2542,17 +2562,25 @@ placement=H
 	\vspace{0.2cm}
 	\noindent \textit{Observación} La verificaciones se realizaran sobre los códigos a comparar con tamaño $n=1$. El motivo de este tamaño es generar el número mínimo de restricciones necesarias, ya que al exceder un determinado límite, \textit{ZK-GENVER} no podría verificarlo correctamente, obteniendo como resultado \textbf{timeout}
 	
-	\subsection{Operador NOT}
+	\subsection{Operador NOT, AND y OR}
+	\vspace{0.2cm}
+	\noindent Estos operadores tienen una función equivalente en la librería \texttt{circomlib}, por lo que no es necesario implementar una que simule su comportamiento, a diferencia de lo que ocurre con otros operadores, como la división.
 	
-	\noindent Equivalentes :)
+	\vspace{0.2cm}
+	\noindent Se han llevado a cabo pruebas específicas en los sistemas de ecuaciones creados con la herramienta \textit{ZK-GENVER} para cada uno de estos operadores antes de comparar todos los pares de códigos.
 	
-	\subsection{Operador AND}
+	\vspace{0.2cm}
+	\noindent Estas pruebas consisten en alterar el sistema de ecuaciones para asignar valores específicos a las señales de entrada del circuito y, de esta manera, tener la capacidad de comprobar con certeza si la lógica es correcta.
 	
-	\noindent Equivalentes :)
+	\vspace{0.2cm}
+	\noindent Una vez realizadas estas pruebas en cada operador para diversos valores de entrada, se obtuvieron los resultados de salida esperados. De esta forma se concluyó que, además de ser deterministas, no había fallos en la implementación de su lógica.
 	
-	\subsection{Operador OR}
+	\vspace{0.2cm}
+	\noindent Por otro lado, después de verificar que los operadores implementados funcionan adecuadamente, hacemos las comparaciones entre cada uno de ellos y el implementado en la librería \texttt{circomlib}.
 	
-	\noindent Equivalentes :)
+	\vspace{0.2cm}
+	\noindent El resultado de estas tres comparaciones fue positivo, obteniendo para todos ellos que son equivalentes a los implementados en la librería.
+	
 	
 	\subsection{Operador AND binario}
 	\noindent La librería \texttt{circomlib} no contiene una función explícita dedicada al operador \texttt{AND} bit a bit, por lo que para verificar la equivalencia entre ambos códigos, se ha implementado una función utilizando otras funciones pertenecientes a la librería para simular este comportamiento.
@@ -2705,17 +2733,14 @@ placement=H
 	\noindent Siguiendo la similitud con el operador \texttt{AND} bit a bit, el resultado de la verificación de equivalencia indicó que ambos códigos son equivalentes.
 	
 	\section{Operadores de Comparación}
+	\vspace{0.2cm}
+	\noindent Todos los operadores de comparación han sido verificados 
+	satisfactoriamente, confirmando su equivalencia con los operadores 
+	de la \texttt{circomlib}.
 	
-	\subsection{Operador LessThan}
-	\subsection{Operador LessThanEq}
-	\subsection{Operador GreaterThan}
-	\subsection{Operador GreaterThanEq}
-	
-	\subsection{Operador Igualdad}
-	\noindent Equivalentes :)
-	
-	\subsection{Operador Distinto}
-	\noindent Equivalentes :)
+	\vspace{0.2cm}
+	\noindent A continuación, utilizamos el operador \texttt{Igual} como 
+	ejemplo ilustrativo de la verificación determinista en \textit{ZK-GENVER}.
 	
 	\section{Operadores de Desplazamiento}
 	
