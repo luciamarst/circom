@@ -83,6 +83,37 @@
 	framesep=5pt
 }
 
+\lstdefinelanguage{Rust}{
+	keywords={fn, let, mut, pub, use, mod, struct, enum, impl, trait, 
+		for, while, loop, if, else, match, return, self, Self,
+		true, false, const, static, type, where, in, as, ref,
+		move, async, await, dyn, extern, unsafe, super, crate},
+	sensitive=true,
+	morecomment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	morestring=[b]",
+	morestring=[b]',
+}
+
+\lstdefinestyle{RustStyle}{
+	language=Rust,
+	keywordstyle=\color{purple!80!black}\bfseries,
+	commentstyle=\color{gray}\ttfamily\itshape,
+	stringstyle=\color{teal!80!black}\ttfamily,
+	identifierstyle=\color{black},
+	basicstyle=\small\ttfamily,
+	numbers=left,
+	numberstyle=\tiny\color{gray},
+	stepnumber=1,
+	numbersep=10pt,
+	captionpos=b,
+	breaklines=true,
+	tabsize=4,
+	showstringspaces=false,
+	frame=lines,
+	framesep=5pt
+}
+
 \DeclareFloatingEnvironment[
 name=Ejemplo,
 placement=H
@@ -2424,8 +2455,152 @@ placement=H
 	\section{Ejemplo con constraints generadas automáticamente}
 	
 	
-	\chapter{Implementación}
-	\section{Explicación y ejemplo de la construcción de las reglas}
+	\chapter{Implementación del problema}
+	\vspace{0.2cm}
+	\noindent Antes de explicar cómo se ha llevado a la práctica la implementación, es necesaria una visión general sobre cómo está construido el compilador de Circom.
+	
+	\vspace{0.2cm}
+	\noindent El compilador de Circom ha sido implementado en Rust, un lenguaje de programación conocido por su gran rendimiento y seguridad, cualidades que lo convierten en una opción muy adecuada para el desarrollo de compiladores y el procesamiento de estructuras de datos complejas como las que genera un lenguaje basado en la construcción de circuitos.
+	
+	\vspace{0.2cm}
+	\noindent Dado que la implementación sigue de manera literal las reglas de traducción especificadas, a continuación se detallarán aquellos operadores con mayor complejidad, pudiendo consultar el resto en el repositorio público del trabajo \cite{circom_autocomplete}.
+	
+	\section{Operadores Aritméticos}
+	\vspace{0.2cm}
+	\noindent Los operadores de suma y resta han sido los más fáciles de implementar, ya que, como se mencionó en el capítulo anterior, no son necesarias nuevas restricciones ni señales intermedias para describir su comportamiento.
+	
+	\vspace{0.2cm}
+	\noindent La multiplicación aunque no necesite nuevas restricciones, si  necesita señales intermedias para garantizar que el formato R1CS se cumple en todo momento.
+	
+	\vspace{0.2cm}
+	\noindent Los más complejos de implementar son la división y el módulo. Estos dos operadores guardan una relación de semejanza muy grande, ya que en el cálculo de los mismos únicamente varía el resultado devuelto, es decir, el cociente y resto respectivamente.
+	
+	\vspace{0.3cm}
+	\begin{figure}[H]
+		\centering
+		\hrule
+		\vspace{5pt}
+		\begin{minipage}[t]{0.48\textwidth}
+			\begin{lstlisting}[style=RustStyle, caption={}, basicstyle=\ttfamily\scriptsize]
+				let mut constraints = vec![];
+				let mut new_vars_name = vec![];
+				
+				// Signals
+				//r_aux declaration 
+				let r_aux_name = format!("raux_{}", runtime.new_added_vars);
+				runtime.new_added_vars+=1;
+				let r_aux = AExpr::Signal{symbol: r_aux_name.clone()};
+				new_vars_name.push(r_aux_name);
+				
+				//q_aux declaration
+				let q_aux_name = format!("qaux_{}", runtime.new_added_vars);
+				runtime.new_added_vars+=1;
+				let q_aux = AExpr::Signal{symbol: q_aux_name.clone()};
+				new_vars_name.push(q_aux_name);
+				
+
+				let b_product_q_name = format!("b_product_q{}", runtime.new_added_vars);
+				runtime.new_added_vars += 1;
+				let bq_aux = AExpr::Signal { symbol: b_product_q_name.clone() }; 
+				new_vars_name.push(b_product_q_name);
+				
+				
+				let (_, constraints_bit_q) = decimal_to_bits(&q_aux, n, field, runtime, &mut new_vars_name);
+				constraints.extend(constraints_bit_q);
+				
+				let (r_signals, constraints_bit_r) = decimal_to_bits(&r_aux, n, field, runtime, &mut new_vars_name);
+				constraints.extend(constraints_bit_r);
+				
+
+				let (b_signals, constraints_bit_b) = decimal_to_bits(r_value, n, &field, runtime, &mut  new_vars_name);
+				constraints.extend(constraints_bit_b);
+				
+				let (zero_signals, constraints_bit_0) = decimal_to_bits(&AExpr::Number { value:BigInt::from(0) }, n, &field, runtime, &mut  new_vars_name);
+				constraints.extend(constraints_bit_0);
+				
+				// return 1 if b!=0
+				let (equal, xor_constraints) = match xor_function(n,&b_signals, &zero_signals,runtime, &mut new_vars_name){
+					Ok(v) => v,
+					Err(_) => return Err(()), 
+				};
+				constraints.extend(xor_constraints);
+				
+				
+			
+				let force_equal_one = AExpr::sub(&AExpr::Number { value: BigInt::from(1)}, &equal, field);
+				let not_equal = AExpr::transform_expression_to_constraint_form(force_equal_one, field).unwrap();
+				constraints.push(not_equal);
+				
+				
+			\end{lstlisting}
+		\end{minipage}
+		\hfill
+		\begin{minipage}[t]{0.48\textwidth}
+			\begin{lstlisting}[style=RustStyle, caption={}, basicstyle=\ttfamily\scriptsize]
+
+				// CONSTRAINT 2: r_value > r_aux
+				let (output_aux_b_minor_zero, constraints_lesser_eq_first) = match secure_less_than_eq_without_binary_transformation(n, &b_signals, &r_signals, runtime, &mut new_vars_name) {
+					Ok(v) => v,
+					Err(_) => return Err(()), 
+				};
+				constraints.extend(constraints_lesser_eq_first);
+				
+				// secure_less_than_eq returns 0 when qaux < r_value. Then if output_aux is 0 is fulfilled
+				let c_out_constraint_one = AExpr::transform_expression_to_constraint_form(output_aux_b_minor_zero.clone(),field).unwrap();
+				constraints.push(c_out_constraint_one);
+				
+				// CONSTRAINT 3: 0 <= r_aux
+				let (output_raux_greater_eq_zero, constraints_lesser_eq_second) = match secure_less_than_eq_without_binary_transformation(n, &zero_signals, &r_signals, runtime, &mut new_vars_name) {
+					Ok(v) => v,
+					Err(_) => return Err(()), 
+				};
+				constraints.extend(constraints_lesser_eq_second);
+				
+				// secure_less_than_eq returns 1 when 0 <= r_aux. Then if output_aux is 1 is fulfilled
+				
+				let output_is_one = AExpr::sub(&output_raux_greater_eq_zero, &AExpr::Number { value: BigInt::from(1)},field);
+				let c_out_constraint_one = AExpr::transform_expression_to_constraint_form(output_is_one,field).unwrap();
+				constraints.push(c_out_constraint_one);
+				
+
+				
+				// Product of r_value and q -> b * q == r_value * q_aux
+				let res_mul = AExpr::mul(r_value, &q_aux, field);
+				let product_equal_signal = AExpr::sub(&res_mul, &bq_aux, field);
+				let product_equal_signal_constraint = AExpr::transform_expression_to_constraint_form(product_equal_signal.clone(), field).expect("Fallo");
+				constraints.push(product_equal_signal_constraint);
+				
+				//Construction of b*q + r
+				let bq_plus_r = AExpr::add(&bq_aux, &r_aux, field);
+				
+				// l_value - (b*q + r)  = 0
+				let final_sub = AExpr::sub(l_value, &bq_plus_r, field);
+				
+				let new_constraint = AExpr::transform_expression_to_constraint_form(final_sub, field).expect("Fallo");
+				constraints.push(new_constraint);
+				
+				Ok((
+				q_aux, //Se pone solo q_aux porque es la expresion principal
+				constraints,
+				new_vars_name
+				))
+			\end{lstlisting}
+		\end{minipage}
+		\vspace{2pt}
+		\caption{Implementación de la división}
+		\label{cod:div-rust}
+		\vspace{5pt}
+		\hrule
+	\end{figure}
+	
+	
+	\section{Operadores Lógicos}
+	
+	\section{Operadores de Comparación}
+	
+	\section{Operadores de Desplazamiento}
+	
+	
 	
 	\chapter{Verificación de los operadores}
 	
@@ -2439,6 +2614,7 @@ placement=H
 		 ZK-GENVER es una herramienta diseñada para la verificación de sistemas de ecuaciones en formato R1CS. 
 	\end{definicion}
 	
+	\vspace{0.2cm}
 	\noindent Esta herramienta ofrece tres funcionalidades principales. En primer lugar, la verificación determinista del sistema de ecuaciones, comprobando que cada entrada produce una única salida. En segundo lugar, la generación de archivos \texttt{smt2}, que contienen las ecuaciones del circuito, las cuales pueden ser alteradas manualmente para así asignar valores de entrada específicos con el fin de consultar la salida correspondiente y validar así que la lógica es la esperada. Por último, la comparación de equivalencia entre dos archivos R1CS, transformándolos a archivos \texttt{smt2}, lo que posibilita contrastar el código base de Circom con el que incorpora la nueva funcionalidad.
 	
 	\vspace{0.2cm}

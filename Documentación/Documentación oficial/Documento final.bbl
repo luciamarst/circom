@@ -1,4 +1,4 @@
-\begin{thebibliography}{17}
+\begin{thebibliography}{18}
 
 \bibitem{wiki_zkp}
 Wikipedia. (2026).
@@ -99,5 +99,11 @@ Iden3. (s. f.).
 \newblock \emph{Circuits/gates.circom} [Código fuente]. GitHub.
 \newblock \url{https://github.com/iden3/circomlib/blob/master/circuits/gates.circom}.
 \newblock Accedido: 19-04-2026.
+
+\bibitem{circom_autocomplete}
+Martínez, L. (2025).
+\newblock \emph{circom\_autocomplete: zkSnark circuit compiler}.
+\newblock GitHub. \url{https://github.com/luciamarst/circom_autocomplete}.
+\newblock Accedido: 22-04-2026.
 
 \end{thebibliography}
