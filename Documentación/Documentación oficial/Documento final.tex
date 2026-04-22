@@ -2734,8 +2734,7 @@ placement=H
 	
 	\section{Operadores de Comparación}
 	\vspace{0.2cm}
-	\noindent Todos los operadores de comparación han sido verificados 
-	satisfactoriamente, confirmando su equivalencia con los operadores 
+	\noindent Todos los operadores de comparación han sido verificados satisfactoriamente, confirmando su equivalencia con los operadores 
 	de la \texttt{circomlib}.
 	
 	\vspace{0.2cm}
@@ -2812,9 +2811,12 @@ placement=H
 	\noindent De esta forma, \textit{ZK-GENVER} es capaz de verificar de manera formal si un sistema de ecuaciones es determinista.
 	
 	\vspace{0.2cm}
-	\noindent \textit{Observación}: El archivo \texttt{.smt2} generado también puede ser utilizado de forma manual, modificando los valores de las señales de entrada para consultar la salida correspondiente y validar así la lógica del operador caso a caso. De manera análoga, \textit{ZK-GENVER} aplica este mismo principio de forma automática para comparar la equivalencia entre dos circuitos, comprobando si para las mismas entradas ambos sistemas producen siempre la misma salida.
+	\noindent \textit{Observación}: El archivo \texttt{smt2} generado también puede ser utilizado de forma manual, modificando los valores de las señales de entrada para consultar la salida correspondiente y validar así la lógica del operador caso a caso. De manera análoga, \textit{ZK-GENVER} aplica este mismo principio de forma automática para comparar la equivalencia entre dos circuitos, comprobando si para las mismas entradas ambos sistemas producen siempre la misma salida.
 	
 	\section{Operadores de Desplazamiento}
+	
+	\vspace{0.2cm}
+	\noindent Ambos tipos de desplazamiento han sido sometidos a las tres pruebas de \textit{ZK-GENVER}, concluyéndose que son deterministas y que sus sistemas de restricciones son equivalentes a los generados por los operadores correspondientes de la librería \texttt{circomlib}.
 	
 	
 	\chapter{Experimentos}
