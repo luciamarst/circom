@@ -2742,6 +2742,78 @@ placement=H
 	\noindent A continuación, utilizamos el operador \texttt{Igual} como 
 	ejemplo ilustrativo de la verificación determinista en \textit{ZK-GENVER}.
 	
+		\begin{mi_ejemplo}
+		\caption{Igual con autocomplete}
+		\label{ex:igual-autocomplete}
+		\begin{lstlisting}[
+			language=Circom,
+			basicstyle=\scriptsize\ttfamily, 
+			]
+			template EsIgual(n) autocomplete{
+				signal input a;
+				signal input b;
+				signal output c;
+				
+				c <-- a==_(n) b;
+			}
+			
+			component main = EsIgual(1);
+			
+		\end{lstlisting}
+	\end{mi_ejemplo}
+	
+	\vspace{0.2cm}
+	\noindent El bloque de código expuesto corresponde al operador \texttt{Igual} implementado. Al compilarlo, la nueva funcionalidad del compilador construye automáticamente el sistema de ecuaciones correspondiente y lo almacena en un archivo R1CS.
+	
+	\vspace{0.2cm}
+	\noindent A partir de dicho archivo, \textit{ZK-GENVER} traduce las ecuaciones al formato \texttt{.smt2}, un estándar diseñado para ser procesado por solvers SMT.
+	
+	\begin{definicion}
+		Un solver SMT es una herramienta capaz de determinar si un sistema de ecuaciones es \textit{satisfactible}, es decir, si existe al menos una asignación de valores que lo satisfaga, o \textit{insatisfactible}, en caso de que no exista ninguna.
+	\end{definicion}
+	
+	\noindent Este principio es la base sobre la que \textit{ZK-GENVER} construye sus verificaciones. En lugar de probar múltiples entradas, lo cual sería inviable, la herramienta añade al final del archivo \texttt{smt2} una restricción adicional y consulta al solver si el sistema resultante es satisfactible o no.
+	
+	\vspace{0.2cm}
+	\noindent En el caso de la verificación determinista, la restricción añadida es \texttt{(assert (not (= s\_1 s\_1\_aux)))}, resaltada en azul en el código \texttt{smt2}. Si el solver devuelve \texttt{UNSAT}, se concluye que no existe ninguna combinación de entradas que produzca salidas distintas, confirmando así el determinismo del operador.
+	
+	\vspace{0.2cm}
+	\noindent
+	\begin{lstlisting}[escapechar=@,
+		language={},
+		basicstyle=\ttfamily\scriptsize,
+		breaklines=true,
+		frame=single,
+		caption={Archivo \texttt{smt2} generado para la verificación determinista del operador \texttt{Igual}},
+		label={lst:smt2-igual-determinista}
+		]
+		(set-logic QF_FF)
+		(define-sort FF0 () (_ FiniteField p)) ; p = primo del campo, omitido por legibilidad
+		(declare-fun s_1 () FF0)
+		(declare-fun s_1_aux () FF0)
+		(declare-fun s_2 () FF0)
+		(declare-fun s_3 () FF0)
+		(declare-fun s_4 () FF0)
+		(declare-fun s_4_aux () FF0)
+		(declare-fun s_5 () FF0)
+		(declare-fun s_5_aux () FF0)
+		(assert (= (as ff0 FF0) (ff.mul (ff.add (ff.mul s_3 (as -1)) s_2) s_4)))
+		(assert (= (as ff0 FF0) (ff.mul (ff.add (ff.mul s_3 (as -1)) s_2) s_4_aux)))
+		(assert (= (as ff0 FF0) (ff.add (ff.mul (ff.add (ff.mul s_2 (as -1 FF0)) s_3) s_5) (ff.add (as -1 FF0) s_4))))
+		(assert (= (as ff0 FF0) (ff.add (ff.mul (ff.add (ff.mul s_2 (as -1 FF0)) s_3) s_5_aux) (ff.add (as -1 FF0) s_4_aux))))
+		(assert (= (as ff0 FF0) (ff.add (ff.mul s_1 (as -1 FF0)) s_4)))
+		(assert (= (as ff0 FF0) (ff.add (ff.mul s_1_aux (as -1)) s_4_aux)))
+		@\textcolor{blue}{(assert (not (= s\_1 s\_1\_aux)))}@
+		(check-sat)
+	\end{lstlisting}
+
+	
+	\vspace{0.2cm}
+	\noindent De esta forma, \textit{ZK-GENVER} es capaz de verificar de manera formal si un sistema de ecuaciones es determinista.
+	
+	\vspace{0.2cm}
+	\noindent \textit{Observación}: El archivo \texttt{.smt2} generado también puede ser utilizado de forma manual, modificando los valores de las señales de entrada para consultar la salida correspondiente y validar así la lógica del operador caso a caso. De manera análoga, \textit{ZK-GENVER} aplica este mismo principio de forma automática para comparar la equivalencia entre dos circuitos, comprobando si para las mismas entradas ambos sistemas producen siempre la misma salida.
+	
 	\section{Operadores de Desplazamiento}
 	
 	
