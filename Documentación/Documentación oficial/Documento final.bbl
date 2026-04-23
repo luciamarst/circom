@@ -1,4 +1,4 @@
-\begin{thebibliography}{18}
+\begin{thebibliography}{20}
 
 \bibitem{wiki_zkp}
 Wikipedia. (2026).
@@ -99,6 +99,19 @@ Iden3. (s. f.).
 \newblock \emph{Circuits/gates.circom} [Código fuente]. GitHub.
 \newblock \url{https://github.com/iden3/circomlib/blob/master/circuits/gates.circom}.
 \newblock Accedido: 19-04-2026.
+
+\bibitem{rust_lang}
+Rust Foundation. (2025).
+\newblock \emph{Rust: Un lenguaje que empodera a todos para crear software fiable y eficiente}.
+\newblock \url{https://www.rust-lang.org/es/}.
+\newblock Accedido: 23-04-2026.
+
+\bibitem{wikipedia_ast}
+Wikipedia. (2024).
+\newblock \emph{Árbol de sintaxis abstracta}.
+\newblock Wikipedia, La enciclopedia libre. \url{https://es.wikipedia.org/wiki/%C3%81rbol_de_sintaxis_abstracta}.
+\newblock Accedido: 23-04-2026.
+
 
 \bibitem{circom_autocomplete}
 Martínez, L. (2025).
