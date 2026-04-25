@@ -48,7 +48,7 @@
 \contentsline {subsection}{\numberline {5.2.3}Operador OR binario}{53}{subsection.5.2.3}%
 \contentsline {section}{\numberline {5.3}Operadores de Comparación}{53}{section.5.3}%
 \contentsline {section}{\numberline {5.4}Operadores de Desplazamiento}{55}{section.5.4}%
-\contentsline {chapter}{\numberline {6}Experimentos}{56}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Aplicación de la generación automática sobre juegos simples}{56}{section.6.1}%
-\contentsline {section}{\numberline {6.2}Aplicación de la generación automática sobre circomLib y comparación de constraints}{56}{section.6.2}%
-\contentsline {section}{\numberline {6.3}Caso de uso, verificación y búsqueda de bugs}{56}{section.6.3}%
+\contentsline {chapter}{\numberline {6}Experimentos}{57}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Aplicación de la generación automática sobre juegos simples}{57}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Aplicación de la generación automática sobre circomLib y comparación de constraints}{57}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Caso de uso, verificación y búsqueda de bugs}{57}{section.6.3}%

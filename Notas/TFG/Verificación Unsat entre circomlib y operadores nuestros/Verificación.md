@@ -38,4 +38,8 @@ EL verbose es necesario porque hay un bloque de código en Rust que pone que si 
 /home/lucia/ZK-GENVER-work_circom/target/release/zkgenver ej_eq.r1cs --solver ffsol --check_equivalence ej_eq_circomlib.r1cs
 ```
 
+```
+/home/lucia/proving_unsat/src/ffsol --file main_1580601343.smt2 
+```
+
 

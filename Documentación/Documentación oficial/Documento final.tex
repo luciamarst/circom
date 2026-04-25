@@ -180,14 +180,14 @@ placement=H
 	\vfill  % Empuja lo siguiente hacia abajo
 	
 	
-	\begin{flushright}
+	\begin{center}
 		\begin{minipage}{6cm}
-			\raggedleft 
+			\centering % Centra el texto dentro de la minipage
 			\large \textbf{Directores}:\\
 			\large Clara Rodríguez Núñez\\
 			\large Alejandro Hernández Cerezo
 		\end{minipage}
-	\end{flushright}
+	\end{center}
 	
 
 	
@@ -289,6 +289,7 @@ placement=H
 %	\noindent Sin embargo, para que estos circuitos puedan ser procesados por el protocolo de prueba, han de traducirse primeramente a un formato algebraico. Es en esta etapa donde \textbf{el código se transforma en un \textbf{Rank-1 Constraint System}}, conocido como \textbf{R1CS}. Este formato descompone la lógica del programa en un conjunto de ecuaciones cuadráticas, las cuales permiten verificar la validez de los cálculos sin revelar información. 
 	
 	\section{CIRCOM}
+	\label{s:circom}
 	\noindent \textbf{Circom} es un lenguaje de programación basado en la descripción de circuitos (DSL), cuyo objetivo principal no es el cálculo, sino definir un sistema de ecuaciones que describe las relaciones entre las \textbf{señales} de entrada y salida \cite{thesis_clara}.
 	
 	\vspace{0.3cm}
@@ -3298,8 +3299,144 @@ placement=H
 	\section{Operadores de Desplazamiento}
 	
 	\vspace{0.2cm}
-	\noindent Ambos tipos de desplazamiento han sido sometidos a las tres pruebas de \textit{ZK-GENVER}, concluyéndose que son deterministas y que sus sistemas de restricciones son equivalentes a los generados por los operadores correspondientes de la librería \texttt{circomlib}.
+	\noindent Ambos tipos de desplazamiento han sido sometidos a las tres pruebas de \textit{ZK-GENVER}, concluyéndose que son deterministas y que sus sistemas de restricciones son equivalentes.. 
 	
+	\vspace{0.2cm}
+	\noindent Para poder realizar la prueba de equivalencia entre ambos códigos se ha tenido que implementar un código en Circom base, ya que en la librería \texttt{circomlib} no existe ninguna función que simule explícitamente el comportamiento de estos operadores.
+	
+	\vspace{0.2cm}
+	\noindent De esta forma, el código desarrollado para comprobar la equivalencia con el desplazamiento a la izquierda ha sido el siguiente:
+	
+	\vspace{0.2cm}
+	\begin{lstlisting}[
+		language=Circom,
+		basicstyle=\scriptsize\ttfamily, 
+		]
+		include "bitify.circom";
+		
+		template shiftL(n){
+			signal input a;
+			signal output c;
+			
+			component n2b = Num2Bits(n);
+			n2b.in <== a;
+			
+			signal shifted_bits[n];
+			
+			shifted_bits[0] <== 0;
+			shifted_bits[1] <== 0;
+			
+			shifted_bits[2] <== n2b.out[0];
+			shifted_bits[3] <== n2b.out[1];
+			
+			//COnvertir a decimal
+			component b2n = Bits2Num(n);
+			
+			b2n.in[0] <== shifted_bits[0];
+			b2n.in[1] <== shifted_bits[1];
+			b2n.in[2] <== shifted_bits[2];
+			b2n.in[3] <== shifted_bits[3];
+			
+			
+			c <== b2n.out;
+		}
+		
+		component main = shiftL(4);
+		
+	\end{lstlisting}
+	
+	\vspace{0.2cm}
+	\noindent Aunque en la librería no haya funciones explícitas dedicadas a los desplazamientos, para su implementación se han usado otras funciones como \texttt{Num2Bits()} y \texttt{Bits2Num()} para facilitar las conversiones numéricas requeridas por este operador.
+	
+	\vspace{0.2cm}
+	\noindent Observando el ejemplo, puede observarse que se ha implementado para un tamaño de $n=4$ y desplazamiento $k=2$, ya que en el programa codificado con el uso de la nueva funcionalidad es el siguiente:
+	
+	\vspace{0.2cm}
+	\begin{lstlisting}[
+		language=Circom,
+		basicstyle=\scriptsize\ttfamily, 
+		]
+		pragma circom 2.2.2;
+		
+		template funcion() autocomplete{
+			signal input a;
+			signal output b;
+			
+			b <-- a <<_(4) 2;
+		}
+		
+		component main = funcion();
+		
+	\end{lstlisting}
+	
+	
+	\vspace{0.2cm}
+	\noindent Tras comparar ambos bloques de código con la herramienta \textit{ZK-GENVER}, se obtuvo como resultado final que para la misma entrada en ambos códigos no existía ninguna solución posible cuyas salidas fuesen diferentes, demostrando así que son equivalentes.
+	
+	\vspace{0.2cm}
+	\noindent De manera análoga, aplicamos el mismo patrón para el desplazamiento a la derecha, utilizando los mismos valores tanto para el tamaño como para el desplazamiento, obteniendo un código en Circom tal que así:
+	
+	
+	\vspace{0.2cm}
+	\begin{lstlisting}[
+		language=Circom,
+		basicstyle=\scriptsize\ttfamily, 
+		]
+		include "bitify.circom";
+		
+		template shiftL(n){
+			signal input a;
+			signal output c;
+			
+			component n2b = Num2Bits(n);
+			n2b.in <== a;
+			
+			signal shifted_bits[n];
+			
+			shifted_bits[3] <== 0;
+			shifted_bits[2] <== 0;
+			
+			shifted_bits[0] <== n2b.out[2];
+			shifted_bits[1] <== n2b.out[3];
+			
+			//COnvertir a decimal
+			component b2n = Bits2Num(n);
+			
+			b2n.in[0] <== shifted_bits[0];
+			b2n.in[1] <== shifted_bits[1];
+			b2n.in[2] <== shifted_bits[2];
+			b2n.in[3] <== shifted_bits[3];
+			
+			
+			c <== b2n.out;
+		}
+		
+		component main = shiftL(4);
+	\end{lstlisting}
+	
+	\vspace{0.2cm}
+	\noindent El código Circom de la nueva funcionalidad para este operador es muy similar al expuesto para el otro caso, ya que únicamente hay que cambiar el operador.
+	
+		\vspace{0.2cm}
+	\begin{lstlisting}[
+		language=Circom,
+		basicstyle=\scriptsize\ttfamily, 
+		]
+		pragma circom 2.2.2;
+		
+		template funcion() autocomplete{
+			signal input a;
+			signal output b;
+			
+			b <-- a >>_(4) 2;
+		}
+		
+		component main = funcion();
+		
+	\end{lstlisting}
+	
+	\vspace{0.2cm}
+	\noindent La prueba de equivalencia entre ambos códigos resultó positiva como la del operador anterior. De esta manera, tras realizar tantos las pruebas de determinismo y validación de lógica así como equivalencia entre códigos implementados con la nueva funcionalidad y Circom base con funciones de la \texttt{circomlib} se ha demostrado que el comportamiento es el correcto.
 	
 	\chapter{Experimentos}
 	\section{Aplicación de la generación automática sobre juegos simples}
