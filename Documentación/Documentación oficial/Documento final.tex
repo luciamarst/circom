@@ -492,7 +492,14 @@ placement=H
 		\label{def:cuerpo-finito}
 	\end{definicion}
 	
-		
+	\vspace{0.25cm}
+	\noindent Circom suele utilizar primos muy grandes para estos cuerpos finitos. Por ejemplo, uno de los primos que Circom está utilizando actualmente correspondo con:
+	
+	{\small
+		\begin{equation*}
+			p = 52435875175126190479447740508185965837690552500527637822603658699938581184513
+	\end{equation*}}
+	
 	\vspace{0.25cm}
 	\noindent R1CS impone restricciones matemáticas complejas. Las ecuaciones, aparte de no poder exceder el segundo grado (\textit{condición necesaria, pero no suficiente}), tienen que poder expresarse como el producto de dos combinaciones lineales de variables, teniendo como resultado una tercera combinación lineal:
 	
@@ -617,7 +624,7 @@ placement=H
 	\noindent De este modo, \textbf{el compilador actuaría como un puente}, transformando automáticamente el flujo imperativo en un sistema de restricciones.
 		
 	\vspace{0.4cm}
-	\noindent \textcolor{red}{Dicha transformación se consigue mediante la traducción de las reglas existentes en el flujo imperativo de Circom. Este proceso consiste en analizar los recursos existentes y especificar una regla de transformación para cada uno de ellos. De esta forma, el compilador consigue traducir automáticamente lo implementado a un sistema de restricciones.}
+	\noindent \textcolor{red}{Dicha transformación se consigue mediante la traducción de instrucciones imperativas de Circom. Este proceso consiste en analizar los operadores admitidos por el lenguaje Circom y especificar una regla de transformación para cada uno de ellos. De esta forma, el compilador consigue traducir automáticamente lo implementado a un sistema de restricciones.}
 		
 	\section{Objetivos y Estructura del trabajo}
 	
@@ -677,7 +684,7 @@ placement=H
 	
 	\begin{enumerate}
 		\item \textbf{Asimilar el paradigma de verificación frente al de ejecución}, comprender que el objetivo principal no es realizar un cálculo o cómputo, sino generar un sistema de restricciones con el objetivo de verificar la validez de una demostración.
-		\item  \textcolor{red}{\textbf{Adaptarse a la complejidad del diseño algebraico}, procedimiento que implica construir circuitos en los que cada operación tiene que ser expresada a través de restricciones algebraicas lineales, asegurando de esta manera el cumplimiento del formato R1CS y la descomposición de la lógica algebraica.}
+		\item  \textcolor{red}{\textbf{Adaptarse a la complejidad del diseño algebraico}, procedimiento que implica construir circuitos en los que cada operación tiene que ser expresada a través de restricciones algebraicas, asegurando de esta manera el cumplimiento del formato R1CS y la descomposición de la lógica algebraica.}
 	\end{enumerate}
 	
 	
@@ -1161,13 +1168,43 @@ placement=H
 	
 	\vspace{0.3cm}
 	\noindent Así, al obligar a que la expresión sea igual a cero, garantizamos que el cociente $q$ y el resto $r$ tomen los valores exactos que satisfacen el teorema dentro del sistema.
+
+	\vspace{0.3cm}
+	\noindent Para ilustrar el funcionamiento de la división, supongamos el caso de $a = 15$ y $b = 3$. La lógica implementada para este operador debe seguir los siguientes pasos:
+		
+	\begin{mi_ejemplo}
+		\caption{Aplicación del teorema de la división}
+		\label{ex:teorema-division}
+		
+		\begin{enumerate}
+			\item \textbf{Comprobación entera positiva:} Primeramente, se verifica que $a$ y $b$ sean números enteros positivos. Esta comprobación es fundamental para evitar errores y se realiza mediante la función \hyperref[cod:num2bits]{\textit{Num2Bits()}}. En este caso, $15 > 0$ y $3 > 0$, por lo que la condición se cumple.
+			
+			\item \textbf{Validación del divisor:} Se verifica que $b \neq 0$ para asegurar que la operación esté definida. Al ser $b = 3$, el circuito permite continuar con la ejecución.
+			
+			\item \textbf{Restricción del resto:} Se impone la condición $r < b$. Es importante observar que no es necesario verificar $0 \leq r$ ya que $r$ es una señal del circuito y por tanto es un entero positivo naturalmente, asumiendo su positividad. Para $q = 5$ y $r = 0$, comprobamos que $0 < 3$.
+			
+			\item \textbf{Ecuación de la división:} Una vez comprobados los puntos anteriores, se establece la restricción más importante, que es la que nos permite conocer el resultado de la división:
+			\begin{equation*}
+				a = b \cdot q + r
+			\end{equation*}
+			Las señales $q$ (cociente) y $r$ (resto) son forzadas a tomar los únicos valores que satisfacen las restricciones impuestas. En este ejemplo, el sistema de restricciones solo admite $q = 5$ y $r = 0$.
+		\end{enumerate}
+		
+		
+		\hspace*{\fill} $\blacksquare$
+	\end{mi_ejemplo}
+	
+	
+	\vspace{0.3cm}
+	\noindent Una vez conocida cuál es la lógica necesaria para simular el comportamiento de la división y expuesto un ejemplo de como se aplicarían las restricciones para unos valores de entrada concretos, se presente un código escrito en Circom base para ilustrar y clarificar como sería el flujo de esta lógica sin hacer uso de la nueva funcionalidad.
+	
 	
 	\vspace{0.3cm}
 	\begin{mi_ejemplo}
 		\caption{Pseudocódigo división}
 		\label{ex:pseudocodigo-div}
 		\begin{lstlisting}[language=Circom]
-			template IntegerDivision() {
+			template IntegerModule() {
 				signal input a; // Dividendo
 				signal input b; // Divisor
 				signal output c; // Cociente q
@@ -1201,6 +1238,9 @@ placement=H
 	\end{mi_ejemplo}
 	
 	\noindent Las funciones \texttt{IsZero()} y \texttt{LessThan()} pertenecen a la librería \texttt{circomlib} \cite{circomlib_comparators}.
+	
+	\vspace{0.3cm}
+	\noindent Para conseguir esta lógica en Circom sin hacer uso de la nueva funcionalidad puede apreciarse que requiere de un diseño aritmético complejo, ya que habría que establecer cada una de las condiciones a mano para simular este comportamiento.
 	
 	\subsubsection{Módulo}
 	\label{sss:modulo}
@@ -1334,11 +1374,62 @@ placement=H
 	\subsection{Operadores Lógicos}
 	
 		\vspace{0.2cm}
-		\noindent Los operadores lógicos se implementan por medio de la reproducción de las puertas lógicas \textit{AND}, \textit{OR} y \textit{NOT}. 
+		\noindent Los operadores lógicos se implementan por medio de la reproducción de las puertas lógicas \texttt{AND}, \texttt{OR} y \texttt{NOT}. 
 		
 		\vspace{0.2cm}
-		\noindent Dicha lógica se aplica de la misma forma a los operadores lógicos bit a bit, con la diferencia de que cada operación se realiza sobre cada par de bits.
+		\noindent Las puertas lógicas tienen un equivalencia aritmética que simula el comportamiento de las mismas, en el casos de las puertas lógicas \texttt{NOT}, \texttt{AND} y \texttt{OR} su equivalencia es la siguiente:
+	
+		\begin{table}[H]
+				\caption{Relación entre simbología lógica identificada y su traducción aritmética.}
+			\label{tab:logica-aritmetica}
+			\centering
+			\renewcommand{\arraystretch}{2.5} 
+			\begin{tabular}{|m{4cm}|m{6cm}|}
+				\hline
+				\centering \textbf{Símbolo Lógico} & \centering \textbf{Equivalencia Aritmética} \tabularnewline \hline
+				
+				\centering
+				\begin{circuitikz} 
+					\draw (0,0) node[not port, scale=1.2,font=\tiny] (not1) {\textbf{NOT}};
+				\end{circuitikz} & 
+				\centering $1 - a$ \tabularnewline \hline
+				
+				\centering
+				\begin{circuitikz} 
+					\draw (0,0) node[and port, scale=1.2,font=\tiny] (and1) {\textbf{AND}};
+				\end{circuitikz} & 
+				\centering $a \cdot b$ \tabularnewline \hline
+				
+				\centering
+				\begin{circuitikz} 
+					\draw (0,0) node[or port, scale=1.2,font=\tiny] (or1) {\textbf{OR}};
+				\end{circuitikz} & 
+				\centering $a + b - (a \cdot b)$ \tabularnewline \hline
+			\end{tabular}
 		
+		\end{table}
+		
+		\vspace{0.2cm}
+		\noindent De esta forma, podemos explotar esta equivalencia aritmética para la traducción de estos operadores, ya que con esta equivalencia podemos declarar las restricciones necesarias su implementación.
+		
+		\vspace{0.2cm}
+		\noindent De la misma forma podemos aplicar esta lógica a los operadores binarios. Los operadores \texttt{NOT}, \texttt{AND} y \texttt{OR} se aplican a un valor o par de valores mientras que los operadores \texttt{AND} y \texttt{OR bit a bit} se aplican sobre cada par de bits de dos números binarios.
+		
+		\vspace{0.2cm}
+		\noindent Por lo tanto, si partimos de dos números binarios de tamaño n, estos operadores se aplicarán entre cada par de bits. Por ejemplo, el operador \texttt{AND binario} se aplicaría de la siguiente forma:
+		
+		\begin{gather*}
+			\text{Siendo } i \in [0, n) \\
+			b1[i] \cdot b2[i]
+		\end{gather*}
+		
+		\vspace{0.2cm}
+		\noindent De forma análoga se aplicaría el operador \texttt{OR} utilizando la equivalencia aritmética de dicha puerta lógica para cada par de bits.
+		
+		
+	
+	
+	\newpage
 	
 	\subsubsection{Traducción de operadores}
 		
@@ -1581,6 +1672,8 @@ placement=H
 		
 				
 		\subsubsection{Tamaño de los números comparados}
+		\label{sssec:tamaño-ops}
+		
 		\noindent El tamaño de los números comparados es un factor importante, ya que dicho tamaño puede ser por un lado conocido e igual, mientras que por otro lado puede ser desconocido o de diferentes tamaños.
 		
 		\vspace{0.2cm}	
@@ -2154,9 +2247,13 @@ placement=H
 		\noindent Los pasos posteriores a la transformación numérica son dependientes al tipo de desplazamiento. En función de si se trata de un desplazamiento a la izquierda o a la derecha, la construcción del sistema de ecuaciones será diferente.
 		
 		\vspace{0.2cm}
+		\noindent Por otra parte, es importante destacar que para estos operadores también se aplica el operador \texttt{op\_(n)} (definido en la \hyperref[sssec:tamaño-ops]{\textbf{Sección \ref{sssec:tamaño-ops}}}), de forma que el usuario puede limitar el tamaño del valor a desplazar si es conocedor del mismo.
+		
+		\vspace{0.2cm}
 		\noindent \textit{Observación}: Hay que asegurar de que el tamaño de N del número a desplazar sea mayor o igual que el número de bits que se quieren desplazar.
 		
 		\subsubsection{Desplazamiento a la izquierda}
+		\label{sssec:desp-izq}  
 		\noindent En este tipo de operación, el objetivo es desplazar un número X de bits (especificados por el usuario) desde las posiciones menos significativas hacia las más significativas; es decir, hacia la izquierda.
 		
 		\vspace{0.2cm}
@@ -2203,34 +2300,128 @@ placement=H
 		
 		\subsubsection{Traducción de operadores}
 		
-		\begin{tabular}{|c|>{\centering\arraybackslash}p{12cm}|}
+		\begin{tabular}{|c|>{\centering\arraybackslash}p{13cm}|}
 			\hline
 			\textbf{Operación} & \textbf{Deducción} \\
 			\hline
 			
 			\texttt{$e= e_1 \ll e_2$} & 
 			\makecell[c]{ 
-				Para un component izq = desplazamiento\_izq(n)(a,b) : \\[6pt] 
+				\\
 				$$ 
 				\begin{prooftree} 
 					\hypo{TC(e_1) = (C_1, e'_1)} 
 					\hypo {TC(e_2) = (C_2, e'_2)} 
-					\infer2{TC(e_1 \ll e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} <== izq.out\}, v_{aux})}
+					\[
+					\infer2{
+						TC(e_1 \ll e_2) =
+						\left(
+						C_1 \wedge C_2 \wedge
+						\left\{ 
+						\begin{array}{l}
+							\{DL(253).in1 = e_2', \\
+							DL(253).in2 = e_1', \\
+							DL(253).out = v_{aux} 
+							\}, 
+						\end{array}
+						\right\}, 
+						v_{aux}
+						\right)
+					}
+					\]
+				\end{prooftree} 
+				$$} 
+				\\
+			
+				
+			\hline
+			
+			\texttt{$e= e_1 \gg e_2$} & 
+			\makecell[c]{ 
+				\\
+				$$ 
+				\begin{prooftree} 
+					\hypo{TC(e_1) = (C_1, e'_1)} 
+					\hypo {TC(e_2) = (C_2, e'_2)} 
+					\[
+					\infer2{
+						TC(e_1 \gg e_2) =
+						\left(
+						C_1 \wedge C_2 \wedge
+						\left\{ 
+						\begin{array}{l}
+							\{DR(253).in1 = e_2', \\
+							DR(253).in2 = e_1', \\
+							DR(253).out = v_{aux} 
+							\}, 
+						\end{array}
+						\right\}, 
+						v_{aux}
+						\right)
+					}
+					\]
 				\end{prooftree} 
 				$$} \\
 			
 			\hline
 			
-			\texttt{$e= e_1 \gg e_2$} & 
+			\texttt{$e= e_1 \ll\_(n) e_2$} & 
 			\makecell[c]{ 
-				Para un component izq = desplazamiento\_dcha(n)(a,b) : \\[6pt] 
-				$$ 
-				\begin{prooftree} 
-					\hypo{TC(e_1) = (C_1, e'_1)} 
-					\hypo {TC(e_2) = (C_2, e'_2)} 
-					\infer2{TC(e_1 \gg e_2) = (C_1 \wedge C_2 \wedge \{v_{aux} <== dcha.out\}, v_{aux})}
-				\end{prooftree} 
-				$$} \\
+			\\
+			$$ 
+			\begin{prooftree} 
+				\hypo{TC(e_1) = (C_1, e'_1)} 
+				\hypo {TC(e_2) = (C_2, e'_2)} 
+				\[
+				\infer2{
+					TC(e_1 \ll\_(n) e_2) =
+					\left(
+					C_1 \wedge C_2 \wedge
+					\left\{ 
+					\begin{array}{l}
+						\{DL(n).in1 = e_2', \\
+						DL(n).in2 = e_1', \\
+						DL(n).out = v_{aux} 
+						\}, 
+					\end{array}
+					\right\}, 
+					v_{aux}
+					\right)
+				}
+				\]
+			\end{prooftree} 
+			$$} 
+			\\
+			
+			
+			\hline
+			
+			\texttt{$e= e_1 \gg\_(n) e_2$} & 
+			\makecell[c]{ 
+			\\
+			$$ 
+			\begin{prooftree} 
+				\hypo{TC(e_1) = (C_1, e'_1)} 
+				\hypo {TC(e_2) = (C_2, e'_2)} 
+				\[
+				\infer2{
+					TC(e_1 \gg\_(n) e_2) =
+					\left(
+					C_1 \wedge C_2 \wedge
+					\left\{ 
+					\begin{array}{l}
+						\{DR(n).in1 = e_2', \\
+						DR(n).in2 = e_1', \\
+						DR(n).out = v_{aux} 
+						\}, 
+					\end{array}
+					\right\}, 
+					v_{aux}
+					\right)
+				}
+				\]
+			\end{prooftree} 
+			$$} \\
 			
 			\hline
 		\end{tabular}
@@ -2488,22 +2679,38 @@ placement=H
 	
 	\vspace{0.2cm}
 	\noindent Como hemos mencionado, cada operador es un posible nodo del AST. A continuación se expone un ejemplo de cómo el compilador construiría el árbol en función del siguiente código.
-	
-	\begin{codigo}
-		\caption{Contrucción de AST en función del código}
+
+
+	\begin{figure}[htbp]
+		\centering
+		\caption{Construcción de AST}
 		\label{cod:ejemplo-ast}
-		\begin{lstlisting}[language=Circom]
-			template Calculo() autocomplete {
-				signal input a;
-				signal input b;
-				signal output c;
-				
-				c <-- (a/b) + ((b!=0) * 5);
-			}
+		
+		\begin{tabular}{| p{0.45\textwidth} | p{0.45\textwidth} |}
+			\hline
+			\centering \textbf{CÓDIGO} & \centering \textbf{ÁRBOL AST} \tabularnewline \hline
 			
-			component main = Calculo();
-		\end{lstlisting}
-	\end{codigo}
+			% Celda del Código
+			\vspace{5pt}
+			\begin{lstlisting}[language=Circom, basicstyle=\footnotesize\ttfamily, frame=no]
+				template Calculo() {
+					signal input a;
+					signal input b;
+					signal output c;
+					c <-- (a/b) + ((b!=0) * 5);
+				}
+				component main = Calculo();
+			\end{lstlisting}
+			& 
+			% Celda de la Imagen
+			\vspace{5pt}
+			\centering
+			\includegraphics[width=1.03\linewidth]{imagenes/ej-ast.png} 
+			\vspace{5pt}
+			\tabularnewline \hline 
+		\end{tabular}
+	\end{figure}
+	
 	
 	\vspace{0.2cm}
 	\noindent Cada nodo tiene su implementación dentro del compilador, que corresponde con las reglas de traducción especificadas en el capítulo anterior para cada operador.
@@ -2511,78 +2718,144 @@ placement=H
 	\vspace{0.2cm}
 	\noindent Debido al tamaño que ocuparía la explicación de las implementaciones de cada uno de los operadores, explicaremos únicamente la implementación de uno de ellos, dejando como referencia el repositorio con la implementación si fuera preciso consultarlo	\cite{circom_autocomplete}.
 	
-	\newpage 
 	
 	\section{Ejemplo de implementación}
 	\vspace{0.2cm}
-	\noindent El operador usado como ejemplo ilustrativo es el de desplazamiento a la izquierda.
+	\noindent El operador elegido como ejemplo ilustrativo es el de desplazamiento a la izquierda. Como fue explicado anteriormente en la \hyperref[sssec:desp-izq]{\textbf{Sección \ref{sssec:desp-izq}}}, para este operador se siguió la siguiente lógica para simular su comportamiento:
 	
-	\begin{mi_ejemplo}[H]
-		\vspace{2pt}
-		\caption{Implementación del desplazamiento a la izquierda}
-		\label{cod:shiftl-rust}
-		\vspace{5pt}
-		\hrule
-		\begin{minipage}[t]{0.48\textwidth}
-			\begin{lstlisting}[style=RustStyle, caption={}, basicstyle=\ttfamily\scriptsize, 
-				xleftmargin=0pt, 
-				frame=none, 
-				breaklines=true,
-				numbers=none]
-ShiftL => {
-	let k = get_constant_usize(r_value)
-	.expect("Shift amount must be a constant usize");
-	assert!(k <= n, "Shift exceeds bit width");
+	\begin{enumerate}
+		\item Transformar el número decimal a desplazar a sistema binario
+		\item Mover los k bits menos significativos a la izquierda un número de k posiciones.
+		\item Los k bits menos significativos sustituirlos por cero.
+	\end{enumerate}
 	
-	let mut constraints = vec![];
-	let mut new_vars_name = vec![];
-	let mut b_signals: Vec<AExpr> = vec![];
+	\vspace{0.2cm}
+	\noindent A la hora de realizar la conversión a binario tenemos que realizar una  comprobación previa sobre el tamaño del desplazamiento.
+	
+	\vspace{0.2cm}
+	\noindent Tal y como se explicó en la \hyperref[sssec:tamaño-ops]{\textbf{Sección \ref{sssec:tamaño-ops}}} y se definió en la \hyperref[sssec:desp-izq]{\textbf{Sección \ref{sssec:desp-izq}}}, si el usuario conoce el tamaño de los valores con los que va a trabajar puede utilizar el \texttt{op\_(n)} sobre los operadores de desplazamientos, de forma que podrá acotar el tamaño de los operandos utilizando esta utilidad.
+	
+	\vspace{0.2cm}
+	\noindent Por tanto, si el tamaño de los valores a desplazar es conocido, el usuario podría limitar el tamaño, ya que por defecto la funcionalidad utiliza el tamaño máximo correspondiente a 253, lo que implica muchas más restricciones de las necesarias.
+	
+	\vspace{0.2cm}
+	\noindent Por ejemplo, si el usuario conoce que el tamaño de los valores con los que va a trabajar es igual o inferior a cuatro, podría aplicar esta limitación tal que así: \texttt{11 $\ll$\_(4) 2}.
+	
+	\vspace{0.2cm}
+	\noindent Debido a este modo en el que el tamaño puede ser limitado, tiene que realizarse la comprobación de que el número n elegido como límite y el número k de bits a desplazar no presente una situación en la que $k > n$.
+	
+	\vspace{0.2cm}
+	\noindent Esta verificación previa es necesaria, ya que no puede desplazarse un número cuyo tamaño es menor que el del desplazamiento. Por este motivo, esta comprobación antes de realizar la implementación es necesaria.
+	
+	\vspace{0.3cm}
+	\begin{lstlisting}[style=RustStyle, caption={}, 		basicstyle=\ttfamily\scriptsize, 
+		xleftmargin=0pt
+		]
+		
+		let k = get_constant_usize(r_value)
+		.expect("Shift amount must be a constant usize");
+		assert!(k <= n, "Shift exceeds bit width");
+		
+		let mut constraints = vec![];
+		let mut new_vars_name = vec![];
+		let mut b_signals: Vec<AExpr> = vec![];
+		
+	
+	\end{lstlisting}
+	
+	\vspace{0.2cm}
+	\noindent Una vez realizada la comprobación, si se cumple la condición $k \leq n$ el código prosigue su curso, declarando las restricciones y señales necesarias para la implementación.
+	
+	\vspace{0.2cm}
+	\noindent Como fue especificado, el primer paso en esta lógica es la conversión decimal a binaria del número a desplazar. Para ello, hacemos uso de la función \texttt{decimal\_to\_bits()} implementada como método general destinado a las conversiones y así reutilizar código. Puede consultarse en el repositorio del proyecto \cite{circom_autocomplete}.
+	
+	\vspace{0.2cm}
+	\noindent En resumen, como su nombre indica, esta función tiene como objetivo la conversión de números en sistema decimal a sistema binario. De esta forma, durante la conversión crea las señales necesarias y restricciones, estas últimas añadidas al conjunto global de restricciones que serán incorporadas al sistema de ecuaciones del operador.
+	
+	\vspace{0.2cm}
+	\noindent  Tras finalizar la función, se obtiene como resultado un array de tamaño n donde cada posición es un dígito binario, representando de esta forma el número binario equivalente.
 	
 	
-	let (field_copy, l_value) = {
-		let field_copy = runtime.constants.get_p().clone();
-		let l_value = l_value.clone();
-		(field_copy, l_value)
-	};
-	
-	// 1. Transformar numero a desplazar en binario
-	let (b_signals, constraints_bit) = decimal_to_bits(
-	&l_value, n, &field_copy, runtime, &mut new_vars_name
-	);
-	constraints.extend(constraints_bit);
-	
-	let mut s_signals = vec![];
-	
-	// 2. Crear senales intermedias para asignar cada bit a un valor
-	for _ in 0..n {
-		let shift_signal_name = format!("s_{}", runtime.new_added_vars);
-		runtime.new_added_vars += 1;
-		s_signals.push(AExpr::Signal {
-			symbol: shift_signal_name.clone()
-		});
-		new_vars_name.push(shift_signal_name);
-	}
-				\end{lstlisting}
-			\end{minipage}
-			\hfill
-			\begin{minipage}[t]{0.48\textwidth}
-				\begin{lstlisting}[style=RustStyle, caption={}, basicstyle=\ttfamily\scriptsize, 
-					xleftmargin=0pt, 
-					frame=none, 
-					breaklines=true,
-					numbers=none]
-	// 3. Forzar el desplazamiento. Movemos los k bits a la izquierda
-	for i in k..n {
-		let eq = AExpr::sub(
-		&s_signals[i], &b_signals[i-k], &field_copy
+	\vspace{0.3cm}
+	\begin{lstlisting}[style=RustStyle, caption={}, 		basicstyle=\ttfamily\scriptsize, 
+		xleftmargin=0pt
+		]
+			
+		let (field_copy, l_value) = {
+			let field_copy = runtime.constants.get_p().clone();
+			let l_value = l_value.clone();
+			(field_copy, l_value)
+		};
+		
+		// 1. Transformar numero a desplazar en binario
+		let (b_signals, constraints_bit) = decimal_to_bits(
+		&l_value, n, &field_copy, runtime, &mut new_vars_name
 		);
-		let c = AExpr::transform_expression_to_constraint_form(
-		eq, &field_copy
-		).unwrap();
-		constraints.push(c);
-	}
+		constraints.extend(constraints_bit);
+		
+	\end{lstlisting}
 	
-	// 4. Los k bits menos significativos = 0
+	
+	\vspace{0.2cm}
+	\noindent Una vez tenemos el número binario, podemos aplicar las restricciones correspondientes, pero antes de ello necesitamos declarar las señales intermedias que vamos a necesitar para forzar la asignación de lo k bits menos significativos a cero y lo bits entre [k,n] al número entre [0,n-k).
+	
+	\vspace{0.3cm}
+	\begin{lstlisting}[style=RustStyle, caption={}, 		basicstyle=\ttfamily\scriptsize, 
+		xleftmargin=0pt
+		]
+		
+			let mut s_signals = vec![];
+		
+		// 2. Crear senales intermedias para asignar cada bit a un valor
+		for _ in 0..n {
+			let shift_signal_name = format!("s_{}", runtime.new_added_vars);
+			runtime.new_added_vars += 1;
+			s_signals.push(AExpr::Signal {
+				symbol: shift_signal_name.clone()
+			});
+			new_vars_name.push(shift_signal_name);
+		}
+		
+	\end{lstlisting}
+	
+	\vspace{0.2cm}
+	\noindent Con las señales intermedias declaradas, podemos forzarlas para así conseguir el desplazamiento del número binario.
+	
+	\vspace{0.2cm}
+	\noindent Siguiendo el ejemplo utilizado en la \hyperref[sssec:desp-izq]{\textbf{Sección \ref{sssec:desp-izq}}} para explicar este operador, el número binario \texttt{1011} con un desplazamiento de k = 2 en este punto se transformaría a \texttt{1111}. 
+	
+	\vspace{0.2cm}
+	\noindent
+	Esto se debe a que primeramente realizamos el desplazamiento de los k bits menos significativos a las posiciones entre [k,n).
+		
+	\vspace{0.3cm}
+	\begin{lstlisting}[style=RustStyle, caption={}, 		basicstyle=\ttfamily\scriptsize, 
+		xleftmargin=0pt
+		]
+			// 3. Forzar el desplazamiento. Movemos los k bits a la izquierda
+		for i in k..n {
+			let eq = AExpr::sub(
+			&s_signals[i], &b_signals[i-k], &field_copy
+			);
+			let c = AExpr::transform_expression_to_constraint_form(
+			eq, &field_copy
+			).unwrap();
+			constraints.push(c);
+		}
+		
+	\end{lstlisting}
+	
+	\vspace{0.2cm}
+	\noindent Para completar el desplazamiento, queda forzar a las señales entre [0,k) a que su valor sea cero, de la misma forma que en el caso anterior forzamos a que las señales entre [k,n) fuesen el número binario entre [0,n-k).
+	
+	\vspace{0.2cm}
+	\noindent De esta forma, el número binario desplazado pasaría de \texttt{1111} a \texttt{1100}. 
+	
+	\vspace{0.3cm}
+	\begin{lstlisting}[style=RustStyle, caption={}, 		basicstyle=\ttfamily\scriptsize, 
+	xleftmargin=0pt
+	]
+		// 4. Los k bits menos significativos = 0
 	for i in 0..k {
 		let eq = AExpr::sub(
 		&s_signals[i],
@@ -2594,8 +2867,22 @@ ShiftL => {
 		).unwrap();
 		constraints.push(c);
 	}
+		
+	\end{lstlisting}
 	
-	// 5. Reconstruccion decimal tras el desplazamiento en el numero binario
+	\vspace{0.2cm}
+	\noindent Una vez finalizada toda la lógica correspondiente al desplazamiento a la izquierda, el paso final es reconstruir el número binario desplazado en decimal.
+	
+	\vspace{0.2cm}
+	\noindent La reconstrucción de un número binario a decimal se realiza a través del \textbf{método de potencias de 2}. De forma que se realiza la suma de los productos entre cada dígito y potencia de base dos según el índice de posición \cite{geeknetic_binario}.
+	
+	\vspace{0.2cm}
+	\noindent Siguiendo este método, recorremos el número binario desplazado aplicando para cada dígito el producto del mismo con su potencia de base dos en función del índice que ocupa. Tras completar el recorrido del número aplicando este método a cada uno de los dígitos, la variable \texttt{sum\_out} acumula la suma de estos producto, siendo la variable que almacena el resultado de la conversión binaria a decimal.
+	
+	\vspace{0.3cm}
+	\begin{lstlisting}[style=RustStyle, caption={}, 		basicstyle=\ttfamily\scriptsize, 
+	xleftmargin=0pt
+	]		// 5. Reconstruccion decimal tras el desplazamiento en el numero binario
 	let mut sum_out = AExpr::Number { value: BigInt::from(0) };
 	for i in 0..n {
 		let power_of_two = BigInt::from(1) << i;
@@ -2608,12 +2895,18 @@ ShiftL => {
 	}
 	
 	Ok((sum_out, constraints, new_vars_name))
-}
-			\end{lstlisting}
-		\end{minipage}
-		\hrule
-	\end{mi_ejemplo}
 	
+	\end{lstlisting}
+	
+
+	\vspace{0.2cm}
+	\noindent De esta forma, aplicando estos bloques de código en el mismo orden en el que han sido expuestos se consigue plasmar la lógica de esta operador aplicando restricciones que formarán parte del sistema de ecuaciones, consiguiendo de esta forma simular completamente la lógica deseada.
+	
+	\vspace{0.2cm}
+	\noindent Para el resto de operadores se aplica la misma lógica pero siguiendo las reglas de traducción especificadas. De hecho, muchas funciones como los operadores \texttt{Igual} y \texttt{Distinto} presentan la misma lógica con lo que puede abstraerse mucho código.
+	
+	\vspace{0.2cm}
+	\noindent En resumen, siguiendo esta vía se transita desde una idea hasta un sistema que funciona de verdad, logrando unir la parte teórica de las reglas de traducción con la parte práctica destinada a la implementación de estas reglas, consiguiendo que estos operadores funcionen según lo esperado.
 	
 	\chapter{Verificación de los operadores}
 	

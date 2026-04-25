@@ -115,8 +115,14 @@ Wikipedia. (2024).
 
 \bibitem{circom_autocomplete}
 Martínez, L. (2025).
-\newblock \emph{circom\_autocomplete: zkSnark circuit compiler}.
+\newblock \emph{Circom autocomplete: zkSnark circuit compiler}.
 \newblock GitHub. \url{https://github.com/luciamarst/circom_autocomplete}.
 \newblock Accedido: 22-04-2026.
+
+\bibitem{geeknetic_binario}
+Geeknetic. (2023).
+\newblock \emph{Cómo convertir binario en decimal paso a paso}.
+\newblock Geeknetic. \url{https://www.geeknetic.es/Guia/2667/Como-convertir-binario-en-decimal-paso-a-paso.html}.
+\newblock Accedido: 25-04-2026.
 
 \end{thebibliography}
