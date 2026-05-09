@@ -11,44 +11,36 @@
 \contentsline {chapter}{\numberline {2}Definición del problema}{13}{chapter.2}%
 \contentsline {section}{\numberline {2.1}Descripción del problema}{13}{section.2.1}%
 \contentsline {section}{\numberline {2.2}Ejemplo: Piedra, Papel y Tijera}{15}{section.2.2}%
-\contentsline {chapter}{\numberline {3}Desarrollo del problema}{20}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Traducción}{20}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Reglas de transformación}{20}{section.3.2}%
-\contentsline {subsection}{\numberline {3.2.1}Operadores Aritméticos}{21}{subsection.3.2.1}%
-\contentsline {subsubsection}{\numberline {3.2.1.1}División}{21}{subsubsection.3.2.1.1}%
-\contentsline {subsubsection}{\numberline {3.2.1.2}Módulo}{23}{subsubsection.3.2.1.2}%
-\contentsline {subsubsection}{\numberline {3.2.1.3}Traducción de operadores}{25}{subsubsection.3.2.1.3}%
-\contentsline {subsection}{\numberline {3.2.2}Operadores Lógicos}{25}{subsection.3.2.2}%
-\contentsline {subsubsection}{\numberline {3.2.2.1}Traducción de operadores}{27}{subsubsection.3.2.2.1}%
-\contentsline {subsection}{\numberline {3.2.3}Operadores de Comparación}{27}{subsection.3.2.3}%
-\contentsline {subsubsection}{\numberline {3.2.3.1}Tratamiento de número negativos}{27}{subsubsection.3.2.3.1}%
-\contentsline {subsubsection}{\numberline {3.2.3.2}Tamaño de los números comparados}{30}{subsubsection.3.2.3.2}%
-\contentsline {subsubsection}{\numberline {3.2.3.3}Operadores $<, \leq , > \ y \ \geq $}{32}{subsubsection.3.2.3.3}%
-\contentsline {subsubsection}{\numberline {3.2.3.4}Operadores == y !=}{33}{subsubsection.3.2.3.4}%
-\contentsline {subsubsection}{\numberline {3.2.3.5}Traducción de operadores}{35}{subsubsection.3.2.3.5}%
-\contentsline {subsection}{\numberline {3.2.4}Operadores de desplazamiento}{36}{subsection.3.2.4}%
-\contentsline {subsubsection}{\numberline {3.2.4.1}Desplazamiento a la izquierda}{37}{subsubsection.3.2.4.1}%
-\contentsline {subsubsection}{\numberline {3.2.4.2}Desplazamiento a la derecha}{37}{subsubsection.3.2.4.2}%
-\contentsline {subsubsection}{\numberline {3.2.4.3}Traducción de operadores}{38}{subsubsection.3.2.4.3}%
-\contentsline {subsection}{\numberline {3.2.5}Expresiones condicionales}{38}{subsection.3.2.5}%
-\contentsline {subsubsection}{\numberline {3.2.5.1}Caso base: if-else}{40}{subsubsection.3.2.5.1}%
-\contentsline {subsubsection}{\numberline {3.2.5.2}Caso inductivo: Condicionales anidados}{40}{subsubsection.3.2.5.2}%
-\contentsline {subsubsection}{\numberline {3.2.5.3}Traducción de operadores}{42}{subsubsection.3.2.5.3}%
-\contentsline {subsection}{\numberline {3.2.6}Acceso a Arrays}{42}{subsection.3.2.6}%
-\contentsline {section}{\numberline {3.3}Ejemplo con constraints generadas automáticamente}{42}{section.3.3}%
-\contentsline {chapter}{\numberline {4}Implementación del problema}{43}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Ejemplo de implementación}{44}{section.4.1}%
-\contentsline {chapter}{\numberline {5}Verificación de los operadores}{48}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Operadores Aritméticos}{49}{section.5.1}%
-\contentsline {subsubsection}{\numberline {5.1.0.1}División}{49}{subsubsection.5.1.0.1}%
-\contentsline {subsubsection}{\numberline {5.1.0.2}Módulo}{50}{subsubsection.5.1.0.2}%
-\contentsline {section}{\numberline {5.2}Operadores Lógicos}{50}{section.5.2}%
-\contentsline {subsection}{\numberline {5.2.1}Operador NOT, AND y OR}{51}{subsection.5.2.1}%
-\contentsline {subsection}{\numberline {5.2.2}Operador AND binario}{51}{subsection.5.2.2}%
-\contentsline {subsection}{\numberline {5.2.3}Operador OR binario}{53}{subsection.5.2.3}%
-\contentsline {section}{\numberline {5.3}Operadores de Comparación}{53}{section.5.3}%
-\contentsline {section}{\numberline {5.4}Operadores de Desplazamiento}{55}{section.5.4}%
-\contentsline {chapter}{\numberline {6}Experimentos}{57}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Aplicación de la generación automática sobre juegos simples}{57}{section.6.1}%
-\contentsline {section}{\numberline {6.2}Aplicación de la generación automática sobre circomLib y comparación de constraints}{57}{section.6.2}%
-\contentsline {section}{\numberline {6.3}Caso de uso, verificación y búsqueda de bugs}{57}{section.6.3}%
+\contentsline {subsection}{\numberline {2.2.1}Señales de los jugadores}{16}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Señal del ganador}{17}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}Lógica del empate}{18}{subsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.2.4}Lógica de los jugadores}{19}{subsection.2.2.4}%
+\contentsline {chapter}{\numberline {3}Desarrollo del problema}{21}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Síntesis de restricciones para la traducción de expresiones}{21}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}Casos inductivos: Reglas de transformación}{22}{subsection.3.1.1}%
+\contentsline {subsubsection}{\numberline {3.1.1.1}Operadores Aritméticos}{22}{subsubsection.3.1.1.1}%
+\contentsline {subsubsection}{\numberline {3.1.1.2}Operadores Lógicos}{27}{subsubsection.3.1.1.2}%
+\contentsline {subsubsection}{\numberline {3.1.1.3}Operadores de Comparación}{30}{subsubsection.3.1.1.3}%
+\contentsline {subsubsection}{\numberline {3.1.1.4}Operadores de desplazamiento}{38}{subsubsection.3.1.1.4}%
+\contentsline {subsection}{\numberline {3.1.2}Expresiones condicionales}{40}{subsection.3.1.2}%
+\contentsline {subsubsection}{\numberline {3.1.2.1}Caso base: if-else}{41}{subsubsection.3.1.2.1}%
+\contentsline {subsubsection}{\numberline {3.1.2.2}Caso inductivo: Condicionales anidados}{42}{subsubsection.3.1.2.2}%
+\contentsline {subsubsection}{\numberline {3.1.2.3}Traducción de operadores}{44}{subsubsection.3.1.2.3}%
+\contentsline {subsection}{\numberline {3.1.3}Acceso a Arrays}{44}{subsection.3.1.3}%
+\contentsline {section}{\numberline {3.2}Ejemplo con constraints generadas automáticamente}{44}{section.3.2}%
+\contentsline {chapter}{\numberline {4}Implementación del problema}{45}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Ejemplo de implementación}{46}{section.4.1}%
+\contentsline {chapter}{\numberline {5}Verificación de los operadores}{50}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Operadores Aritméticos}{51}{section.5.1}%
+\contentsline {subsubsection}{\numberline {5.1.0.1}División}{51}{subsubsection.5.1.0.1}%
+\contentsline {subsubsection}{\numberline {5.1.0.2}Módulo}{52}{subsubsection.5.1.0.2}%
+\contentsline {section}{\numberline {5.2}Operadores Lógicos}{52}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}Operador NOT, AND y OR}{53}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}Operador AND binario}{53}{subsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.2.3}Operador OR binario}{55}{subsection.5.2.3}%
+\contentsline {section}{\numberline {5.3}Operadores de Comparación}{55}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Operadores de Desplazamiento}{57}{section.5.4}%
+\contentsline {chapter}{\numberline {6}Experimentos}{59}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Aplicación de la generación automática sobre juegos simples}{59}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Aplicación de la generación automática sobre circomLib y comparación de constraints}{59}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Caso de uso, verificación y búsqueda de bugs}{59}{section.6.3}%
