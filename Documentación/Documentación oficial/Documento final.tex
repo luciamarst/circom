@@ -38,8 +38,11 @@
 \usepackage[hidelinks]{hyperref} 
 \setcounter{secnumdepth}{3}
 \setcounter{tocdepth}{3}
+\usepackage{etoolbox}
 \usepackage[most]{tcolorbox}
 \tcbuselibrary{listings}
+
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc}
 \geometry{top=3cm, bottom=3cm, left=3cm, right=3cm}
 
 % Comandos
@@ -1095,7 +1098,7 @@ placement=H
 		\end{itemize}
 	
 	
-	\subsection{Casos inductivos: Reglas de transformación}
+	\subsection{Casos inductivos: Reglas de transformación de expresiones}
 	
 	\noindent Esta sección recoge la documentación sobre la implementación de las reglas de transformación pertinentes para materializar la funcionalidad descrita a la práctica.
 	
@@ -1571,43 +1574,36 @@ placement=H
 		\end{longtable}
 
 	\vspace{0.2cm} 
-	\noindent La función \textit{BinaryAnd(n)} recibe dos números decimales ($e_1$ y $e_2$), de forma que:
+	\noindent La función \textit{BinaryAnd(n)} recibe dos números decimales ($e'_1$ y $e'_2$), de forma que:
 	
 	\begin{enumerate}
-		\item $e_1$ es transformado a binario: $e_{1_bin}$
-		\item $e_2$ es transformado a binario: $e_{2_bin}$
-		\item Una vez tenemos los números binarios transformados, podemos aplicar la operación \texttt{AND} entre cada par de bits: $result[i] = e_[i]{1_bin} \cdot e_[i]{2,bin}$, donde $i \in [0,n)$
-		\item Una vez aplicada la operación \texttt{AND}, el número resultante es transformado a decimal con la función $Bits2Num()$, la cuál de forma análoga a $Num2Bits()$ transforma el número binario a decimal.
+		\item $e'_1$ es transformado a binario: $e'_{1_{bin}}$
+		\item $e'_2$ es transformado a binario: $e'_{2_{bin}}$
+		\item Una vez tenemos los números binarios transformados, podemos aplicar la operación \texttt{AND} entre cada par de bits: $result[i] = e'[i]_{1_{bin}} \cdot e'[i]_{2,{bin}}$, donde $i \in [0,n)$
+		\item Una vez aplicada la operación \texttt{AND}, \texttt{result} es transformado a decimal con la función $Bits2Num()$, la cuál de forma análoga a $Num2Bits()$ transforma el número binario a decimal.
 	\end{enumerate}
 	
 	
 	\newpage
 	
-	\noindent La función \textit{BinaryOr(n)} recibe dos números decimales ($e_1$ y $e_2$), de forma que:
+	\noindent La función \textit{BinaryOr(n)} recibe dos números decimales ($e'_1$ y $e'_2$), de forma que:
 	
 	\begin{enumerate}
-		\item $e_1$ es transformado a binario: $e_{1_bin}$
-		\item $e_2$ es transformado a binario: $e_{2_bin}$
-		\item Una vez tenemos los números binarios transformados, podemos aplicar la operación \texttt{OR} entre cada par de bits: $result[i] = e_[i]{1_bin} + e_[i]{2_bin} - e_[i]{1_bin} \cdot e_[i]{2_bin}$, donde $i \in [0,n)$
-		\item Una vez aplicada la operación \texttt{OR}, el número resultante es transformado a decimal con la función $Bits2Num()$, la cuál de forma análoga a $Num2Bits()$ transforma el número binario a decimal.
+		\item $e'_1$ es transformado a binario: $e'_{1_{bin}}$
+		\item $e'_2$ es transformado a binario: $e'_{2_{bin}}$
+		\item Una vez tenemos los números binarios transformados, podemos aplicar la operación \texttt{OR} entre cada par de bits: $result[i] = e'[i]_{1_{bin}} + e'_[i]_{2_{bin}} - e'[i]_{1_{bin}} \cdot e'[i]_{2_{bin}}$, donde $i \in [0,n)$
+		\item Una vez aplicada la operación \texttt{OR}, \texttt{result} es transformado a decimal con la función $Bits2Num()$, la cuál de forma análoga a $Num2Bits()$ transforma el número binario a decimal.
 	\end{enumerate}
 
 	\subsubsection{Operadores de Comparación}
-		\vspace{0.6cm}
-		\noindent \textbf{Tratamiento de número negativos}
+		\noindent \textbf{Tratamiento de número negativos: Num2Bits()}
 		\vspace{0.2cm}
 		
-		\label{sssec:num_negativos}
-		\noindent Un detalle destacable en la función \textit{LessThanEq()}, utilizada para hacer posible la traducción de los operadores de comparación $<, \leq, > \ y \ \geq$ a restricciones algebraicas, es que para números negativos podría dificultar su uso si no se tienen en cuenta ciertos aspectos determinantes.
+		\label{sssec:tra:num_negativos}
+		
+		\noindent Debido a la forma en la que Circom gestiona los valores numéricos, los números negativos requieren un tratamiento especial (véase el \hyperref[ap:num_negativos]{\textbf{Capítulo \ref{ap:num_negativos}})}.
 		
 		\vspace{0.2cm}
-		\noindent El motivo reside en trabajamos sobre un \hyperref[def:cuerpo-finito]{cuerpo finito $\mathbb{F}_p$}, de forma que los números negativos realmente no existen. En su lugar, se representan mediante el módulo del campo.
-		
-		\vspace{0.2cm}
-		\noindent Por ejemplo, el valor $- 1$ se interpreta como $p - 1$, un número extremadamente grande que se aproxima al orden del primo del campo.
-		
-		\vspace{0.2cm}
-		
 		\noindent Para solventar este problema, recurrimos a las transformación de los números a comparar de sistema decimal a binario. Esta conversión es estrictamente necesaria para asegurar que los números correspondientes no exceden el rango especificado.
 		
 		\vspace{0.2cm}
@@ -1618,7 +1614,7 @@ placement=H
 		
 		\vspace{0.2cm}
 		
-		\noindent Debido al excesivo tamaño del número entrante, nunca se cumplirá la restricción de que ambos sean iguales debido a que el tamaño máximo fijado (N) es siempre menor que el tamaño del número negativo, desencadenando que la reconstrucción no realizará un bucle de tamaño mayor a al número N fijado.
+		\noindent Debido al excesivo tamaño del número entrante, nunca se cumplirá la restricción de que ambos sean iguales debido a que el tamaño máximo fijado (N) es siempre menor que el tamaño del número negativo, desencadenando que la reconstrucción no realizará un bucle de tamaño mayor al número N fijado.
 		
 		\vspace{0.2cm}
 			
@@ -1642,13 +1638,13 @@ placement=H
 		\noindent \textit{Observación: Gracias a la constraint lc1 === in (fuerza a que la entrada cumpla el rango \([0,2^n -1]\)), podemos evitar el uso de número negativos, ya que estos no cumplirán tal restricción.}
 		
 		
-		\textcolor{red}{	
-		\vspace{0.2cm}
-		\noindent Un ejemplo para ilustrar el comportamiento de la función en caso de número negativo es el siguiente:}
 		
-		\textcolor{red}{Todo el ejemplo este nuevo}
+		
+		\vspace{0.2cm}
+		\noindent Un ejemplo para ilustrar el comportamiento de la función en caso de número negativo es el siguiente:
+		
 		\begin{mi_ejemplo}
-			\caption{\textcolor{red}{Comportamiento Num2Bits()}}
+			\caption{\textcolor{black}{Comportamiento Num2Bits()}}
 			\label{ex:num2bits}
 			\begin{enumerate}
 				
@@ -1657,7 +1653,7 @@ placement=H
 				
 				\item Es imprescindible añadir explícitamente la restricción \texttt{out[i] * (out[i] - 1) === 0}. Esta ecuación sí se integra en el sistema de restricciones, asegurando que la señal solo pueda adoptar los valores lógicos 0 o 1. Sin embargo, \texttt{out[i]} \texttt{<-} \texttt{-}\texttt{ (in}$\gg$\texttt{i) \& 1} solo asigna y no es añadida al sistema de ecuaciones.
 				
-				\item Una vez realizadas la asignación y restricción de \texttt{out[i]}, se produce la reconstrucción del valor de entrada, este caso el -3. Es en este punto donde la funcion\textit{Num2Bits()} nos permite determinar si el número es negativo. 
+				\item Una vez realizadas la asignación y restricción de \texttt{out[i]}, se produce la reconstrucción del valor de entrada, este caso el -3. Es en este punto donde la funcion \textit{Num2Bits()} nos permite determinar si el número es negativo. 
 				
 				\item Como hemos mencionado, al trabajar con un cuerpo finito $\mathbb{F}_p$, el valor $-3$ se representa como $p-3$, un número positivo extremadamente grande que requiere cerca de 254 bits para ser expresado. Dado que el tamaño máximo permitido es 253, el bucle de reconstrucción solo sumará los pesos de a lo sumo 253 bits. 
 				
@@ -1694,10 +1690,10 @@ placement=H
 		\end{codigo}
 		
 		
-		\noindent \textcolor{red}{Este bloque de código corresponde a la plantilla \textit{Num2Bits()} de la librería \texttt{circomlib} \cite{iden3_circomlib_bitify}.}
+		\noindent \textcolor{black}{Este bloque de código corresponde a la plantilla \textit{Num2Bits()} de la librería \texttt{circomlib} \cite{iden3_circomlib_bitify}.}
 		
 		\vspace{0.25cm}
-		\noindent \textcolor{red}{Esta función ha sido el modelo de referencia para implementar la conversión decimal$-$binaria dentro de la nueva funcionalidad del compilador desarrollado.}
+		\noindent \textcolor{black}{Esta función ha sido el modelo de referencia para implementar la conversión decimal$-$binaria dentro de la nueva funcionalidad del compilador desarrollado.}
 		\vspace{0.5cm}
 		
 				
@@ -1710,10 +1706,7 @@ placement=H
 		\noindent El tamaño de los números comparados es un factor importante, ya que dicho tamaño puede ser por un lado conocido e igual, mientras que por otro lado puede ser desconocido o de diferentes tamaños.
 		
 		\vspace{0.2cm}	
-		\noindent \textcolor{red}{Un tamaño es desconocido cuando una señal no tiene una restricción de bits predefinida, existiendo únicamente como un valor dentro del rango del cuerpo finito $\mathbb{F}_p$ ([0,$p-1$]). Esto ocurre porque en la los circuitos lógicos los cables que lo conforman no tienen un tamaño fijo. }
-		
-		\vspace{0.2cm}	
-		\noindent \textcolor{red}{Por tanto, el circuito ignora el tamaño real de la entrada hasta que se requiere conocer el rango al que pertenece dicho tamaño. Sin esta imposición, el sistema no puede diferenciar si una entrada es un entero pequeño o un valor enorme cercano al primo p.}
+		\noindent \textcolor{black}{Un tamaño es desconocido cuando una señal no tiene una restricción de bits predefinida, existiendo únicamente como un valor dentro del rango del cuerpo finito $\mathbb{F}_p$ ([0,$p-1$]). }
 		
 		\vspace{0.2cm}	
 		\noindent Para resolver este problema, vamos a definir un complemento opcional por cada operador de comparación existente.
@@ -1771,17 +1764,97 @@ placement=H
 		
 		
 		\vspace{0.2cm}	
-		\noindent \textcolor{red}{Siguiendo el ejemplo anterior, la introducción del operador \textit{op\_(n)} permite limitar el tamaño en bits de los operadores \texttt{>} y \texttt{==}, restringiendo así el tamaño de las señales \texttt{a} y \texttt{b} a n=2.}
+		\noindent \textcolor{black}{Siguiendo el ejemplo anterior, la introducción del operador \textit{op\_(n)} permite limitar el tamaño en bits de los operadores \texttt{>} y \texttt{==}, restringiendo así el tamaño de las señales \texttt{a} y \texttt{b} a n=2.}
 		
 		\vspace{0.2cm}	
-		\noindent \textcolor{red}{Este operador resulta de gran utilidad cuando el programador conoce previamente el tamaño de las señales. Si no estuviese disponible, el sistema utilizaría por defecto el tamaño máximo de 253 bits.}
+		\noindent \textcolor{black}{Este operador resulta de gran utilidad cuando el programador conoce previamente el tamaño de las señales. Si no estuviese disponible, el sistema utilizaría por defecto el tamaño máximo de 253 bits.}
+		
+		\vspace{0.2cm}	
+		\noindent Aunque el usuario conociese que las señales con las que va a trabajar no exceden un tamaño de 2, se generarían 251 señales innecesarias para este circuito, efectando considerablemente a su eficiencia.
 		 
 		\vspace{0.2cm}	
-		\noindent \textcolor{red}{Si este operador no estuviese disponible, aunque el usuario supiese que el tamaño de las señales es 2, tendría que programar codificar el programa con el tamaño predefindo de 253 bits.}
-		
-		\vspace{0.2cm}	
-		\noindent \textcolor{red}{Por ello, si el usuario es conocedor del tamaño, es una herramienta que reduce considerablemente el número de restricciones generadas. Al acotar el tamaño a solo 2 bits en lugar de los 253 predefinidos, se evita la generación de  de ecuaciones innecesarias que se producirían al descomponer y verificar cada bit de una señal cuyo tamaño ya era conocido por el usuario.}
+		\noindent \textcolor{black}{Por ello, si el usuario es conocedor del tamaño, es una herramienta que reduce considerablemente el número de restricciones generadas.}
 	
+		\vspace{0.6cm}
+		\noindent \textbf{Operadores == y !=}
+		\vspace{0.2cm}
+		
+		\label{sss:ops-eq-neq}
+		\vspace{0.2cm}
+		\noindent Los operadores $== \ y \ !=$ plantean una estrategia de implementación basada en dos restricciones claves:
+		
+		\begin{itemize}
+			\item \texttt{(in1-in2) $*$ equal\_signal = 0}
+			\item \texttt{1 $-$ ((in1$-$in2) $*$ inv\_signal) = equal\_signal}
+		\end{itemize}
+		
+		\vspace{0.2cm}
+		\noindent Estas dos ecuaciones son imprescindibles, ya que las usaremos para determinar si \texttt{in1 == in2} o \texttt{in1}$\neq$\texttt{in2}, utilizando  \texttt{equal\_signal} como indicador.
+		
+		% No se si aqui meter referencia al capitulo de circom por lo de la señal
+		\vspace{0.2cm}
+		\noindent La señal  \texttt{equal\_signal} será 1 cuando \texttt{in1 == in2}, o será 0 cuando \texttt{in1}$\neq$\texttt{in2}. Este comportamiento se consigue por medio de las dos ecuaciones descritas anteriormente.
+		
+		\vspace{0.2cm}
+		\noindent \texttt{(in1-in2) $*$ equal\_signal = 0} es imprescindible para obtener que  \texttt{equal\_signal} sea 0 cuando in1 e in2 sean diferentes. Esto se debe a que si in1 es distinto a in2, entonces el resultado de su diferencia será distinto a 0. Por tanto, la ecuación quedaría así:
+		
+		\begin{equation}
+			\begin{aligned}
+				&num \cdot equal\_signal = 0 \\
+				&num \in \mathbb{R} \setminus \{0\}
+			\end{aligned}
+		\end{equation}
+		
+		\vspace{0.2cm}
+		\noindent De esta forma, al ser num un valor distinto de cero, la única forma de que se satisfaga la ecuación es forzar a que  \texttt{equal\_signal} sea obligatoriamente 0. De este modo, la señal será igual a 0, indicando que in1 e in2 son diferentes.
+		
+		\vspace{0.2cm}
+		\noindent \textit{Observación}: Si in1 e in2 fuesen iguales, entonces su diferencia sería igual a 0, por tanto  \texttt{equal\_aux} podría tomar cualquier valor e \texttt{(in1-in2) $*$ equal\_signal = 0} seguiría satisfaciéndose:
+		
+		\begin{equation}
+			\begin{aligned}
+				&0 \cdot equal\_signal = 0 \\
+				&equal\_signal \in \mathbb{R}
+			\end{aligned}
+		\end{equation}
+		
+		\vspace{0.2cm}
+		\noindent Por ello, es importante la segunda ecuación, ya que además de que \texttt{equal\_signal} puede ser cualquier valor, podría ser 0 también, indicando erróneamente que in1 e in2 son diferentes.
+		
+		\vspace{0.2cm}
+		\noindent Esta segunda ecuación, \texttt{1 $-$ ((in1$-$in2) $*$ inv\_signal) = equal\_signal}, además de asegurar que \texttt{equal\_signal} sea distinta de cero, garantiza que el resultado sea estrictamente 1 siempre que \texttt{in1} e \texttt{in2} sean idénticos.
+		
+		\vspace{0.2cm}
+		\noindent Esto se consigue mediante el uso de una segunda señal, \texttt{inv\_signal}, la cual garantiza que \texttt{equal\_signal} tome el valor 1 cuando in1 e in2 son iguales. Dado que en este escenario la diferencia entre ambas entradas es nula, cualquier valor de \texttt{inv\_signal} $\in \mathbb{R}$ resultará en un producto igual a cero, derivando en el siguiente comportamiento:
+		
+		\begin{equation}
+			\begin{aligned}
+				1 - ((in1 - in2) \cdot inv\_signal) &= equal\_signal \\
+				1 - (0 \cdot inv\_signal) &= equal\_signal \\
+				1 - 0 &= equal\_signal \\
+				1 &= equal\_signal
+			\end{aligned}
+		\end{equation}
+		
+		\vspace{0.2cm}
+		\noindent Como puede observarse, aunque en la primera ecuación para in1 == in2 la señal equal\_signal puede tener cualquier valor, con esta segunda ecuación forzamos a que su valor sea 0, en caso de que in1!=in2, o bien 1, si in1==in2.
+		
+		\vspace{0.2cm}
+		\noindent En caso de que $in1 \neq in2$, entonces \texttt{equal\_signal} sería 0, obteniendo un comportamiento diferente:
+		
+		\begin{equation}
+			\begin{aligned}
+				1 - ((in1 - in2) \cdot inv\_signal) &= equal\_signal \\
+				1 - ((in1 - in2) \cdot inv\_signal) &= 0 \\
+				\text{Como } (in1 - in2) &\in \mathbb{R} \setminus \{0\} \\
+				inv\_signal &= \frac{1}{in1 - in2} \\
+				1 - 1 &= 0 \\
+				0 &= 0
+			\end{aligned}
+		\end{equation}
+		
+		\vspace{0.2cm}
+		\noindent Gracias a la señal \texttt{inv\_signal}, incluso cuando ambas entradas son diferentes, la restricción puede satisfacerse ajustando el valor de la señal al inverso de la diferencia, para así obtener como producto de estas el 1.
 		
 		\vspace{0.6cm}
 		\noindent \textbf{Operadores $<, \leq, > \ y \ \geq$}
@@ -1838,87 +1911,6 @@ placement=H
 		
 		\vspace{0.2cm}	
 		\noindent Con está pequeña modificación, al usar para ambos número a comparar la función \textit{Num2Bits()} nos aseguramos de que se cumpla la restricción de ser número enteros positivos dentro del rango.
-		
-		\vspace{0.6cm}
-		\noindent \textbf{Operadores == y !=}
-		\vspace{0.2cm}
-		
-		\label{sss:ops-eq-neq}
-		\vspace{0.2cm}
-		\noindent Los operadores $== \ y \ !=$ plantean una implementación alejada del complemento a 2. La estrategia aplicada en este caso es simplemente establecer dos restricciones claves:
-		
-		\begin{itemize}
-			\item \texttt{(in1-in2) $*$ equal\_signal = 0}
-			\item \texttt{1 $-$ ((in1$-$in2) $*$ inv\_signal) = equal\_signal}
-		\end{itemize}
-		
-		\vspace{0.2cm}
-		\noindent Estas dos ecuaciones son imprescindibles, ya que las usaremos para determinar si \texttt{in1 == in2} o \texttt{in1}$\neq$\texttt{in2}, utilizando  \texttt{equal\_signal} como indicador.
-		
-		% No se si aqui meter referencia al capitulo de circom por lo de la señal
-		\vspace{0.2cm}
-		\noindent La señal  \texttt{equal\_signal} será 1 cuando \texttt{in1 == in2}, o será 0 cuando \texttt{in1}$\neq$\texttt{in2}. Este comportamiento se consigue por medio de las dos ecuaciones descritas anteriormente.
-		
-		\vspace{0.2cm}
-		\noindent \texttt{(in1-in2) $*$ equal\_signal = 0} es imprescindible para obtener que  \texttt{equal\_signal} sea 0 cuando in1 e in2 sean diferentes. Esto se debe a que si in1 es distinto a in2, entonces el resultado de su diferencia será distinto a 0. Por tanto, la ecuación quedaría así:
-		
-		\begin{equation}
-			\begin{aligned}
-				&num \cdot equal\_signal = 0 \\
-				&num \in \mathbb{R} \setminus \{0\}
-			\end{aligned}
-		\end{equation}
-	
-		\vspace{0.2cm}
-		\noindent De esta forma, al ser num un valor distinto de cero, la única forma de que se satisfaga la ecuación es forzar a que  \texttt{equal\_signal} sea obligatoriamente 0. De este modo, la señal será igual a 0, indicando que in1 e in2 son diferentes.
-		
-		\vspace{0.2cm}
-		\noindent \textit{Observación}: Si in1 e in2 fuesen iguales, entonces su diferencia sería igual a 0, por tanto  \texttt{equal\_aux} podría tomar cualquier valor e \texttt{(in1-in2) $*$ equal\_signal = 0} seguiría satisfaciéndose:
-		
-		\begin{equation}
-			\begin{aligned}
-				&0 \cdot equal\_signal = 0 \\
-				&equal\_signal \in \mathbb{R}
-			\end{aligned}
-		\end{equation}
-		
-		 \vspace{0.2cm}
-		 \noindent Por ello, es importante la segunda ecuación, ya que además de que \texttt{equal\_signal} puede ser cualquier valor, podría ser 0 también, indicando erróneamente que in1 e in2 son diferentes.
-		
-		\vspace{0.2cm}
-		\noindent Esta segunda ecuación, \texttt{1 $-$ ((in1$-$in2) $*$ inv\_signal) = equal\_signal}, además de asegurar que \texttt{equal\_signal} sea distinta de cero, garantiza que el resultado sea estrictamente 1 siempre que \texttt{in1} e \texttt{in2} sean idénticos.
-		
-		\vspace{0.2cm}
-		\noindent Esto se consigue mediante el uso de una segunda señal, \texttt{inv\_signal}, la cual garantiza que \texttt{equal\_signal} tome el valor 1 cuando in1 e in2 son iguales. Dado que en este escenario la diferencia entre ambas entradas es nula, cualquier valor de \texttt{inv\_signal} $\in \mathbb{R}$ resultará en un producto igual a cero, derivando en el siguiente comportamiento:
-		
-		\begin{equation}
-			\begin{aligned}
-				1 - ((in1 - in2) \cdot inv\_signal) &= equal\_signal \\
-				1 - (0 \cdot inv\_signal) &= equal\_signal \\
-				1 - 0 &= equal\_signal \\
-				1 &= equal\_signal
-			\end{aligned}
-		\end{equation}
-			
-		\vspace{0.2cm}
-		\noindent Como puede observarse, aunque en la primera ecuación para in1 == in2 la señal equal\_signal puede tener cualquier valor, con esta segunda ecuación forzamos a que su valor sea 0, en caso de que in1!=in2, o bien 1, si in1==in2.
-		
-		\vspace{0.2cm}
-		\noindent En caso de que $in1 \neq in2$, entonces \texttt{equal\_signal} sería 0, obteniendo un comportamiento diferente:
-		
-		\begin{equation}
-			\begin{aligned}
-				1 - ((in1 - in2) \cdot inv\_signal) &= equal\_signal \\
-				1 - ((in1 - in2) \cdot inv\_signal) &= 0 \\
-				\text{Como } (in1 - in2) &\in \mathbb{R} \setminus \{0\} \\
-				inv\_signal &= \frac{1}{in1 - in2} \\
-				1 - 1 &= 0 \\
-				0 &= 0
-			\end{aligned}
-		\end{equation}
-		
-		\vspace{0.2cm}
-		\noindent Gracias a la señal \texttt{inv\_signal}, incluso cuando ambas entradas son diferentes, la restricción puede satisfacerse ajustando el valor de la señal al inverso de la diferencia, para así obtener como producto de estas el 1.
 		
 		\newpage
 		
@@ -2269,13 +2261,13 @@ placement=H
 		\end{longtable} 
 		
 		\vspace{0.2cm} 
-		\noindent Las siglas \textit{SLTEq} denotan \textit{SecureLessThanEq()}, función que simula el comportamiento explicado en la \hyperref[sssec:less-greater]{\textbf{Sección \ref{sssec:less-greater}}} para dos entradas.
+		\noindent Las siglas \textit{SLTEq} denotan \textit{SecureLessThanEq()}, función que simula el comportamiento explicado en la \hyperref[sssec:less-greater]{\textbf{Operadores $<, \leq, > \ y \ \geq$}} para dos entradas.
 	
 		\vspace{0.2cm} 
-		\noindent \textit{Observación}: Es importante darse cuanta que podemos hacer uso de la misma función para los operadores $<, \leq, > \ y \ \geq$ explotando su carácter reflexivo. Para ello, notesé que las llamadas de los operadores $\le \ y \geq $ se invierten.
+		\noindent \textit{Observación}: Es importante darse cuanta que podemos hacer uso de la misma función para los operadores $<, \leq, > \ y \ \geq$ explotando su carácter reflexivo. Para ello, notesé que las llamadas de los operadores $< \ y \geq $ se invierten.
 		
 		\vspace{0.2cm} 
-		\noindent Por otro lado, EQI denota las siglas \textit{Equality Indicator}, haciendo referencia a una función encargada de imitar al comportamiento explicado en la \hyperref[sss:ops-eq-neq]{\textbf{Sección \ref{sss:ops-eq-neq}}} para dos entradas.
+		\noindent Por otro lado, EQI denota las siglas \textit{Equality Indicator}, haciendo referencia a una función encargada de imitar al comportamiento explicado en el apartado de  \hyperref[sss:ops-eq-neq]{\textbf{Operadores == y !=}} para dos entradas.
 		
 
 	\subsubsection{Operadores de desplazamiento}
@@ -2478,7 +2470,8 @@ placement=H
 		\end{tabular}
 	
 	
-	\subsection{Expresiones condicionales}
+	\subsection{Casos inductivos: Reglas de transformación de instrucciones}
+	\subsubsection{Instrucciones condicionales}
 	
 	\noindent Como se ha mencionado anteriormente, en Circom cada señal representa un cable del circuito cuyo valor es único. Por esta razón, no pueden cambiar su valor de forma dinámica una vez establecidas, ya que el sistema de restricciones debe ser estático para su correcta verificación.
 	
@@ -2489,7 +2482,7 @@ placement=H
 	\vspace{0.3cm}
 	% Tabla con codigo C y Circom
 	
-	\noindent Un ejemplo específico de conversión de un bloque condicional a sus equivalente utilizando restricciones en Circom sería el siguiente:
+	\noindent Un ejemplo específico de conversión de un bloque condicional a su equivalente utilizando restricciones en Circom sería el siguiente:
 	
 	\vspace{0.3cm}
 	
@@ -2537,8 +2530,9 @@ placement=H
 	\vspace{0.3cm}
 	\noindent De la misma forma expuesta en el ejemplo, definiremos la inducción partiendo del caso base.
 	
-	\subsubsection{Caso base: if-else}
-	
+	\newpage
+	\noindent \textbf{Caso base: if-else}
+	\vspace{0.3cm}
 	
 	\begin{mi_ejemplo}
 		\caption{Caso base condicional}
@@ -2582,9 +2576,10 @@ placement=H
 	\vspace{0.2cm}
 	\noindent La traducción formal de este caso es la siguiente:
 	
+	\vspace{0.5cm}
+	\noindent \textbf{Caso inductivo: Condicionales anidados}
 	\vspace{0.3cm}
 	
-	\subsubsection{Caso inductivo: Condicionales anidados}
 	\noindent Partiendo del caso base, es trivial aplicar la inducción para alcanzar la transformación de bloques condicionales complejos en sistemas de ecuaciónes.
 	
 	\vspace{0.22cm}
@@ -2663,7 +2658,9 @@ placement=H
 	\vspace{0.2cm}
 	\noindent De esta manera, podemos transformas cualquier bloque condicional en un sistema de ecuaciones equivalente, cumpliendo con la naturaleza estática de Circom.
 	
-	\subsubsection{Traducción de operadores}
+	\vspace{0.5cm}
+	\noindent \textbf{Traducción de operadores}
+	\vspace{0.3cm}
 	
 	
 	\renewcommand{\arraystretch}{2} 
@@ -2693,12 +2690,10 @@ placement=H
 		\tabularnewline \hline
 	\end{tabular}
 	
-	\subsection{Acceso a Arrays}
+	\subsubsection{Acceso a Arrays}
+	\noindent La implementación de las operaciones de indexación y acceso a estructuras de datos tipo array se ha diferido para una implementación futura del sistema. Esta decisión tiene su motivo en que es necesario realizar una adaptación del compilador. Por tanto, se ha optado por priorizar y consolidar primeramente la integridad de los operadores así como las instrucciones condicionales antes de pasar a la implementación de los accesos, cuyo desarrollo requiere una mayor complejidad.
 	
-	
-	\section{Ejemplo con constraints generadas automáticamente}
-	
-	
+
 	\chapter{Implementación del problema}
 	\vspace{0.2cm}
 	\noindent Antes de explicar cómo se ha llevado a la práctica la implementación, es necesaria una visión general sobre cómo está construido el compilador de Circom.
@@ -2831,14 +2826,8 @@ placement=H
 	\begin{lstlisting}[style=RustStyle, caption={}, 		basicstyle=\ttfamily\scriptsize, 
 		xleftmargin=0pt
 		]
-			
-		let (field_copy, l_value) = {
-			let field_copy = runtime.constants.get_p().clone();
-			let l_value = l_value.clone();
-			(field_copy, l_value)
-		};
-		
-		// 1. Transformar numero a desplazar en binario
+		// field_copy corresponde con el numero primo del cuerpo finito
+		// Transformar numero a desplazar en binario
 		let (b_signals, constraints_bit) = decimal_to_bits(
 		&l_value, n, &field_copy, runtime, &mut new_vars_name
 		);
@@ -2925,7 +2914,7 @@ placement=H
 	\noindent Una vez finalizada toda la lógica correspondiente al desplazamiento a la izquierda, el paso final es reconstruir el número binario desplazado en decimal.
 	
 	\vspace{0.2cm}
-	\noindent La reconstrucción de un número binario a decimal se realiza a través del \textbf{método de potencias de 2}. De forma que se realiza la suma de los productos entre cada dígito y potencia de base dos según el índice de posición \cite{geeknetic_binario}.
+	\noindent La reconstrucción de un número binario a decimal se realiza a través del \textbf{método de cambio de base}. De forma que se realiza la suma de los productos entre cada dígito y potencia de base dos según el índice de posición \cite{geeknetic_binario}.
 	
 	\vspace{0.2cm}
 	\noindent Siguiendo este método, recorremos el número binario desplazado aplicando para cada dígito el producto del mismo con su potencia de base dos en función del índice que ocupa. Tras completar el recorrido del número aplicando este método a cada uno de los dígitos, la variable \texttt{sum\_out} acumula la suma de estos producto, siendo la variable que almacena el resultado de la conversión binaria a decimal.
@@ -2971,7 +2960,6 @@ placement=H
 		 ZK-GENVER es una herramienta diseñada para la verificación de sistemas de ecuaciones en formato R1CS. 
 	\end{definicion}
 	
-	\vspace{0.2cm}
 	\noindent Esta herramienta ofrece tres funcionalidades principales. En primer lugar, la verificación determinista del sistema de ecuaciones, comprobando que cada entrada produce una única salida. En segundo lugar, la generación de archivos \texttt{smt2}, que contienen las ecuaciones del circuito, las cuales pueden ser alteradas manualmente para así asignar valores de entrada específicos con el fin de consultar la salida correspondiente y validar así que la lógica es la esperada. Por último, la comparación de equivalencia entre dos archivos R1CS, transformándolos a archivos \texttt{smt2}, lo que posibilita contrastar el código base de Circom con el que incorpora la nueva funcionalidad.
 	
 	\vspace{0.2cm}
@@ -2979,18 +2967,173 @@ placement=H
 	
 	\begin{enumerate}
 		\item Verificación determinista
-		\item Validación de la lógica mediante los archivos \texttt{smt2} generados 
-		\item Comparación de equivalencia entre los archivos R1CS convertidos a \texttt{smt2}.
+		\item Validación de la lógica asignando valores a las entradas
+		\item Comparación de equivalencia entre los archivos \texttt{smt2} generados
 	\end{enumerate}
 	
 	\vspace{0.2cm}
-	\noindent La forma en la que \textit{ZK-GENVER} realiza la comprobación determinista de un sistema de ecuaciones se basa en la restricción \texttt{out1 $\neq$ out2}. Si el sistema resultante es insatisfactible, es decir, no admite ninguna solución, se concluye que no existe ninguna combinación de entradas que produzca salidas distintas para el mismo circuito, confirmando así su naturaleza determinista.
+	\noindent \textit{ZK-GENVER} realiza la verificación determinista a partir de los archivos \texttt{smt2}, los cuales son generados automáticamente por la herramienta tomando como base los archivos R1CS que contienen todas las restricciones del programa original. Este archivo \texttt{smt2} es pasado al \textit{solver}.
+	
+		
+	\vspace{0.2cm}
+	\begin{definicion}
+		Un solver SMT es una herramienta capaz de determinar si un sistema de ecuaciones es \textit{satisfactible}, es decir, si existe al menos una asignación de valores que lo satisfaga, o \textit{insatisfactible}, en caso de que no exista ninguna.
+	\end{definicion}
 	
 	\vspace{0.2cm}
-	\noindent En cuanto a la segunda funcionalidad, \textit{ZK-GENVER} genera un archivo \texttt{smt2}, el cual contiene las ecuaciones del sistema de restricciones. Asignando manualmente valores de entrada en dicho archivo es posible consultar la salida esperada y comprobar así que la lógica del operador es la correcta.
+	\noindent La comprobación se centra en la imposición de la restricción \texttt{s\_1 $\neq$ s\_1\_aux}. Mediante este esquema, el sistema compara la salida del circuito original con la de una réplica exacta que cuanta con las mismas entradas, forzando al \textit{solver} a buscar si existe alguna solución en la que para las mismas entradas produzca valores de salida distintos.
 	
 	\vspace{0.2cm}
-	\noindent Gracias a la tercera funcionalidad de \textit{ZK-GENVER}, ambos archivos R1CS son convertidos a formato \texttt{smt2} para comparar directamente los sistemas de restricciones generados por la nueva funcionalidad con los generados por los operadores equivalentes de la librería \texttt{circomlib}, estos últimos implementados en Circom sin hacer uso de dicha funcionalidad \cite{iden3_circomlib}.
+	\noindent El resultado de esta búsqueda puede ser SAT o UNSAT. Si el sistema es \textbf{insatisfactible (UNSAT)}, se garantiza que el circuito es determinista, ya que no existe ninguna solución en la que para las mismas entradas haya salidas diferentes. Por otro lado, si el sistema es \textbf{satisfactible (SAT)}, el \textit{solver} halla un contraejemplo que evidencia un comportamiento indeterminista. Esto revela que el circuito permite diferentes valores de salida para los mismos valores de entrada, señalando así una vulnerabilidad en la la lógica del sistema.
+	
+
+	\begin{figure}[H]
+		\centering
+		
+		\caption{Esquema de la comprobación de unicidad determinista.}
+		\label{fig:determinismo_corregido}
+		\begin{tikzpicture}[
+			node distance=2.5cm and 2cm,
+			% Estilo de los bloques principales
+			circulo/.style={rectangle, draw, fill=gray!20, minimum width=3.5cm, minimum height=2cm, align=center, font=\bfseries, line width=0.8pt},
+			% Estilo de las restricciones internas
+			restr/.style={rectangle, draw, fill=white, dashed, minimum width=2.2cm, minimum height=0.7cm, font=\footnotesize\normalfont},
+			% Estilo de las flechas
+			flecha/.style={-Stealth, thick},
+			% Estilo del comparador
+			comp/.style={circle, draw, fill=orange!20, minimum size=0.8cm}
+			]
+			
+			% --- BLOQUES ---
+			% --- CIRCUITO 1 (ORIGINAL) ---
+			\node[circulo] (orig) {}; 
+			\node[anchor=north, font=\bfseries, yshift=-5pt] at (orig.north) {Circuito Original};
+			\node[restr, yshift=-0.2cm] at (orig.center) {Constraints}; 
+			
+			% --- CIRCUITO 2 (RÉPLICA) ---
+			\node[circulo, right=3cm of orig] (rep) {};
+			\node[anchor=north, font=\bfseries, yshift=-5pt] at (rep.north) {Réplica};
+			\node[restr, yshift=-0.2cm] at (rep.center) {Constraints'}; 
+			
+			
+			% --- ENTRADAS ---
+			\node[left=1cm of orig] (in) {Entradas};
+			
+			\draw[thick] (in.east) -- ++(0.5,0) coordinate (split);
+			\draw[flecha] (split) -- (orig.west) node[midway, above] {$I$};
+			\draw[thick] (split) |- ++(0,1.5) coordinate (top);
+			\draw[flecha] (top) -| (rep.north) node[pos=0.7, right, xshift=2pt] {$I = I'$};
+			\node[font=\footnotesize, align=left] at ($(orig.east)!0.5!(rep.west) + (0,0.8)$) {Misma entrada\\que el original};
+			
+			% --- SALIDAS ---
+			\node[below=1.2cm of orig] (out1) {\texttt{s\_1}};
+			\node[below=1.2cm of rep] (out2) {\texttt{s\_1\_aux}};
+			
+			\draw[flecha] (orig.south) -- (out1);
+			\draw[flecha] (rep.south) -- (out2);
+			
+			% --- COMPARADOR ---
+			\node[comp, below=1cm of $(out1)!0.5!(out2)$] (distinto) {\Large $\neq$};
+			
+			\draw[flecha] (out1.south) |- (distinto.west);
+			\draw[flecha] (out2.south) |- (distinto.east);
+			
+			% --- RESULTADO FINAL ---
+			\node[draw, rounded corners=8pt, fill=green!10, below=0.8cm of distinto, inner sep=10pt, align=center] (final) {
+				\textbf{SAT} $\rightarrow$ \textit{Indeterminista} \\[4pt]
+				\textbf{UNSAT} $\rightarrow$ \textbf{Determinista}
+			};
+			\draw[flecha, double] (distinto.south) -- (final.north);
+			
+		\end{tikzpicture}
+	\end{figure}
+
+	\vspace{0.2cm}
+	\noindent Este principio es la base sobre la que \textit{ZK-GENVER} construye sus verificaciones. En lugar de probar múltiples entradas, lo cual sería inviable, la herramienta añade al final del archivo \texttt{smt2} la restricción \texttt{(assert (not (= s\_1 s\_1\_aux)))} (resaltada en azul en el siguiente código), consultando al solver si el sistema resultante es satisfactible o no.
+	
+	\begin{mi_ejemplo}
+		\caption{Archivo \texttt{smt2} generado por el operador \texttt{Igual}}
+		\label{lst:smt2-igual-determinista}
+		
+		\begin{lstlisting}[escapechar=@,
+			language={},
+			basicstyle=\ttfamily\scriptsize,
+			breaklines=true,
+			frame=single,
+			]
+			(set-logic QF_FF)
+			(define-sort FF0 () (_ FiniteField p)) ; p = primo del campo, omitido por legibilidad
+			(declare-fun s_1 () FF0)
+			(declare-fun s_1_aux () FF0)
+			(declare-fun s_2 () FF0)
+			(declare-fun s_3 () FF0)
+			(declare-fun s_4 () FF0)
+			(declare-fun s_4_aux () FF0)
+			(declare-fun s_5 () FF0)
+			(declare-fun s_5_aux () FF0)
+			(assert (= (as ff0 FF0) (ff.mul (ff.add (ff.mul s_3 (as -1)) s_2) s_4)))
+			(assert (= (as ff0 FF0) (ff.mul (ff.add (ff.mul s_3 (as -1)) s_2) s_4_aux)))
+			(assert (= (as ff0 FF0) (ff.add (ff.mul (ff.add (ff.mul s_2 (as -1 FF0)) s_3) s_5) (ff.add (as -1 FF0) s_4))))
+			(assert (= (as ff0 FF0) (ff.add (ff.mul (ff.add (ff.mul s_2 (as -1 FF0)) s_3) s_5_aux) (ff.add (as -1 FF0) s_4_aux))))
+			(assert (= (as ff0 FF0) (ff.add (ff.mul s_1 (as -1 FF0)) s_4)))
+			(assert (= (as ff0 FF0) (ff.add (ff.mul s_1_aux (as -1)) s_4_aux)))
+			@\textcolor{blue}{(assert (not (= s\_1 s\_1\_aux)))}@
+			(check-sat)
+		\end{lstlisting}
+	\end{mi_ejemplo}
+	
+	\vspace{0.2cm}
+	\noindent Si el solver devuelve \texttt{UNSAT}, se concluye que no existe ninguna combinación de entradas que produzca salidas distintas, confirmando así el determinismo del operador.
+	
+	\vspace{0.2cm}
+	\noindent De esta forma, \textit{ZK-GENVER} es capaz de verificar de manera formal si un sistema de ecuaciones es determinista.
+		
+	\vspace{0.2cm}
+	\noindent En cuanto a la segunda funcionalidad, se parte del archivo \texttt{smt2} generado en la verificación determinista, el cual contiene las ecuaciones del sistema de restricciones. De esta forma, es posible modificar este archivo manualmente para asignar valores a las entradas, haciendo posible consultar la salida esperada y comprobar así que la lógica del operador es la correcta en función de las entradas asignadas.
+	
+	\vspace{0.2cm}
+	\noindent Partiendo del \hyperref[lst:smt2-igual-determinista]{\textbf{Ejemplo \ref{lst:smt2-igual-determinista}}}, habría que modificar el archivo \texttt{smt2} para asignar los valores deseados a las señales de entradas.
+	
+	\begin{mi_ejemplo}
+	\caption{Asignación de valores en archivo smt2}
+	\label{lst:smt2-asignacion-valores}
+	
+	\begin{lstlisting}[escapechar=@,
+		language={},
+		basicstyle=\ttfamily\scriptsize,
+		breaklines=true,
+		frame=single,
+		]
+		(set-logic QF_FF)
+		(define-sort FF0 () (_ FiniteField p)) ; p = primo del campo, omitido por legibilidad
+		(declare-fun s_1 () FF0)
+		(declare-fun s_1_aux () FF0)
+		(declare-fun s_2 () FF0)
+		(declare-fun s_3 () FF0)
+		...
+		@\textcolor{blue}{(assert (= s\_2 3))}@
+		@\textcolor{blue}{(assert (= s\_3 2))}@
+		(check-sat)
+	\end{lstlisting}
+\end{mi_ejemplo}
+	
+	\vspace{0.2cm}
+	\noindent Como puede apreciarse, además de añadir dos restricciones para asignar valores a las señales de entrada \texttt{s\_2} y\texttt{s\_3}, la restricción \texttt{(assert (not (= s\_1 s\_1\_aux)))} encargada de verificar el determinismo del sistema es suprimida.
+	
+	\vspace{0.2cm}
+	\noindent El motivo de esta supresión es que llegados a este paso, no buscamos verificar si nuestro sistema es determinista o no, sino concluir si el sistema de ecuaciones generado por nuestra nueva funcionalidad realmente describe la lógica esperada.
+	
+	\vspace{0.2cm}
+	\noindent Una vez realizada la asignación de las señales de entrada y procesado el archivo \texttt{smt2} modificado, el \textit{solver} determina el valor resultante para la señal de salida, que en este caso corresponde a \texttt{s\_1}.
+	
+	\vspace{0.2cm}
+	\noindent De esta forma, podemos concluir si nuestro sistema de ecuaciones, además de ser determinista, realmente representa la lógica adecuada. 
+	
+	\vspace{0.2cm}
+	\noindent Una vez verificada la lógica y el determinismo del sistema, el paso final consiste en validar su equivalencia con los circuitos originales escritos en Circom. Dado que estos últimos carecen de la nueva funcionalidad, actúan como un referente de veracidad, permitiéndonos confirmar que el nuevo diseño mantiene el comportamiento correcto y determinista de las implementaciones en Circom sin utilizar nuestra funcionalidad.
+	
+	\vspace{0.2cm}
+	\noindent De este modo, la herramienta utiliza los archivos \texttt{smt2} para contrastar las restricciones generadas por la nueva funcionalidad frente a las de la librería \texttt{circomlib} \cite{iden3_circomlib}. Al emplear operadores estándar cuya fiabilidad ya es conocida, se garantiza que la nueva implementación mantiene la equivalencia funcional con los métodos tradicionales de Circom.
 	
 	\vspace{0.2cm}
 	\noindent De esta forma, si ambos sistemas de restricciones son equivalentes, obtenemos una confirmación adicional de que la nueva funcionalidad describe correctamente la lógica esperada, reforzando así los resultados obtenidos previamente mediante la validación con los archivos \texttt{smt2} de cada operador.
@@ -2998,125 +3141,237 @@ placement=H
 	\vspace{0.2cm}
 	\noindent A continuación se presentan los resultados obtenidos para cada operador siguiendo el proceso de verificación descrito.
 	
+	\section{Resultados obtenidos}
+	
+	\subsection{Operadores Aritméticos}
+	
+	\noindent Dentro del conjunto de operadores aritméticos, se han obtenido los siguientes resultados tras la verificación.
+	
+	\vspace{0.5cm}
+	\begingroup % Para que el stretch solo afecte a esta tabla
+	\renewcommand{\arraystretch}{2} 
+	\begin{longtable}{|c|>{\centering\arraybackslash}m{10cm}|}
+		\hline
+		\textbf{Operación} & \textbf{Resultado obtenido} \\
+		\hline
+		
+		\texttt{Suma} & Verificado exitosamente \checkmark \\
+		\hline
+		
+		\texttt{Resta} & 
+		Verificado exitosamente \checkmark \\
+		\hline
+		
+		\texttt{Multiplicación} & 
+		Verificado exitosamente \checkmark \\
+		\hline
+		
+		\texttt{División} & \makecell[c]{Timeout \\ \footnotesize (Usando implementación propia equivalente \ref{sec:ver-division})} \\
+		\hline
+		
+		\texttt{Módulo} & \makecell[c]{Timeout \\ \footnotesize (Usando implementación propia equivalente \ref{sec:ver-modulo})} \\
+		\hline
+	\end{longtable}
+	\endgroup
+	
+
+	\subsection{Operadores Lógicos}
+	\noindent La verificación de los operadores lógicos es sencilla. La librería \texttt{circomlib} dispone de un sección exclusiva de puertas lógicas como \texttt{NOT, AND} y \texttt{OR}, las cuales utilizamos para simular el comportamiento de este tipo de operadores \cite{iden3_gates_circom}.
+	
+	\vspace{0.2cm}
+	\noindent \textit{Observación}: La verificaciones se realizaran sobre los códigos a comparar con tamaño $n=1$. El motivo de este tamaño es generar el número mínimo de restricciones necesarias, ya que al exceder un determinado límite, \textit{ZK-GENVER} no podría verificarlo correctamente, obteniendo como resultado \textbf{timeout}
+	
+	\vspace{0.5cm}
+	\begingroup % Para que el stretch solo afecte a esta tabla
+	\renewcommand{\arraystretch}{2} 
+	\begin{longtable}{|c|>{\centering\arraybackslash}m{10cm}|}
+		\hline
+		\textbf{Operación} & \textbf{Resultado obtenido} \\
+		\hline
+		
+		\texttt{NOT} & Verificado exitosamente \checkmark \\
+		\hline
+		
+		\texttt{AND} & 
+		Verificado exitosamente \checkmark \\
+		\hline
+		
+		\texttt{OR} & 
+		Verificado exitosamente \checkmark \\
+		\hline
+		
+		\texttt{AND Binario} & \makecell[c]{Verificado exitosamente \checkmark \\ \footnotesize (Usando implementación propia equivalente \ref{sec:ver-andbinario})} \\
+		\hline
+		
+		\texttt{OR Binario} & \makecell[c]{Verificado exitosamente \checkmark \\ \footnotesize (Usando implementación propia equivalente \ref{sec:ver-orbinario})} \\
+		\hline
+	\end{longtable}
+	\endgroup
+	
+	
+	\subsection{Operadores de Comparación}
+	\vspace{0.2cm}
+	\noindent Todos los operadores de comparación han sido verificados satisfactoriamente, confirmando su equivalencia con los operadores 
+	de la \texttt{circomlib}.
+	
+		
+	\vspace{0.5cm}
+	\begingroup % Para que el stretch solo afecte a esta tabla
+	\renewcommand{\arraystretch}{2} 
+	\begin{longtable}{|c|>{\centering\arraybackslash}m{10cm}|}
+		\hline
+		\textbf{Operación} & \textbf{Resultado obtenido} \\
+		\hline
+		
+		\texttt{Igual} & Verificado exitosamente \checkmark \\
+		\hline
+		
+		\texttt{Distinto} & 
+		Verificado exitosamente \checkmark \\
+		\hline
+		
+		\texttt{Menor} & 
+		Verificado exitosamente \checkmark \\
+		\hline
+		
+		\texttt{Menor igual} & Verificado exitosamente \checkmark \\ 
+		\hline
+		
+		\texttt{Mayor} & Verificado exitosamente \checkmark \\
+		\hline
+		
+		\texttt{Mayor igual} & Verificado exitosamente \checkmark \\
+		\hline
+	\end{longtable}
+	\endgroup
+	
+	
+	
+	\subsection{Operadores de Desplazamiento}
+	
+	\vspace{0.2cm}
+	\noindent Ambos tipos de desplazamiento han sido sometidos a las tres pruebas de \textit{ZK-GENVER}, concluyéndose que son deterministas y que sus sistemas de restricciones son equivalentes.
+	
+	\vspace{0.5cm}
+	\begingroup % Para que el stretch solo afecte a esta tabla
+	\renewcommand{\arraystretch}{2} 
+	\begin{longtable}{|c|>{\centering\arraybackslash}m{10cm}|}
+		\hline
+		\textbf{Operación} & \textbf{Resultado obtenido} \\
+		\hline
+		
+		\texttt{Igual} & \makecell[c]{Verificado exitosamente \checkmark \\ \footnotesize (Usando implementación propia equivalente \ref{sec:ver-despizq})} \\
+		\hline
+		
+		\texttt{Distinto} & \makecell[c]{Verificado exitosamente \checkmark \\ \footnotesize (Usando implementación propia equivalente \ref{sec:ver-despdcha})} \\
+		\hline
+		
+	\end{longtable}
+	\endgroup
+	
+	\chapter{Experimentos}
+	\section{Aplicación de la generación automática sobre juegos simples}
+	\section{Aplicación de la generación automática sobre circomLib y comparación de constraints}
+	\section{Caso de uso, verificación y búsqueda de bugs}
+	
+	
+	
+	\bibliographystyle{unsrt} 
+	\bibliography{referencias}
+	%\printbibliography
+	
+
+	\cleardoublepage
+	\appendix 
+	
+	\makeatletter
+	\def\chaptername{Apéndice}
+	\def\@chapapp{Apéndice} 
+	\makeatother
+	
+	\chapter{Problemática de los números negativos}
+	\label{ap:num_negativos}
+	
+	\vspace{0.2cm}
+	\noindent Los número negativos no existen en Circom. El motivo de que estos números no existan es que trabajamos sobre un cuerpo finito $\mathbb{F}_p$ definido por un número primo cuyo tamaño es 254 bits. En este sistema, cualquier operación se realiza módulo $p$, por lo que el rango de elementos válidos es estrictamente $[0, p-1]$. 
+	
+	\vspace{0.2cm}
+	\noindent En consecuencia, un número negativo $-x$ se interpreta mediante su equivalente positivo en el cuerpo, calculado como $p - x$. Por ejemplo, el valor $-1$ se representa como $p-1$, un número extremadamente grande cercano al límite superior del campo. 
+	
+	\vspace{0.2cm}
+	\noindent Estos números excesivamente grandes pueden provocar comportamientos no esperados en operadores como $<, \leq, > \ y \ \geq$, ya que al realizar las comparaciones entre números negativos su conversión a estos números positivos grandes puede tener como resultado una comparación errónea.
+	
+	\chapter{Verificación de operadores}
 	\section{Operadores Aritméticos}
-	\noindent Dentro del conjunto de operadores aritméticos, la verificación de equivalencia se ha centrado en los operadores de división y módulo. El motivo es que las operaciones de suma, resta y multiplicación no requieren restricciones adicionales a las que ya define un programa Circom de forma natural. Por lo tanto, al emplear la \texttt{circomlib}, los sistemas de ecuaciones generados son idénticos y su equivalencia está garantizada por construcción. 
+	\subsection{División}
+	\label{sec:ver-division}
 	
-	\vspace{0.2cm}
-	\noindent En cambio, la división y el módulo implican una lógica de restricciones más compleja, ya que no son operadores atómicos de Circom, requiriendo de esta manera restricciones adicionales para simular su comportamiento. Por ello, es indispensable validar que la nueva funcionalidad y la \texttt{circomlib} converjan en el mismo sistema de ecuaciones equivalente.
-	
-	
-	\vspace{0.2cm}
-	\noindent  La librería \texttt{circomlib} no ofrece funciones específicas para los operadores de división y módulo, pero podemos construirlas utilizando funciones que la propia \texttt{circomlib} ofrece para construir el comportamiento de estos operadores.
-	
-	\subsubsection{División}
 	\vspace{0.2cm}
 	\noindent El operador división, como se explico en la \hyperref[sss:division]{\textbf{Sección \ref{sss:division}}}, se basa en el teorema de la división para poder simular el comportamiento de este operador. 
 	
 	\vspace{0.2cm}
-	\noindent Por tanto, al no existir una función que imite este comportamiento en la \texttt{circomlib}, se implemento haciendo uso de las funciones \texttt{IsZero} y \texttt{LessThan(n)} que la librería ofrece.
+	\noindent Por tanto, al no existir una función que imite este comportamiento en la \texttt{circomlib}, se implementó una haciendo uso de las funciones \texttt{IsZero} y \texttt{LessThan(n)} que la librería ofrece.
 	
 	\vspace{0.2cm}
-	\noindent Estas funciones son usadas para asegurar que las restricciones $b\neq0$ y $0<=r<|b|$ se cumplen.
-	
-	\vspace{0.2cm}
-	\noindent De esta forma, el resultado del código sería el siguiente:
-	
-	
+	\noindent Estas funciones son usadas para asegurar que las restricciones $b\neq0$ y $0<=r<|b|$ se cumplen. De esta forma, el resultado del código sería el siguiente:
 	
 	\begin{mi_ejemplo}
 		\caption{Creación de división usando funciones de circomlib}
 		\label{ex:div-circomlib}
-	\begin{lstlisting}[
+		\begin{lstlisting}[
 			language=Circom,
 			basicstyle=\scriptsize\ttfamily, 
 			lineskip=-2pt,                  
 			aboveskip=5pt,                  
 			belowskip=5pt,                  
 			xleftmargin=10pt
-		]
-		template circomlibDivision(n){
-			signal input a;
-			signal input b;
-			signal output salida; //Cociente
+			]
+			template circomlibDivision(n){
+				signal input a;
+				signal input b;
+				signal output salida; //Cociente
+				
+				// Asegurar que no son numeros negativos
+				component n2b_a = Num2Bits(2);
+				n2b_a.in <== a;
+				
+				component n2b_b = Num2Bits(2);
+				n2b_b.in <== b;
+				
+				signal q<--a\b; //Cociente
+				signal r<--a%b; //Resto
+				
+				// Comprobamos que b!=0
+				component is_zero = IsZero();
+				is_zero.in<==b;
+				is_zero.out === 0;
+				
+				// Comprobamos que 0<=r<|b|; 0 <= r no hace falta porque al estar en campo finito se entiende
+				// r < |b|
+				component lt = LessThan(2);
+				lt.in[0] <== r;
+				lt.in[1] <== b;
+				lt.out === 1;
+				
+				// Una vez hecho eso, comprobamos que se cumple a === b*q+r
+				a === b*q +r;
+				salida <==q; 
+			}
 			
-			
-			// Asegurar que no son numeros negativos
-			component n2b_a = Num2Bits(2);
-			n2b_a.in <== a;
-			
-			component n2b_b = Num2Bits(2);
-			n2b_b.in <== b;
-			
-			
-			// Necesitamos que las senales tengan un valor para poder operar con ellas
-			// Este calculo no es anadido al sistema de ecuaciones
-			signal q<--a\b; //Cociente
-			signal r<--a%b; //Resto
-			
-			// Comprobamos que b!=0
-			component is_zero = IsZero();
-			is_zero.in<==b;
-			is_zero.out === 0;
-			
-			
-			// Comprobamos que 0<=r<|b|; 0 <= r no hace falta porque al estar en campo finito se entiende
-			// r < |b|
-			component lt = LessThan(2);
-			lt.in[0] <== r;
-			lt.in[1] <== b;
-			lt.out === 1;
-			
-			// Una vez hecho eso, comprobamos que se cumple a === b*q+r
-			
-			a === b*q +r;
-			salida <==q; 
-		}
-		
-		component main = circomlibDivision();
-		
-		
-	\end{lstlisting}
+			component main = circomlibDivision();
+		\end{lstlisting}
 	\end{mi_ejemplo}
 	
-	\vspace{0.2cm}
 	\noindent \textit{Observación: } El bloque de código expuesto es muy similar al pseudocódigo presentado en la \hyperref[sss:division]{\textbf{Sección \ref{sss:division}}}.
 	
-	\vspace{0.2cm}
-	\noindent TODO: No he podido comprobarlo porque al generar el smt con ZK-GENVER me da timeout aunque ponga n = 1 :(
-	
-	\subsubsection{Módulo}
+	\subsection{Módulo}
+	\label{sec:ver-modulo}
 	\noindent El operador módulo seguiría una lógica similar a la expuesta en la división, con la única diferencia que la salida sería el resto en lugar del cociente, ya que en este caso es el valor esperado para esta operación.
 	
-	\noindent TODO: Lo mismo que div por el timeout porque solo sería cambiar q por r en la salida.
-	
-	\section{Operadores Lógicos}
-	\noindent La verificación de los operadores lógicos es sencilla. La librería \texttt{circomlib} dispone de un sección exclusiva de puertas lógicas, las cuales utilizamos para simular el comportamiento de este tipo de operadores \cite{iden3_gates_circom}.
-	
-	\vspace{0.2cm}
-	\noindent \textit{Observación} La verificaciones se realizaran sobre los códigos a comparar con tamaño $n=1$. El motivo de este tamaño es generar el número mínimo de restricciones necesarias, ya que al exceder un determinado límite, \textit{ZK-GENVER} no podría verificarlo correctamente, obteniendo como resultado \textbf{timeout}
-	
-	\subsection{Operador NOT, AND y OR}
-	\vspace{0.2cm}
-	\noindent Estos operadores tienen una función equivalente en la librería \texttt{circomlib}, por lo que no es necesario implementar una que simule su comportamiento, a diferencia de lo que ocurre con otros operadores, como la división.
-	
-	\vspace{0.2cm}
-	\noindent Se han llevado a cabo pruebas específicas en los sistemas de ecuaciones creados con la herramienta \textit{ZK-GENVER} para cada uno de estos operadores antes de comparar todos los pares de códigos.
-	
-	\vspace{0.2cm}
-	\noindent Estas pruebas consisten en alterar el sistema de ecuaciones para asignar valores específicos a las señales de entrada del circuito y, de esta manera, tener la capacidad de comprobar con certeza si la lógica es correcta.
-	
-	\vspace{0.2cm}
-	\noindent Una vez realizadas estas pruebas en cada operador para diversos valores de entrada, se obtuvieron los resultados de salida esperados. De esta forma se concluyó que, además de ser deterministas, no había fallos en la implementación de su lógica.
-	
-	\vspace{0.2cm}
-	\noindent Por otro lado, después de verificar que los operadores implementados funcionan adecuadamente, hacemos las comparaciones entre cada uno de ellos y el implementado en la librería \texttt{circomlib}.
-	
-	\vspace{0.2cm}
-	\noindent El resultado de estas tres comparaciones fue positivo, obteniendo para todos ellos que son equivalentes a los implementados en la librería.
-	
-	
-	\subsection{Operador AND binario}
-	\noindent La librería \texttt{circomlib} no contiene una función explícita dedicada al operador \texttt{AND} bit a bit, por lo que para verificar la equivalencia entre ambos códigos, se ha implementado una función utilizando otras funciones pertenecientes a la librería para simular este comportamiento.
+	\section{Operadores lógicos}	
+	\subsection{AND binario}
+	\label{sec:ver-andbinario}
+	\noindent La librería \texttt{circomlib} no contiene una función explícita dedicada al operador \texttt{AND} binario, por lo que para verificar la equivalencia entre ambos códigos, se ha implementado una función utilizando otras funciones pertenecientes a la librería para simular este comportamiento.
 	
 	\vspace{0.2cm}
 	\noindent Para dicha implementación serán necesarias las funciones \texttt{Num2Bits(n)} y \texttt{Bits2Num(n)} de la librería, ubicadas en el archivo \textit{bitify.circom}.
@@ -3163,7 +3418,7 @@ placement=H
 	\end{mi_ejemplo}
 	
 	\vspace{0.2cm}
-	\noindent Una vez implementada esta función, se verifico su determinismo, obteniendo un resultado positivo.
+	\noindent De esta forma, comparamos el código implementado con el de la nueva funcionalidad.
 	
 	\begin{table}[h!]
 		\caption{Comparativa de la operación OR bit a bit (1 bit) entre la implementación estándar y el uso de autocompletado.}
@@ -3209,17 +3464,16 @@ placement=H
 	\end{table}
 	
 	\vspace{0.2cm}
-	\noindent Tras la comprobación determinista de ambos códigos mediante el análisis de restricciones R1CS, se procedió a la verificación de equivalencia. Los resultados obtenidos confirman que ambos circuitos son equivalentes, demostrando que la nuevo funcionalidad construye un sistema de ecuaciones que simula la verdadera lógica de este operador.
+	\noindent Tras la comprobación determinista de ambos códigos mediante el análisis de restricciones R1CS, se procedió a la verificación de equivalencia.
 	
-	
-	
-	\subsection{Operador OR binario}
-	\noindent EL operador \texttt{OR} bit a bit presenta el mismo problema que \texttt{AND}, ya que en la \texttt{circomlib} no hay una función explícita dedicada a estos operadores. Para solucionarlo, seguimos los mismos pasos que para el operador \texttt{AND} bit a bit, por lo que implementamos una función similar para \texttt{OR} bit a bit.
+	\subsection{OR binario}
+	\label{sec:ver-orbinario}
+	\noindent El operador \texttt{OR} binario presenta el mismo problema que \texttt{AND}, ya que en la \texttt{circomlib} no hay una función explícita dedicada a estos operadores. Para solucionarlo, seguimos los mismos pasos que para el operador \texttt{AND} bit a bit, por lo que implementamos una función similar para \texttt{OR} bit a bit.
 	
 	\vspace{0.2cm}
 	\noindent De esta forma, los códigos implementados son prácticamente iguales:
 	
-		\begin{table}[h!]
+	\begin{table}[h!]
 		\caption{Comparativa de la operación OR bit a bit (1 bit) entre la implementación estándar y el uso de autocompletado.}
 		\label{tab:comparativa-orb}
 		
@@ -3262,97 +3516,11 @@ placement=H
 		
 	\end{table}
 	
+	\section{Operadores de desplazamiento}
+	\subsection{Desplazamiento a la izquierda}
+	\label{sec:ver-despizq}
 	\vspace{0.2cm}
-	\noindent Siguiendo la similitud con el operador \texttt{AND} bit a bit, el resultado de la verificación de equivalencia indicó que ambos códigos son equivalentes.
-	
-	\section{Operadores de Comparación}
-	\vspace{0.2cm}
-	\noindent Todos los operadores de comparación han sido verificados satisfactoriamente, confirmando su equivalencia con los operadores 
-	de la \texttt{circomlib}.
-	
-	\vspace{0.2cm}
-	\noindent A continuación, utilizamos el operador \texttt{Igual} como 
-	ejemplo ilustrativo de la verificación determinista en \textit{ZK-GENVER}.
-	
-		\begin{mi_ejemplo}
-		\caption{Igual con autocomplete}
-		\label{ex:igual-autocomplete}
-		\begin{lstlisting}[
-			language=Circom,
-			basicstyle=\scriptsize\ttfamily, 
-			]
-			template EsIgual(n) autocomplete{
-				signal input a;
-				signal input b;
-				signal output c;
-				
-				c <-- a==_(n) b;
-			}
-			
-			component main = EsIgual(1);
-			
-		\end{lstlisting}
-	\end{mi_ejemplo}
-	
-	\vspace{0.2cm}
-	\noindent El bloque de código expuesto corresponde al operador \texttt{Igual} implementado. Al compilarlo, la nueva funcionalidad del compilador construye automáticamente el sistema de ecuaciones correspondiente y lo almacena en un archivo R1CS.
-	
-	\vspace{0.2cm}
-	\noindent A partir de dicho archivo, \textit{ZK-GENVER} traduce las ecuaciones al formato \texttt{.smt2}, un estándar diseñado para ser procesado por solvers SMT.
-	
-	\begin{definicion}
-		Un solver SMT es una herramienta capaz de determinar si un sistema de ecuaciones es \textit{satisfactible}, es decir, si existe al menos una asignación de valores que lo satisfaga, o \textit{insatisfactible}, en caso de que no exista ninguna.
-	\end{definicion}
-	
-	\noindent Este principio es la base sobre la que \textit{ZK-GENVER} construye sus verificaciones. En lugar de probar múltiples entradas, lo cual sería inviable, la herramienta añade al final del archivo \texttt{smt2} una restricción adicional y consulta al solver si el sistema resultante es satisfactible o no.
-	
-	\vspace{0.2cm}
-	\noindent En el caso de la verificación determinista, la restricción añadida es \texttt{(assert (not (= s\_1 s\_1\_aux)))}, resaltada en azul en el código \texttt{smt2}. Si el solver devuelve \texttt{UNSAT}, se concluye que no existe ninguna combinación de entradas que produzca salidas distintas, confirmando así el determinismo del operador.
-	
-	\vspace{0.2cm}
-	\noindent
-	\begin{lstlisting}[escapechar=@,
-		language={},
-		basicstyle=\ttfamily\scriptsize,
-		breaklines=true,
-		frame=single,
-		caption={Archivo \texttt{smt2} generado para la verificación determinista del operador \texttt{Igual}},
-		label={lst:smt2-igual-determinista}
-		]
-		(set-logic QF_FF)
-		(define-sort FF0 () (_ FiniteField p)) ; p = primo del campo, omitido por legibilidad
-		(declare-fun s_1 () FF0)
-		(declare-fun s_1_aux () FF0)
-		(declare-fun s_2 () FF0)
-		(declare-fun s_3 () FF0)
-		(declare-fun s_4 () FF0)
-		(declare-fun s_4_aux () FF0)
-		(declare-fun s_5 () FF0)
-		(declare-fun s_5_aux () FF0)
-		(assert (= (as ff0 FF0) (ff.mul (ff.add (ff.mul s_3 (as -1)) s_2) s_4)))
-		(assert (= (as ff0 FF0) (ff.mul (ff.add (ff.mul s_3 (as -1)) s_2) s_4_aux)))
-		(assert (= (as ff0 FF0) (ff.add (ff.mul (ff.add (ff.mul s_2 (as -1 FF0)) s_3) s_5) (ff.add (as -1 FF0) s_4))))
-		(assert (= (as ff0 FF0) (ff.add (ff.mul (ff.add (ff.mul s_2 (as -1 FF0)) s_3) s_5_aux) (ff.add (as -1 FF0) s_4_aux))))
-		(assert (= (as ff0 FF0) (ff.add (ff.mul s_1 (as -1 FF0)) s_4)))
-		(assert (= (as ff0 FF0) (ff.add (ff.mul s_1_aux (as -1)) s_4_aux)))
-		@\textcolor{blue}{(assert (not (= s\_1 s\_1\_aux)))}@
-		(check-sat)
-	\end{lstlisting}
-
-	
-	\vspace{0.2cm}
-	\noindent De esta forma, \textit{ZK-GENVER} es capaz de verificar de manera formal si un sistema de ecuaciones es determinista.
-	
-	\vspace{0.2cm}
-	\noindent \textit{Observación}: El archivo \texttt{smt2} generado también puede ser utilizado de forma manual, modificando los valores de las señales de entrada para consultar la salida correspondiente y validar así la lógica del operador caso a caso. De manera análoga, \textit{ZK-GENVER} aplica este mismo principio de forma automática para comparar la equivalencia entre dos circuitos, comprobando si para las mismas entradas ambos sistemas producen siempre la misma salida.
-	
-	\section{Operadores de Desplazamiento}
-	
-	\vspace{0.2cm}
-	\noindent Ambos tipos de desplazamiento han sido sometidos a las tres pruebas de \textit{ZK-GENVER}, concluyéndose que son deterministas y que sus sistemas de restricciones son equivalentes.. 
-	
-	\vspace{0.2cm}
-	\noindent Para poder realizar la prueba de equivalencia entre ambos códigos se ha tenido que implementar un código en Circom base, ya que en la librería \texttt{circomlib} no existe ninguna función que simule explícitamente el comportamiento de estos operadores.
+	\noindent Para poder realizar la prueba de equivalencia se ha tenido que implementar un código en Circom base, ya que en la librería \texttt{circomlib} no existe ninguna función que simule explícitamente el comportamiento de estos operadores.
 	
 	\vspace{0.2cm}
 	\noindent De esta forma, el código desarrollado para comprobar la equivalencia con el desplazamiento a la izquierda ha sido el siguiente:
@@ -3420,12 +3588,11 @@ placement=H
 	\end{lstlisting}
 	
 	
-	\vspace{0.2cm}
-	\noindent Tras comparar ambos bloques de código con la herramienta \textit{ZK-GENVER}, se obtuvo como resultado final que para la misma entrada en ambos códigos no existía ninguna solución posible cuyas salidas fuesen diferentes, demostrando así que son equivalentes.
 	
+	\subsection{Desplazamiento a la derecha}
+	\label{sec:ver-despdcha}
 	\vspace{0.2cm}
 	\noindent De manera análoga, aplicamos el mismo patrón para el desplazamiento a la derecha, utilizando los mismos valores tanto para el tamaño como para el desplazamiento, obteniendo un código en Circom tal que así:
-	
 	
 	\vspace{0.2cm}
 	\begin{lstlisting}[
@@ -3467,7 +3634,7 @@ placement=H
 	\vspace{0.2cm}
 	\noindent El código Circom de la nueva funcionalidad para este operador es muy similar al expuesto para el otro caso, ya que únicamente hay que cambiar el operador.
 	
-		\vspace{0.2cm}
+	\vspace{0.2cm}
 	\begin{lstlisting}[
 		language=Circom,
 		basicstyle=\scriptsize\ttfamily, 
@@ -3485,17 +3652,4 @@ placement=H
 		
 	\end{lstlisting}
 	
-	\vspace{0.2cm}
-	\noindent La prueba de equivalencia entre ambos códigos resultó positiva como la del operador anterior. De esta manera, tras realizar tantos las pruebas de determinismo y validación de lógica así como equivalencia entre códigos implementados con la nueva funcionalidad y Circom base con funciones de la \texttt{circomlib} se ha demostrado que el comportamiento es el correcto.
-	
-	\chapter{Experimentos}
-	\section{Aplicación de la generación automática sobre juegos simples}
-	\section{Aplicación de la generación automática sobre circomLib y comparación de constraints}
-	\section{Caso de uso, verificación y búsqueda de bugs}
-	
-	
-	
-	\bibliographystyle{unsrt} % Estilo sencillo que numera por orden de aparición
-	\bibliography{referencias}
-	%\printbibliography
 \end{document}
