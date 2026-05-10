@@ -234,7 +234,7 @@ placement=H
 	
 	\vspace{0.2cm}
 		
-	\noindent \textcolor{red}{Sí repetimos la prueba una segunda vez ($0,1*0,1 = 0,01$)}, se reduce la probabilidad inicial de 0,1 a 0,01. Es decir, a medida que las repeticiones aumentan, menor es la probabilidad de que se acierte al azar, ya que ésta converge a 0, alcanzando así una certeza práctica sin haber revelado ni un solo dígito del décimo.
+	\noindent \textcolor{black}{Sí repetimos la prueba una segunda vez ($0,1*0,1 = 0,01$)}, se reduce la probabilidad inicial de 0,1 a 0,01. Es decir, a medida que las repeticiones aumentan, menor es la probabilidad de que se acierte al azar, ya que ésta converge a 0, alcanzando así una certeza práctica sin haber revelado ni un solo dígito del décimo.
 	
 	\end{minipage}
 	\caption{Zero Knowledge Proof} 
@@ -264,7 +264,7 @@ placement=H
 	\end{definicion}
 	
 	\vspace{0.25cm}
-	\noindent \textcolor{red}{Estas pruebas destacan} por su reducido tamaño de prueba y corto tiempo de verificación. Sin embargo, presentan la desventaja de requerir una fase inicial conocida como \textbf{configuración de confianza}.
+	\noindent \textcolor{black}{Estas pruebas destacan} por su reducido tamaño de prueba y corto tiempo de verificación. Sin embargo, presentan la desventaja de requerir una fase inicial conocida como \textbf{configuración de confianza}.
 	
 	\begin{definicion}[Configuración de confianza]
 	
@@ -417,7 +417,7 @@ placement=H
 		\label{ex:zkp-transformacion}
 	\end{figura}
 	
-	\textcolor{red}{Reestructurado para evitar espacio en blanco}
+	\textcolor{black}{Reestructurado para evitar espacio en blanco}
 	
 	\vspace{0.3cm}
 	
@@ -491,7 +491,7 @@ placement=H
 	\noindent 
 	
 	\begin{definicion}[Cuerpo finito]
-	\textcolor{red}{En el álgebra abstracta, un cuerpo finito es una estructura algebraica que contiene un número finito de elementos. Esto significa que las operaciones aplicadas sobre estos elementos se realizan usando aritmética modular en un rango [0,p$-$1], con p siendo un número primo que determina el orden del cuerpo \cite{wikipedia_cuerpo_finito}.}
+	\textcolor{black}{En el álgebra abstracta, un cuerpo finito es una estructura algebraica que contiene un número finito de elementos. Esto significa que las operaciones aplicadas sobre estos elementos se realizan usando aritmética modular en un rango [0,p$-$1], con p siendo un número primo que determina el orden del cuerpo \cite{wikipedia_cuerpo_finito}.}
 		
 		\label{def:cuerpo-finito}
 	\end{definicion}
@@ -544,7 +544,7 @@ placement=H
 	\section{Snarkjs}
 	\label{sec:snarkjs}
 	
-	\noindent Snarkjs es una librería de JavaScript creada para la generación y verificación de pruebas de conocimiento cero partiendo de las restricciones en formato R1CS correspondientes, que puede ser ejecutado tanto en dispositivos \textcolor{red}{móviles} como en servidores con \textit{Node.js}, materializando el concepto de \hyperref[def:zk-snarks]{\textit{ \ref{def:zk-snarks} zk-SNARKS}} nombrado anteriormente \cite{thesis_clara}\cite{circom_articulo_clara}.
+	\noindent Snarkjs es una librería de JavaScript creada para la generación y verificación de pruebas de conocimiento cero partiendo de las restricciones en formato R1CS correspondientes, que puede ser ejecutado tanto en dispositivos \textcolor{black}{móviles} como en servidores con \textit{Node.js}, materializando el concepto de \hyperref[def:zk-snarks]{\textit{ \ref{def:zk-snarks} zk-SNARKS}} nombrado anteriormente \cite{thesis_clara}\cite{circom_articulo_clara}.
 	
 	\vspace{0.25cm}
 	
@@ -563,7 +563,7 @@ placement=H
 	\label{sec:descripcion-problema}
 	
 	
-	\noindent \textcolor{red}{Circom es un lenguaje de programación cuyo aprendizaje y aplicación puede ser complejo inicialmente, sobre todo si se carece de habilidad tratando con lenguajes lógicos basados en restricciones. Una de las razones principales de esta complejidad son los conocidos como \textit{underconstrained bugs}. }
+	\noindent \textcolor{black}{Circom es un lenguaje de programación cuyo aprendizaje y aplicación puede ser complejo inicialmente, sobre todo si se carece de habilidad tratando con lenguajes lógicos basados en restricciones. Una de las razones principales de esta complejidad son los conocidos como \textit{underconstrained bugs}. }
 	
 	\begin{definicion}[Underconstrained bug]
 		\vspace{0.2cm}
@@ -614,7 +614,7 @@ placement=H
 	\noindent De esta forma, al no haber ninguna restricción que obligue a que \texttt{inv} sea el inverso de \texttt{a}, el vínculo entre la entrada \texttt{a} con la salida \texttt{b} no se cumple totalmente. Por tanto, al no ser añadida la asignación \texttt{inv <-}\texttt{- a!= 0 ? 1/a : 0} al sistema de ecuaciones, no existe para el verifier, permitiendo que un prover malicioso  pueda manipular el valor de \texttt{inv} para generar pruebas falsas que el sistema aceptaría.
 	 
 	\vspace{0.2cm}
-	\noindent Más allá del ejemplo expuesto, este error se repite de forma recurrente en muchos programas Circom, sobre todo aquellos desarrollados por principiantes en el lenguaje. Otros ejemplos donde este error está presente son en implementaciones de terceros que pueden encontrarse en repositorios públicos como \textcolor{red}{el juego de} \textit{"Hundir la flota"} \cite{battlezips_circom}, \textit{Dark Forest} \cite{darkforest_circuits_2021} o \textit{Decoder template en Circomlib} \cite{iden3_multiplexer_2023}.
+	\noindent Más allá del ejemplo expuesto, este error se repite de forma recurrente en muchos programas Circom, sobre todo aquellos desarrollados por principiantes en el lenguaje. Otros ejemplos donde este error está presente son en implementaciones de terceros que pueden encontrarse en repositorios públicos como \textcolor{black}{el juego de} \textit{"Hundir la flota"} \cite{battlezips_circom}, \textit{Dark Forest} \cite{darkforest_circuits_2021} o \textit{Decoder template en Circomlib} \cite{iden3_multiplexer_2023}.
 	
 	
 	\vspace{0.2cm}
@@ -628,7 +628,7 @@ placement=H
 	\noindent De este modo, \textbf{el compilador actuaría como un puente}, transformando automáticamente el flujo imperativo en un sistema de restricciones.
 		
 	\vspace{0.4cm}
-	\noindent \textcolor{red}{Dicha transformación se consigue mediante la traducción de instrucciones imperativas de Circom. Este proceso consiste en analizar los operadores admitidos por el lenguaje Circom y especificar una regla de transformación para cada uno de ellos. De esta forma, el compilador consigue traducir automáticamente lo implementado a un sistema de restricciones.}
+	\noindent \textcolor{black}{Dicha transformación se consigue mediante la traducción de instrucciones imperativas de Circom. Este proceso consiste en analizar los operadores admitidos por el lenguaje Circom y especificar una regla de transformación para cada uno de ellos. De esta forma, el compilador consigue traducir automáticamente lo implementado a un sistema de restricciones.}
 		
 	\section{Objetivos y Estructura del trabajo}
 	
@@ -647,7 +647,7 @@ placement=H
 	\noindent Para alcanzar los objetivos propuestos, hemos realizado las siguientes tareas durante el desarrollo del trabajo:
 	
 	\begin{enumerate}
-		\item \textcolor{red}{Diseño y} especificación de las reglas de traducción
+		\item \textcolor{black}{Diseño y} especificación de las reglas de traducción
 		\item Implementación dentro del compilador de las reglas especificadas
 		\item Verificación de los sistemas de ecuaciones generados por las reglas
 		\item Aplicación de la nueva funcionalidad en casos reales
@@ -659,7 +659,7 @@ placement=H
 	\noindent Para alcanzar los objetivos propuestos, este documento se ha estructurado en los siguientes capítulos:
 	
 	\begin{itemize}
-		\item Capítulo 1 (Introducción a Circom): \textcolor{red}{Se introduce el} contexto sobre la tecnología que vamos a tratar y ofrecer una visión general de lo que pretendemos hacer con ella a lo largo del trabajo.
+		\item Capítulo 1 (Introducción a Circom): \textcolor{black}{Se introduce el} contexto sobre la tecnología que vamos a tratar y ofrecer una visión general de lo que pretendemos hacer con ella a lo largo del trabajo.
 		\item Capítulo 2 (Definición del problema): Se definirá el problema y se presentará un ejemplo.
 		\item Capítulo 3 (Desarrollo del problema): Especificación técnica de las modificaciones que se llevarán a cabo en el compilador del lenguaje.
 		\item Capítulo 4 (Implementación): 
@@ -688,7 +688,7 @@ placement=H
 	
 	\begin{enumerate}
 		\item \textbf{Asimilar el paradigma de verificación frente al de ejecución}, comprender que el objetivo principal no es realizar un cálculo o cómputo, sino generar un sistema de restricciones con el objetivo de verificar la validez de una demostración.
-		\item  \textcolor{red}{\textbf{Adaptarse a la complejidad del diseño algebraico}, procedimiento que implica construir circuitos en los que cada operación tiene que ser expresada a través de restricciones algebraicas, asegurando de esta manera el cumplimiento del formato R1CS y la descomposición de la lógica algebraica.}
+		\item  \textcolor{black}{\textbf{Adaptarse a la complejidad del diseño algebraico}, procedimiento que implica construir circuitos en los que cada operación tiene que ser expresada a través de restricciones algebraicas, asegurando de esta manera el cumplimiento del formato R1CS y la descomposición de la lógica algebraica.}
 	\end{enumerate}
 	
 	
@@ -699,7 +699,7 @@ placement=H
 	\noindent Por tanto, para aquellas personas que requieran el uso de este lenguaje, pero se enfrenten a la dificultad del cambio de paradigma se expone una solución cuyo objetivo es facilitar el uso de Circom, explotando su cualidad imperativa.
 	
 	\vspace{0.2cm}
-	\noindent La propuesta radica en la modificación del compilador de Circom para incorporar una nueva funcionalidad que \textcolor{red}{habilite} la traducción del codigo generado por el testigo desarrollado en un programa Circom a ecuaciones algebraicas en formato R1CS equivalentes.
+	\noindent La propuesta radica en la modificación del compilador de Circom para incorporar una nueva funcionalidad que \textcolor{black}{habilite} la traducción del codigo generado por el testigo desarrollado en un programa Circom a ecuaciones algebraicas en formato R1CS equivalentes.
 	
 	\vspace{0.2cm}
 	\noindent El código generador del testigo tras la modificación del compilador no sería únicamente funcional para dicha generación, sino que también se permitiría la conversión del código a su equivalente sistema de restricciones R1CS.
@@ -730,7 +730,7 @@ placement=H
 	\noindent Esta restricción permite vincular completamente la entrada \texttt{a} con la salida \texttt{b}. Su ausencia en el código \ref{cod:underc-bug} es lo que provoca el mencionado underconstrained bug. Al añadirla se soluciona el error, ya que, a pesar de que \texttt{inv} podría adoptar un valor distinto al que se le asignó, la señal \texttt{b} queda ahora limitada por el valor de \texttt{a} a través de la restricción \texttt{a*b===0}, la cual sí se incorpora al sistema de ecuaciones. De este modo, existe una restricción que obliga a la señal \texttt{a} a adoptar un único valor, garantizando así un circuito seguro.
 	
 	\vspace{0,2cm}
-	\noindent \textcolor{red}{Por otro lado, el segundo bloque tiene el mismo comportamiento operacional que el primero, con la única diferencia de que éste hace uso de autocomplete. De esta forma se genera un sistema de ecuaciones equivalente al del primer bloque.}
+	\noindent \textcolor{black}{Por otro lado, el segundo bloque tiene el mismo comportamiento operacional que el primero, con la única diferencia de que éste hace uso de autocomplete. De esta forma se genera un sistema de ecuaciones equivalente al del primer bloque.}
 	
 	\vspace{0,2cm}
 	\noindent A través del análisis del código de este segundo bloque, se distingue la sencillez de un bloque básico \texttt{if-else} que tiene como objetivo determinar si la entrada \texttt{a} es igual a cero o no.
@@ -777,7 +777,6 @@ placement=H
 				\begin{lstlisting}[
 					language=Circom,
 					basicstyle=\fontsize{8}{9.5}\selectfont\ttfamily,
-					numbers=none,
 					frame=none, 
 					breaklines=true,
 					xleftmargin=5pt
@@ -869,7 +868,8 @@ placement=H
 	\noindent Por ejemplo, si el \texttt{jugador1} elige piedra y el \texttt{jugador2} elige tijera, los valores de estas señales serán \texttt{jugador1 = 0} y \texttt{jugador2 = 2}.
 	
 	\vspace{0.2cm}
-	\noindent \textcolor{black}{Como se ha mencionado en el capítulo anterior, el valor de las señales debe conocerse en tiempo de compilación para poder construir correctamente el circuito. Por esta razón, para determinar qué elemento ha elegido cada jugador es necesario crear un componente por cada alternativa posible (tijera, papel o piedra) y hacer lo mismo con los dos jugadores.}
+	\noindent Como se ha mencionado en el capítulo anterior, el valor de las señales debe conocerse en tiempo de compilación para poder construir correctamente el circuito. Por esta razón, para determinar qué elemento ha elegido cada jugador es necesario crear un componente por cada alternativa posible (piedra: \texttt{linea 11}, papel: \texttt{linea 13}, tijera: \texttt{linea 15}) y hacer lo mismo con los dos jugadores.
+	
 	
 	\vspace{0.2cm}
 	\noindent \textcolor{black}{De esta manera, seremos capaces de determinar cuál fue el elemento elegido por cada jugador y, basándonos en las reglas del juego, podremos establecer si se trata de una victoria del jugador 1, una victoria del jugador 2 o un empate.}
@@ -2950,7 +2950,7 @@ placement=H
 	
 	\chapter{Verificación de los operadores}
 	
-	\noindent La verificación de los operadores es un paso fundamental en este trabajo. Este proceso es necesario para garantizar que la nueva funcionalidad implementada construye sistemas de ecuaciones equivalentes a los generados naturalmente por el lenguaje Circom.
+	\noindent La verificación de operadores es un paso fundamental en este trabajo. Este proceso es necesario para garantizar que la nueva funcionalidad implementada construye sistemas de ecuaciones equivalentes a los generados naturalmente por el lenguaje Circom.
 	
 	\vspace{0.2cm}
 	\noindent Para realizar esta verificación de forma segura y fiable se ha empleado la herramienta \textit{ZK-GENVER}, desarrollada por el grupo de investigación Costa \cite{costa_group_zkgenver}.
@@ -2960,7 +2960,7 @@ placement=H
 		 ZK-GENVER es una herramienta diseñada para la verificación de sistemas de ecuaciones en formato R1CS. 
 	\end{definicion}
 	
-	\noindent Esta herramienta ofrece tres funcionalidades principales. En primer lugar, la verificación determinista del sistema de ecuaciones, comprobando que cada entrada produce una única salida. En segundo lugar, la generación de archivos \texttt{smt2}, que contienen las ecuaciones del circuito, las cuales pueden ser alteradas manualmente para así asignar valores de entrada específicos con el fin de consultar la salida correspondiente y validar así que la lógica es la esperada. Por último, la comparación de equivalencia entre dos archivos R1CS, transformándolos a archivos \texttt{smt2}, lo que posibilita contrastar el código base de Circom con el que incorpora la nueva funcionalidad.
+	\noindent Esta herramienta ofrece tres funcionalidades principales. En primer lugar, la verificación determinista del sistema de ecuaciones, comprobando que para cada entrada produce una única salida. En segundo lugar, la generación de archivos \texttt{smt2}, que contienen las ecuaciones del circuito, las cuales pueden ser alteradas manualmente para así asignar valores de entrada específicos con el fin de consultar la salida correspondiente y validar así que la lógica es la esperada. Por último, la comparación de equivalencia entre dos archivos R1CS, transformándolos a archivos \texttt{smt2}, lo que posibilita contrastar el código base de Circom con el que incorpora la nueva funcionalidad.
 	
 	\vspace{0.2cm}
 	\noindent Por tanto, para llevar a cabo una verificación exhaustiva de cada operador implementado, se emplearán las tres funcionalidades que \textit{ZK-GENVER} ofrece, siguiendo el mismo orden en el que han sido expuestas:
@@ -3089,7 +3089,7 @@ placement=H
 	\noindent De esta forma, \textit{ZK-GENVER} es capaz de verificar de manera formal si un sistema de ecuaciones es determinista.
 		
 	\vspace{0.2cm}
-	\noindent En cuanto a la segunda funcionalidad, se parte del archivo \texttt{smt2} generado en la verificación determinista, el cual contiene las ecuaciones del sistema de restricciones. De esta forma, es posible modificar este archivo manualmente para asignar valores a las entradas, haciendo posible consultar la salida esperada y comprobar así que la lógica del operador es la correcta en función de las entradas asignadas.
+	\noindent En cuanto a la segunda funcionalidad, se parte del mismo archivo \texttt{smt2} generado en la verificación determinista, el cual contiene las ecuaciones del sistema de restricciones. De esta forma, es posible modificar este archivo manualmente para asignar valores a las entradas, haciendo posible consultar la salida esperada y comprobar así que la lógica del operador es la correcta en función de las entradas asignadas.
 	
 	\vspace{0.2cm}
 	\noindent Partiendo del \hyperref[lst:smt2-igual-determinista]{\textbf{Ejemplo \ref{lst:smt2-igual-determinista}}}, habría que modificar el archivo \texttt{smt2} para asignar los valores deseados a las señales de entradas.
