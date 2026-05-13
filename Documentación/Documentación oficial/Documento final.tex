@@ -131,6 +131,7 @@ placement=H
 
 
 \newtheorem{definicion}{Definición}
+\newtheorem{definition}{Definition}
 
 \DeclareFloatingEnvironment[
 name=Código,
@@ -668,6 +669,450 @@ placement=H
 	\end{itemize}
 	
 	
+	\chapter{Introduction to Circom}
+	
+	\section{Zero-Knowledge Proofs}
+	\noindent In cryptographic terms, a zero-knowledge proof (ZKP) refers to a \textbf{family of protocols} designed to enable one party \textbf{(the prover)} to demonstrate to another \textbf{(the verifier)} that a specific statement is true \textbf{without revealing any information about it} other than its validity \cite{wiki_zkp}.
+	
+	\vspace{0.2cm}
+	\noindent The following example illustrates this concept:
+	
+	\begin{mi_ejemplo}[H]
+		\centering
+		
+		\begin{minipage}{0.95\textwidth}
+			
+			\noindent \textbf{Alejandro (prover)} holds a winning Christmas lottery ticket and wants to prove to \textbf{Clara (verifier)} that he owns the winning number without her actually seeing it (to prevent her from claiming the prize or stealing it). To do this, they use a safe that only opens by entering the winning ticket's combination.
+			
+			\vspace{0.2cm}
+			
+			\noindent Clara writes a random digit on a piece of paper, places it inside the safe, and locks it. Then, Clara turns around so she can no longer see the safe.
+			
+			\vspace{0.2cm}
+			
+			\noindent Alejandro, who knows the ticket number, enters the combination to open the safe and reads the number Clara wrote out loud. At that moment, Clara knows he was able to open the safe and, therefore, obtains proof that Alejandro possesses that information. 
+			
+			\vspace{0.2cm}
+			
+			\noindent However, Clara might suspect that Alejandro simply guessed the digit, as there is a 10\% chance of doing so. Consequently, Clara decides to repeat the test several times.
+			
+			\vspace{0.2cm}
+			
+			\noindent \textcolor{black}{If we repeat the test a second time ($0.1 * 0.1 = 0.01$)}, the initial probability drops from 0.1 to 0.01. In other words, as the number of repetitions increases, the probability of guessing correctly by chance decreases and converges to 0, achieving practical certainty without revealing a single digit of the ticket.
+			
+		\end{minipage}
+		\caption{Zero Knowledge Proof} 
+		\label{ex:loteria-ingles}
+		
+		\hspace*{\fill} $\blacksquare$
+		
+	\end{mi_ejemplo}
+	
+	\vspace{0.25cm}
+	
+	\noindent As shown in \hyperref[ex:loteria-ingles]{\textit{Example \ref{ex:loteria-ingles}}}, the concept of \textbf{ZKP} is illustrated in a very intuitive way. However, to translate this logic into a cryptographic context, these interactions must be formalized through specific protocols.
+	
+	\vspace{0.25cm}
+	
+	\noindent \textbf{Cryptography} is the fundamental pillar of digital security, protecting sensitive information from threats. Cryptographic techniques allow us to guarantee confidentiality while maintaining a balance between transparency and privacy.
+	
+	\vspace{0.25cm}
+	
+	\noindent Historically, the term ZKP emerged in the 1980s as a purely theoretical concept before its practical development \cite{nervos_zkp}. This notion was created to strengthen both security and privacy within the cryptographic field. Today, this has led to the creation of major protocol families, most notably \textbf{zk-SNARKs}.
+	
+	
+	\begin{definition}[zk-SNARKS]
+		
+		\noindent \textit{Succinct Non-Interactive Argument of Knowledge}, better known by the acronym \textbf{zk-SNARKs}, are cryptographic proofs that allow one to prove the truth of information without revealing its content \cite{binance_academy_zk-ingles}.
+		
+		\label{def:zk-snarks-ingles}
+	\end{definition}
+	
+	\vspace{0.25cm}
+	\noindent \textcolor{black}{These proofs are notable} for their small proof size and short verification time. However, they have the disadvantage of requiring an initial phase known as a \textbf{trusted setup}.
+	
+	\begin{definition}[Trusted setup]
+		
+		\noindent A trusted setup is a phase where random values are generated and must be destroyed immediately. If these random values are exposed, the security of the system is compromised \cite{binance_academy_zk}.
+		
+		
+		\label{def:confidence-configuration-ingles}
+	\end{definition}
+	
+	
+	\noindent \textbf{The reason} these random numbers must be deleted immediately is that any entity knowing these values could store them and generate \textbf{fake proofs}, thereby bypassing the system's security.
+	
+	
+	\vspace{0.25cm}
+	
+	\noindent Given the complexity involved in implementing these protocols from scratch, specialized programming languages called \textbf{Domain Specific Languages} (DSLs) have been developed. 
+	
+	\vspace{0.25cm}
+	
+	\noindent The goal is to allow developers who are not cryptography experts to program the statements they wish to prove. It is in this context that \textbf{Circom} becomes important—a tool created to facilitate the creation of circuits and their subsequent transformation into constraint systems.
+	
+	\vspace{0.25cm}
+	
+	\section{CIRCOM}
+	\label{s:circom-ingles}
+	\noindent \textbf{Circom} is a circuit description language (DSL) whose primary purpose is not computation itself, but defining a system of equations that describes the relationships between input and output \textbf{signals} \cite{thesis_clara}.\vspace{0.3cm}
+	
+	\noindent A signal is a component that acts like a wire within the circuit, carrying values through logic gates and forming part of the equations the programmer intends to verify. The constraints of the equation system generated by Circom describe the behavior of the circuit's signals.
+	
+	\vspace{0.3cm}
+	
+	\noindent This perspective is fundamental, as ZKPs cannot interpret code directly; they require computation to be expressed as a structure of algebraic constraints called R1CS, which we will detail in \hyperref[sec:r1cs-ingles]{\textbf{Section \ref{sec:r1cs-ingles}}}.
+	
+	
+	\vspace{0.3cm}
+	
+	\noindent The Circom compilation process reflects a hybrid paradigm between \textbf{declarative and imperative}. Accordingly, the compiler generates two essential files to produce the proof:
+	
+	\begin{itemize}
+		\item \textbf{R1CS File:} Contains the set of all algebraic constraints that define the circuit logic. These constraints are added from a Circom program using the \texttt{<==} and \texttt{===} symbols.
+		\item \textbf{Witness Generator:} An executable (in C++ or WASM format) responsible for calculating the values of all circuit signals, including intermediate values, based on the provided inputs. These assignments are added from a Circom program using the \texttt{<==} and \texttt{<-}\texttt{-} symbols.
+	\end{itemize}
+	
+	\vspace{0.3cm}
+	
+	\noindent Starting from these two files, we can generate the proof using \textbf{Snarkjs}. This tool takes the R1CS file and the Witness obtained after compiling a Circom program to generate the associated proof. We will analyze its operation and specific commands in detail in \hyperref[sec:snarkjs-ingles]{\textbf{Section \ref{sec:snarkjs-ingles}}}.
+	
+	\tikzset{every picture/.style={line width=0.75pt}} 
+	
+	\begin{figura}[H]
+		\centering
+		\resizebox{0.45\textwidth}{!}{
+			\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+				%Rounded Rect [id:dp05875085235019617] 
+				\draw   (275,40.5) .. controls (275,33.04) and (281.04,27) .. (288.5,27) -- (379.63,27) .. controls (387.08,27) and (393.13,33.04) .. (393.13,40.5) -- (393.13,81) .. controls (393.13,88.46) and (387.08,94.5) .. (379.63,94.5) -- (288.5,94.5) .. controls (281.04,94.5) and (275,88.46) .. (275,81) -- cycle ;
+				%Straight Lines [id:da06402967877759314] 
+				\draw [line width=1.5]    (333.5,94.5) -- (334.5,135.5) ;
+				%Shape: Rectangle [id:dp8085143403557636] 
+				\draw   [dash pattern={on 4.5pt off 4.5pt}] (280,137) -- (387.5,137) -- (387.5,177) -- (280,177) -- cycle ;
+				%Straight Lines [id:da5899123595041729] 
+				\draw [line width=1.5]    (280,177) -- (235.37,233.15) ;
+				\draw [shift={(233.5,235.5)}, rotate = 308.48] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=1.5]    (14.21,-4.28) .. controls (9.04,-1.82) and (4.3,-0.39) .. (0,0) .. controls (4.3,0.39) and (9.04,1.82) .. (14.21,4.28)   ;
+				%Straight Lines [id:da1590131005098081] 
+				\draw [line width=1.5]    (387.5,177) -- (437.51,233.26) ;
+				\draw [shift={(439.5,235.5)}, rotate = 228.37] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=1.5]    (14.21,-4.28) .. controls (9.04,-1.82) and (4.3,-0.39) .. (0,0) .. controls (4.3,0.39) and (9.04,1.82) .. (14.21,4.28)   ;
+				%Shape: Rectangle [id:dp4149414273363945] 
+				\draw  [line width=1.5]  (180,235) -- (291.5,235) -- (291.5,289) -- (180,289) -- cycle ;
+				%Shape: Rectangle [id:dp6656795684081461] 
+				\draw  [line width=1.5]  (387,235) -- (498.5,235) -- (498.5,289) -- (387,289) -- cycle ;
+				%Straight Lines [id:da5108600083542064] 
+				\draw [line width=1.5]    (236.5,289.5) -- (236.5,329.5) ;
+				\draw [shift={(236.5,332.5)}, rotate = 270] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=1.5]    (14.21,-4.28) .. controls (9.04,-1.82) and (4.3,-0.39) .. (0,0) .. controls (4.3,0.39) and (9.04,1.82) .. (14.21,4.28)   ;
+				%Straight Lines [id:da97309796419649] 
+				\draw [line width=1.5]    (445.5,290.5) -- (446.45,347.5) ;
+				\draw [shift={(446.5,350.5)}, rotate = 269.05] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=1.5]    (14.21,-4.28) .. controls (9.04,-1.82) and (4.3,-0.39) .. (0,0) .. controls (4.3,0.39) and (9.04,1.82) .. (14.21,4.28)   ;
+				%Shape: Rectangle [id:dp05069346026332677] 
+				\draw  [dash pattern={on 4.5pt off 4.5pt}] (401,349) -- (493.5,349) -- (493.5,389) -- (401,389) -- cycle ;
+				%Rounded Rect [id:dp7496026716421088] 
+				\draw  [line width=1.5]  (187,345.26) .. controls (187,339.04) and (192.04,334) .. (198.26,334) -- (274.24,334) .. controls (280.46,334) and (285.5,339.04) .. (285.5,345.26) -- (285.5,379.03) .. controls (285.5,385.25) and (280.46,390.29) .. (274.24,390.29) -- (198.26,390.29) .. controls (192.04,390.29) and (187,385.25) .. (187,379.03) -- cycle ;
+				%Straight Lines [id:da7117949724826909] 
+				\draw [line width=1.5]    (400.5,364.5) -- (290.5,364.5) ;
+				\draw [shift={(287.5,364.5)}, rotate = 360] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=1.5]    (14.21,-4.28) .. controls (9.04,-1.82) and (4.3,-0.39) .. (0,0) .. controls (4.3,0.39) and (9.04,1.82) .. (14.21,4.28)   ;
+				%Straight Lines [id:da5960434606703144] 
+				\draw [line width=1.5]    (238.5,390.5) -- (239.45,443.5) ;
+				\draw [shift={(239.5,446.5)}, rotate = 268.98] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=1.5]    (14.21,-4.28) .. controls (9.04,-1.82) and (4.3,-0.39) .. (0,0) .. controls (4.3,0.39) and (9.04,1.82) .. (14.21,4.28)   ;
+				%Shape: Rectangle [id:dp8763181436266994] 
+				\draw  [line width=1.5]  (205,450) -- (275,450) -- (275,490) -- (205,490) -- cycle ;
+				
+				% Text Node
+				\draw (291,39) node [anchor=north west][inner sep=0.75pt]   [align=left] {\begin{minipage}[lt]{59.86pt}\setlength\topsep{0pt}
+						\begin{center}
+							{\large \textbf{Circom}}\\\textbf{{\large Program}}
+						\end{center}
+						
+				\end{minipage}};
+				% Text Node
+				\draw (334,156.5) node   [align=left] {\begin{minipage}[lt]{68pt}\setlength\topsep{0pt}
+						\begin{center}
+							{\small Compiler}\\{\small Circom}
+						\end{center}
+						
+				\end{minipage}};
+				% Text Node
+				\draw (442.75,262) node   [align=left] {\begin{minipage}[lt]{68pt}\setlength\topsep{0pt}
+						\begin{center}
+							Executable\\(C++/WASM)
+						\end{center}
+						
+				\end{minipage}};
+				% Text Node
+				\draw (235.75,262) node   [align=left] {\begin{minipage}[lt]{68pt}\setlength\topsep{0pt}
+						\begin{center}
+							R1CS \\file
+						\end{center}
+						
+				\end{minipage}};
+				% Text Node
+				\draw (447.25,369) node   [align=left] {\begin{minipage}[lt]{46.58pt}\setlength\topsep{0pt}
+						\begin{center}
+							Witness
+						\end{center}
+						
+				\end{minipage}};
+				% Text Node
+				\draw (236.25,362.14) node   [align=left] {\begin{minipage}[lt]{59.5pt}\setlength\topsep{0pt}
+						\begin{center}
+							\textbf{{\large Snarkjs}}
+						\end{center}
+						
+				\end{minipage}};
+				% Text Node
+				\draw (240,470) node   [align=left] {\begin{minipage}[lt]{42.5pt}\setlength\topsep{0pt}
+						\begin{center}
+							\textbf{{\large ZKP}}
+						\end{center}
+						
+				\end{minipage}};
+				
+				
+			\end{tikzpicture}
+		}
+		\caption{Transformation process to ZKP from Circom} 
+		\label{ex:zkp-transformacion-ingles}
+	\end{figura}
+	
+	\vspace{0.3cm}
+	
+	\noindent A fundamental characteristic of Circom is that it is a circuit-based language where the circuit structure must be static; this implies that any value determining the circuit's structure (such as array sizes, loop iteration counts, etc.) \textbf{must be known at compile time}. This is because the R1CS file contains the algebraic constraints describing the circuit, which cannot depend on the values of the input signals.
+	
+	
+	\vspace{0.3cm}
+	\vspace{0.5cm}
+	
+	\noindent As mentioned previously, signals represent the constraints established by the programmer that they wish to verify. Below is an example of a Circom program and its representation as a logic circuit, adding the constraint $a*b=c$.
+	
+	\begin{mi_ejemplo}[H]\centering\begin{minipage}{0.55\textwidth}\lstset{
+				language=Circom,
+				basicstyle=\footnotesize\ttfamily,
+				frame=single,
+				breaklines=true}
+			\begin{lstlisting}
+				template mult(){
+					signal input a;
+					signal input b;
+					signal output c;
+					
+					c <== a * b;
+					}
+	            main component = mult();
+			\end{lstlisting}
+		\end{minipage}
+		\hfill
+		
+		\begin{minipage}{0.45\textwidth}
+			\centering
+			\resizebox{\textwidth}{!}{
+				\begin{circuitikz}
+					\draw (2,0) node[and port] (myand) {};
+					
+					\node at ([xshift=-0.65cm]myand.center) {\large $*$};
+					
+					% Conexiones
+					\draw (myand.in 1) node[anchor=east] {signal $a$};
+					\draw (myand.in 2) node[anchor=east] {signal $b$};
+					\draw (myand.out) node[anchor=west] {c};
+				\end{circuitikz}
+			}
+		\end{minipage}
+		
+		\caption{Comparative illustration of code vs. circuit}
+		\label{ex:varA-dist-zero-ingles}
+		
+		\hspace*{\fill} $\blacksquare$
+	\end{mi_ejemplo}\vspace{0.2cm}\noindent The previous example reflects how Circom transforms the equation $c<==a*b$ into an equivalent logic circuit. Thus, we can see that the inputs of the logic component are $a$ and $b$, thereby forcing $c$ to equal the product of both inputs.
+	
+	\section{R1CS}
+	\label{sec:r1cs-ingles}
+	
+	\noindent \textit{Rank-1 Constraint System} (commonly known as \textbf{R1CS}) is a mathematical representation system designed to transform complex computational tasks into a set of algebraic constraints. Its relevance lies in the fact that while generating a solution to a problem can be costly, its \textbf{verification is extremely efficient and fast}, which is a key requirement for zero-knowledge proofs \cite{R1CS_cita}.
+	
+	\vspace{0.25cm}
+	\noindent For this representation system to be functional, R1CS constraints are defined over a finite field $\mathbb{F}_p$.
+	
+	\vspace{0.25cm}
+	\noindent 
+	
+	\begin{definition}[Finite field]
+		\textcolor{black}{In abstract algebra, a finite field is an algebraic structure containing a finite number of elements. This means that operations applied to these elements are performed using modular arithmetic within a range [0, p$-$1], where p is a prime number that determines the order of the field \cite{wikipedia_cuerpo_finito}.}
+		
+		\label{def:cuerpo-finito-ingles}
+	\end{definition}
+	
+	\vspace{0.25cm}
+	\noindent Circom typically uses very large primes for these finite fields. For instance, one of the primes currently used by Circom corresponds to:
+	
+	{\small
+		\begin{equation*}
+			p = 52435875175126190479447740508185965837690552500527637822603658699938581184513
+	\end{equation*}}
+	
+	\vspace{0.25cm}
+	\noindent R1CS imposes specific mathematical constraints. Beyond the fact that equations cannot exceed the second degree (\textit{a necessary but not sufficient condition}), they must be expressible as the product of two linear combinations of variables resulting in a third linear combination:
+	
+	\begin{equation*}
+		A \cdot B - C = 0
+	\end{equation*}
+	
+	\noindent Where \textit{A, B, and C are linear combinations of the circuit signals}. In practical terms, this implies that a single constraint can only contain one multiplication between variables. Operations involving multiple independent products, even if they are of the second degree, must be decomposed into several consecutive constraints using intermediate variables to satisfy this standard.
+	
+	\vspace{0.3cm}
+	
+	\noindent Following \hyperref[ex:varA-dist-zero]{\textit{Example \ref{ex:varA-dist-zero}}}, the constraint \texttt{c <== a*b} is translated into R1CS format as the product of two linear combinations A and B, thereby enforcing that the result of the signals a and b equals c.
+	
+	\begin{mi_ejemplo}[H]
+		\caption{Multiplication transformation to R1CS format}
+		\label{ex:var_zero-to-R1CS-ingles}    
+		
+		Given the statement:
+		\begin{equation*}
+			(a) \times (b) = (c)
+		\end{equation*}
+		Where the structure $A \cdot B = C$ is satisfied by assigning:
+		\begin{itemize}
+			\item $A = a$ (Linear combination 1)
+			\item $B = b$ (Linear combination 2)
+			\item $C = c$ (Result of the constraint)
+		\end{itemize}
+		
+		\hspace*{\fill} $\blacksquare$
+	\end{mi_ejemplo}
+	
+	\vspace{0.3cm}
+	
+	\noindent By using the R1CS format, \textit{constraints written in Circom can be verified very efficiently} through Snarkjs, as we will see in \hyperref[sec:snarkjs-ingles]{\textbf{Section \ref{sec:snarkjs-ingles}}}.
+	
+	\newpage
+	
+	\section{Snarkjs}
+	\label{sec:snarkjs-ingles}
+	
+	\noindent Snarkjs is a JavaScript library designed for generating and verifying zero-knowledge proofs from their corresponding R1CS constraints. It can be executed on both \textcolor{black}{mobile} devices and servers using \textit{Node.js}, materializing the previously mentioned concept of \hyperref[def:zk-snarks]{\textit{ \ref{def:zk-snarks} zk-SNARKs}} \cite{thesis_clara}\cite{circom_articulo_clara}.
+	
+	\vspace{0.25cm}
+	
+	\noindent As previously shown in \hyperref[ex:zkp-transformacion]{\textit{Figure \ref{ex:zkp-transformacion}}}, Snarkjs requires two files to generate a proof:
+	
+	\begin{itemize}
+		\item  \textit{Witness}, generated by the C++/WASM executable.
+		\item  \textit{R1CS File}, containing the circuit's logic constraints.
+	\end{itemize}
+	
+	\vspace{0.25cm}
+	
+	\noindent Once these two files are available and the trusted setup is completed, Snarkjs generates the zero-knowledge proof that allows the Prover to demonstrate the validity of their statement to the Verifier.
+	
+	\section{Problem Preamble}
+	\label{sec:descripcion-problema-ingles}
+	
+	\noindent 
+	\textcolor{black}{Circom is a programming language whose learning curve and application can be complex initially, especially for those lacking experience with constraint-based logic languages. One of the primary reasons for this complexity is the occurrence of what are known as \textit{underconstrained bugs}. }
+	
+	\begin{definition}[Underconstrained bug]
+		\vspace{0.2cm}
+		\noindent An underconstrained bug is an error that occurs when the user fails to include all the necessary equations in the R1CS file to accurately reflect the circuit's intended behavior.
+		
+		\label{def:underconstrained-bug-ingles}
+	\end{definition}
+	
+	\vspace{0.2cm}
+	\noindent A Circom program is considered correct when the algebraic equations in the R1CS file exactly represent the circuit's behavior (which is expressed imperatively in the witness generator). The absence of these constraints means that witnesses can be generated that do not reflect the correct behavior of the circuit, yet would still be accepted when verifying the R1CS equations.
+	
+	\vspace{0.2cm}
+	\noindent The \texttt{<-}\texttt{-} symbol allows for adding an assignment to the Witness file, but not to the R1CS, as the latter is reserved exclusively for the program's constraints (added using the \texttt{<==} and \texttt{===} operators). 
+	
+	\vspace{0.2cm}
+	\noindent The functionality of these operators is entirely different. Many people starting out with Circom are initially unclear about the actual difference between these operators, leading to the development of erroneous programs where the generated proof is invalid.
+	
+	\vspace{0.2cm}
+	\noindent Incorrect use of these operators could lead to problems such as the aforementioned underconstrained bug. If a user utilizes \texttt{<-}\texttt{-} to add constraints to the equation system instead of \texttt{<==} or \texttt{===}, those equations will not be added to the R1CS file. Consequently, they will not be part of the equation system describing the circuit, leaving it incomplete.
+	
+	\vspace{0.2cm}
+	\noindent An example of this type of error can be seen in the following code block, which is intended to check if an input is equal to zero:
+	
+	\vspace{0.2cm}
+	\begin{lstlisting}[
+		language=Circom, 
+		caption={Underconstrained bug}, 
+		label={cod:underc-bug}
+		]
+		template isZero() {
+			signal input a;
+			signal output b;
+			
+			signal inv;
+			
+			inv <-- a!= 0 ? 1/a : 0;
+			
+			b <== -a*inv * 1;
+		}
+		
+	\end{lstlisting}
+	
+	
+	\vspace{0.2cm}
+	\noindent This function, while appearing to be correctly implemented, misused the \texttt{<-}\texttt{-} operator, resulting in an underconstrained bug. By using this operator to calculate the \texttt{inv} signal, an assignment is made, but no constraint is added to the equation system. 
+	
+	\vspace{0.2cm}
+	\noindent Because there is no constraint forcing \texttt{inv} to be the inverse of \texttt{a}, the link between the input \texttt{a} and the output \texttt{b} is not fully enforced. Therefore, since the assignment \texttt{inv <-}\texttt{- a!= 0 ? 1/a : 0} was not added to the equation system, it effectively does not exist for the verifier. This allows a malicious prover to manipulate the value of \texttt{inv} to generate fake proofs that the system would accept.
+	
+	\vspace{0.2cm}
+	\noindent Beyond this specific example, this error recurs frequently in many Circom programs, particularly those written by beginners. Other instances where this error appears include third-party implementations found in public repositories, such as \textcolor{black}{the game} \textit{"Battleship"} \cite{battlezips_circom}, \textit{Dark Forest} \cite{darkforest_circuits_2021}, or the \textit{Decoder template in Circomlib} \cite{iden3_multiplexer_2023}.
+	
+	
+	\vspace{0.2cm}
+	\noindent Due to this error, among many others, Circom is a complex language that can be difficult to adapt to, largely because of the various concepts that must be internalized. Therefore, the goal of this work is to provide the user with a much faster, simpler, and more secure way to program in Circom.
+	
+	
+	\vspace{0.2cm}
+	\noindent By leveraging the flexibility of assignments and the syntax provided by Circom's \textit{declarative-imperative} nature, we can implement new functionality by modifying its compiler. This allows us to translate imperative logic (constraints declared with \texttt{<-}\texttt{-}, which are normally only added to the \textit{Witness}) into constraints that will form part of the equation system (traditionally only added via \texttt{<==} or \texttt{===}).
+	
+	\vspace{0.2cm}
+	\noindent In this way, \textbf{the compiler would act as a bridge}, automatically transforming the imperative flow into a system of constraints.
+	
+	\vspace{0.4cm}
+	\noindent \textcolor{black}{This transformation is achieved by translating Circom's imperative instructions. The process involves analyzing the operators supported by the Circom language and specifying a transformation rule for each one. Through this, the compiler can automatically translate the implementation into a system of constraints.}
+	
+	\section{Objectives and Work Structure}
+	
+	\subsection{Objectives}
+	
+	\noindent The main objective of this work is to create a simpler and more intuitive way of programming in Circom, making the creation of equation systems and their equivalent logic circuits much more accessible and secure.
+	
+	\vspace{0.2cm}
+	\noindent Additionally, this work seeks to provide a validation tool. By leveraging the new capabilities of the compiler, it allows the user to compare their own Circom implementation with the one generated through the new functionality, facilitating the verification between their logic and that generated by the compiler.
+	
+	
+	\vspace{0.2cm}
+	\noindent This final objective also encompasses learning, aiming to reduce the initial complexity of Circom and allowing the user to become familiar with the language in a simpler and more efficient way.
+	
+	\vspace{0.2cm}
+	\noindent To achieve the proposed objectives, we have carried out the following tasks during the development of this work:
+	
+	\begin{enumerate}
+		\item \textcolor{black}{Design and} specification of the translation rules
+		\item Implementation of the specified rules within the compiler
+		\item Verification of the equation systems generated by the rules
+		\item Application of the new functionality to real-world cases
+		\item Development of the report to document the above and analyze the results of the work
+	\end{enumerate}
+	
+	\subsection{Work Structure}
+	
+	\noindent To achieve the proposed objectives, this document has been structured into the following chapters:
+	
+	\begin{itemize}
+		\item Chapter 1 (Introduction to Circom): \textcolor{black}{Provides} context regarding the technology being addressed and offers an overview of what we intend to achieve with it throughout this work.
+		\item Chapter 2 (Problem Definition): Defines the problem and presents an example.
+		\item Chapter 3 (Problem Development): Technical specification of the modifications to be carried out within the language compiler.
+		\item Chapter 4 (Implementation): 
+		\item Chapter 5 (Operator Verification): 
+		\item Chapter 6 (Experiments):
+		\item Chapter 7 (Concluding remarks):
+	\end{itemize}
 	\chapter{Definición del problema}
 	
 	\noindent 
@@ -3275,7 +3720,8 @@ placement=H
 	\section{Caso de uso, verificación y búsqueda de bugs}
 	
 	
-	
+	\chapter{Conclusiones}
+	\chapter{Concluding remarks}
 	\bibliographystyle{unsrt} 
 	\bibliography{referencias}
 	%\printbibliography
