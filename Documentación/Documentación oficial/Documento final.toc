@@ -1,39 +1,38 @@
 \babel@toc {spanish}{}\relax 
-\contentsline {chapter}{\numberline {1}Introducción a Circom}{4}{chapter.1}%
-\contentsline {section}{\numberline {1.1}Zero Knowledge Proof}{4}{section.1.1}%
-\contentsline {section}{\numberline {1.2}CIRCOM}{5}{section.1.2}%
-\contentsline {section}{\numberline {1.3}R1CS}{7}{section.1.3}%
-\contentsline {section}{\numberline {1.4}Snarkjs}{9}{section.1.4}%
-\contentsline {section}{\numberline {1.5}Preámbulo del problema}{9}{section.1.5}%
-\contentsline {section}{\numberline {1.6}Objetivos y Estructura del trabajo}{11}{section.1.6}%
-\contentsline {subsection}{\numberline {1.6.1}Objetivos}{11}{subsection.1.6.1}%
-\contentsline {subsection}{\numberline {1.6.2}Estructura del trabajo}{11}{subsection.1.6.2}%
-\contentsline {chapter}{\numberline {2}Introduction to Circom}{13}{chapter.2}%
-\contentsline {section}{\numberline {2.1}Zero-Knowledge Proofs}{13}{section.2.1}%
-\contentsline {section}{\numberline {2.2}CIRCOM}{14}{section.2.2}%
-\contentsline {section}{\numberline {2.3}R1CS}{16}{section.2.3}%
-\contentsline {section}{\numberline {2.4}Snarkjs}{18}{section.2.4}%
-\contentsline {section}{\numberline {2.5}Problem Preamble}{18}{section.2.5}%
-\contentsline {section}{\numberline {2.6}Objectives and Work Structure}{20}{section.2.6}%
-\contentsline {subsection}{\numberline {2.6.1}Objectives}{20}{subsection.2.6.1}%
-\contentsline {subsection}{\numberline {2.6.2}Work Structure}{20}{subsection.2.6.2}%
-\contentsline {chapter}{\numberline {3}Definición del problema}{21}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Descripción del problema}{21}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Ejemplo: Piedra, Papel y Tijera}{23}{section.3.2}%
-\contentsline {subsection}{\numberline {3.2.1}Señales de los jugadores}{24}{subsection.3.2.1}%
-\contentsline {subsection}{\numberline {3.2.2}Señal del ganador}{25}{subsection.3.2.2}%
-\contentsline {subsection}{\numberline {3.2.3}Lógica del empate}{26}{subsection.3.2.3}%
-\contentsline {subsection}{\numberline {3.2.4}Lógica de los jugadores}{27}{subsection.3.2.4}%
-\contentsline {chapter}{\numberline {4}Desarrollo del problema}{29}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Síntesis de restricciones para la traducción de expresiones}{29}{section.4.1}%
-\contentsline {subsection}{\numberline {4.1.1}Casos inductivos: Reglas de transformación de expresiones}{30}{subsection.4.1.1}%
-\contentsline {subsubsection}{\numberline {4.1.1.1}Operadores Aritméticos}{30}{subsubsection.4.1.1.1}%
-\contentsline {subsubsection}{\numberline {4.1.1.2}Operadores Lógicos}{35}{subsubsection.4.1.1.2}%
-\contentsline {subsubsection}{\numberline {4.1.1.3}Operadores de Comparación}{38}{subsubsection.4.1.1.3}%
-\contentsline {subsubsection}{\numberline {4.1.1.4}Operadores de desplazamiento}{46}{subsubsection.4.1.1.4}%
-\contentsline {subsection}{\numberline {4.1.2}Casos inductivos: Reglas de transformación de instrucciones}{48}{subsection.4.1.2}%
-\contentsline {subsubsection}{\numberline {4.1.2.1}Instrucciones condicionales}{48}{subsubsection.4.1.2.1}%
-\contentsline {subsubsection}{\numberline {4.1.2.2}Acceso a Arrays}{52}{subsubsection.4.1.2.2}%
+\contentsline {chapter}{\numberline {1}Introducción a Circom}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Zero Knowledge Proof}{1}{section.1.1}%
+\contentsline {section}{\numberline {1.2}CIRCOM}{2}{section.1.2}%
+\contentsline {section}{\numberline {1.3}R1CS}{4}{section.1.3}%
+\contentsline {section}{\numberline {1.4}Snarkjs}{6}{section.1.4}%
+\contentsline {section}{\numberline {1.5}Preámbulo del problema}{6}{section.1.5}%
+\contentsline {section}{\numberline {1.6}Objetivos y Estructura del trabajo}{8}{section.1.6}%
+\contentsline {subsection}{\numberline {1.6.1}Objetivos}{8}{subsection.1.6.1}%
+\contentsline {subsection}{\numberline {1.6.2}Estructura del trabajo}{8}{subsection.1.6.2}%
+\contentsline {chapter}{\numberline {2}Introduction to Circom}{10}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Zero-Knowledge Proofs}{10}{section.2.1}%
+\contentsline {section}{\numberline {2.2}CIRCOM}{11}{section.2.2}%
+\contentsline {section}{\numberline {2.3}R1CS}{13}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Snarkjs}{15}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Problem Preamble}{15}{section.2.5}%
+\contentsline {section}{\numberline {2.6}Objectives and Work Structure}{17}{section.2.6}%
+\contentsline {subsection}{\numberline {2.6.1}Objectives}{17}{subsection.2.6.1}%
+\contentsline {subsection}{\numberline {2.6.2}Work Structure}{17}{subsection.2.6.2}%
+\contentsline {chapter}{\numberline {3}Definición del problema}{19}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Descripción del problema}{19}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Ejemplo: Piedra, Papel y Tijera}{21}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Señales de los jugadores}{22}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Señal del ganador}{23}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}Lógica del empate}{25}{subsection.3.2.3}%
+\contentsline {subsection}{\numberline {3.2.4}Lógica de los jugadores}{26}{subsection.3.2.4}%
+\contentsline {chapter}{\numberline {4}Desarrollo del problema}{28}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Síntesis de restricciones para la traducción de expresiones}{28}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Casos inductivos: Reglas de transformación de expresiones}{29}{subsection.4.1.1}%
+\contentsline {subsubsection}{\numberline {4.1.1.1}Operadores Aritméticos}{29}{subsubsection.4.1.1.1}%
+\contentsline {subsubsection}{\numberline {4.1.1.2}Operadores Lógicos}{34}{subsubsection.4.1.1.2}%
+\contentsline {subsubsection}{\numberline {4.1.1.3}Operadores de Comparación}{37}{subsubsection.4.1.1.3}%
+\contentsline {subsubsection}{\numberline {4.1.1.4}Operadores de desplazamiento}{45}{subsubsection.4.1.1.4}%
+\contentsline {subsection}{\numberline {4.1.2}Casos inductivos: Reglas de transformación de instrucciones}{47}{subsection.4.1.2}%
+\contentsline {subsubsection}{\numberline {4.1.2.1}Instrucciones condicionales}{47}{subsubsection.4.1.2.1}%
 \contentsline {chapter}{\numberline {5}Implementación del problema}{53}{chapter.5}%
 \contentsline {section}{\numberline {5.1}Ejemplo de implementación}{54}{section.5.1}%
 \contentsline {chapter}{\numberline {6}Verificación de los operadores}{58}{chapter.6}%
@@ -44,18 +43,22 @@
 \contentsline {subsection}{\numberline {6.1.4}Operadores de Desplazamiento}{63}{subsection.6.1.4}%
 \contentsline {chapter}{\numberline {7}Experimentos}{64}{chapter.7}%
 \contentsline {section}{\numberline {7.1}Aplicación de la generación automática sobre juegos simples}{64}{section.7.1}%
-\contentsline {section}{\numberline {7.2}Aplicación de la generación automática sobre circomLib y comparación de constraints}{64}{section.7.2}%
+\contentsline {section}{\numberline {7.2}Aplicación de la generación automática sobre circomlib y comparación de constraints}{64}{section.7.2}%
 \contentsline {section}{\numberline {7.3}Caso de uso, verificación y búsqueda de bugs}{64}{section.7.3}%
-\contentsline {chapter}{\numberline {8}Conclusiones}{65}{chapter.8}%
-\contentsline {chapter}{\numberline {9}Concluding remarks}{66}{chapter.9}%
-\contentsline {chapter}{\numberline {A}Problemática de los números negativos}{69}{appendix.Alph1}%
-\contentsline {chapter}{\numberline {B}Verificación de operadores}{70}{appendix.Alph2}%
-\contentsline {section}{\numberline {B.1}Operadores Aritméticos}{70}{section.Alph2.1}%
-\contentsline {subsection}{\numberline {B.1.1}División}{70}{subsection.Alph2.1.1}%
-\contentsline {subsection}{\numberline {B.1.2}Módulo}{71}{subsection.Alph2.1.2}%
-\contentsline {section}{\numberline {B.2}Operadores lógicos}{71}{section.Alph2.2}%
-\contentsline {subsection}{\numberline {B.2.1}AND binario}{71}{subsection.Alph2.2.1}%
-\contentsline {subsection}{\numberline {B.2.2}OR binario}{72}{subsection.Alph2.2.2}%
-\contentsline {section}{\numberline {B.3}Operadores de desplazamiento}{73}{section.Alph2.3}%
-\contentsline {subsection}{\numberline {B.3.1}Desplazamiento a la izquierda}{73}{subsection.Alph2.3.1}%
-\contentsline {subsection}{\numberline {B.3.2}Desplazamiento a la derecha}{74}{subsection.Alph2.3.2}%
+\contentsline {chapter}{\numberline {8}Conclusiones y Trabajo Futuro}{65}{chapter.8}%
+\contentsline {section}{\numberline {8.1}Conclusiones}{65}{section.8.1}%
+\contentsline {section}{\numberline {8.2}Trabajo Futuro}{66}{section.8.2}%
+\contentsline {chapter}{\numberline {9}Conclusions and Future Work}{67}{chapter.9}%
+\contentsline {section}{\numberline {9.1}Conclusions}{67}{section.9.1}%
+\contentsline {section}{\numberline {9.2}Future Work}{68}{section.9.2}%
+\contentsline {chapter}{\numberline {A}Problemática de los números negativos}{71}{appendix.Alph1}%
+\contentsline {chapter}{\numberline {B}Verificación de operadores}{72}{appendix.Alph2}%
+\contentsline {section}{\numberline {B.1}Operadores Aritméticos}{72}{section.Alph2.1}%
+\contentsline {subsection}{\numberline {B.1.1}División}{72}{subsection.Alph2.1.1}%
+\contentsline {subsection}{\numberline {B.1.2}Módulo}{73}{subsection.Alph2.1.2}%
+\contentsline {section}{\numberline {B.2}Operadores lógicos}{73}{section.Alph2.2}%
+\contentsline {subsection}{\numberline {B.2.1}AND binario}{73}{subsection.Alph2.2.1}%
+\contentsline {subsection}{\numberline {B.2.2}OR binario}{74}{subsection.Alph2.2.2}%
+\contentsline {section}{\numberline {B.3}Operadores de desplazamiento}{75}{section.Alph2.3}%
+\contentsline {subsection}{\numberline {B.3.1}Desplazamiento a la izquierda}{75}{subsection.Alph2.3.1}%
+\contentsline {subsection}{\numberline {B.3.2}Desplazamiento a la derecha}{76}{subsection.Alph2.3.2}%

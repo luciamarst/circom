@@ -132,7 +132,7 @@ placement=H
 
 \newtheorem{definicion}{Definición}
 \newtheorem{definition}{Definition}
-
+\newtheorem{ejemplo}{Ejemplo}
 \DeclareFloatingEnvironment[
 name=Código,
 placement=H
@@ -205,6 +205,16 @@ placement=H
 	{\Huge\bfseries\filcenter #1} 
 	
 	\renewcommand{\thesection}{\thechapter.\arabic{section}}
+	
+	\begin{abstract}
+		Este trabajo presenta la implementación de una nueva funcionalidad para el \textbf{compilador de Circom}, diseñada para simplificar la creación de \textbf{circuitos} mediante una traducción automática de operadores de alto nivel a restricciones algebraicas. La complejidad de este lenguaje radica en la necesidad de definir manualmente un sistema de ecuaciones en \textbf{formato R1CS} coherente y seguro, ya que una implementación incompleta o errónea de estas restricciones puede comprometer la integridad del circuito, permitiendo la generación de pruebas falsas. Para resolverlo, se han especificado reglas que permiten transformar operaciones complejas (como comparaciones, divisiones, expresiones condicionales, etc) en ecuaciones válidas para una \textbf{prueba de conocimiento cero}, garantizando que el \textbf{witness} generado sea siempre fiel a la lógica imperativa del programador. Finalmente, la validez de estas reglas ha sido sometida a un tedioso proceso de verificación mediante la herramienta \textbf{ZKGEVER}, asegurando que las restricciones resultantes sean robustas y seguras frente a posibles vulnerabilidades.
+	\end{abstract}
+	
+	\cleardoublepage 
+	\renewcommand{\abstractname}{Abstract} 
+	\begin{abstract}
+		This work presents the development of a new functionality for the \textbf{Circom compiler}, designed to simplify the creation of \textbf{circuits} through the automatic translation of high-level operators into algebraic constraints. The complexity of this language lies in the need to manually define a coherent \textbf{R1CS format} system of equations; an incomplete or erroneous implementation of these constraints can compromise the circuit's integrity, leading to the potential generation of forged proofs. To address this, specific rules have been defined to transform complex operations (such as comparisons, divisions, conditional expressions, etc) into valid equations for a \textbf{zero-knowledge proof}, ensuring that the generated \textbf{witness} consistently reflects the programmer's imperative logic. Finally, the validity of these rules has undergone a rigorous verification process using the \textbf{ZKGEVER} tool, ensuring that the resulting constraints are robust and secure against potential vulnerabilities.
+	\end{abstract}
 	
 	\chapter{Introducción a Circom}
 	
@@ -615,7 +625,7 @@ placement=H
 	\noindent De esta forma, al no haber ninguna restricción que obligue a que \texttt{inv} sea el inverso de \texttt{a}, el vínculo entre la entrada \texttt{a} con la salida \texttt{b} no se cumple totalmente. Por tanto, al no ser añadida la asignación \texttt{inv <-}\texttt{- a!= 0 ? 1/a : 0} al sistema de ecuaciones, no existe para el verifier, permitiendo que un prover malicioso  pueda manipular el valor de \texttt{inv} para generar pruebas falsas que el sistema aceptaría.
 	 
 	\vspace{0.2cm}
-	\noindent Más allá del ejemplo expuesto, este error se repite de forma recurrente en muchos programas Circom, sobre todo aquellos desarrollados por principiantes en el lenguaje. Otros ejemplos donde este error está presente son en implementaciones de terceros que pueden encontrarse en repositorios públicos como \textcolor{black}{el juego de} \textit{"Hundir la flota"} \cite{battlezips_circom}, \textit{Dark Forest} \cite{darkforest_circuits_2021} o \textit{Decoder template en Circomlib} \cite{iden3_multiplexer_2023}.
+	\noindent Más allá del ejemplo expuesto, este error se repite de forma recurrente en muchos programas Circom, sobre todo aquellos desarrollados por principiantes en el lenguaje. Otros ejemplos donde este error está presente son en implementaciones de terceros que pueden encontrarse en repositorios públicos como \textcolor{black}{el juego de} \textit{"Hundir la flota"} \cite{battlezips_circom}, \textit{Dark Forest} \cite{darkforest_circuits_2021} o \textit{Decoder template en circomlib} \cite{iden3_multiplexer_2023}.
 	
 	
 	\vspace{0.2cm}
@@ -663,9 +673,10 @@ placement=H
 		\item Capítulo 1 (Introducción a Circom): \textcolor{black}{Se introduce el} contexto sobre la tecnología que vamos a tratar y ofrecer una visión general de lo que pretendemos hacer con ella a lo largo del trabajo.
 		\item Capítulo 2 (Definición del problema): Se definirá el problema y se presentará un ejemplo.
 		\item Capítulo 3 (Desarrollo del problema): Especificación técnica de las modificaciones que se llevarán a cabo en el compilador del lenguaje.
-		\item Capítulo 4 (Implementación): 
-		\item Capítulo 5 (Verificación de operadores): 
-		\item Capítulo 6 (Experimentos):
+		\item Capítulo 4 (Implementación): Detalle del desarrollo de las nuevas funcionalidades en el código fuente del compilador.
+		\item Capítulo 5 (Verificación de operadores): Análisis del proceso de validación formal para asegurar que los nuevos operadores generen sistemas de restricciones correctos y equivalentes.
+		\item Capítulo 6 (Experimentos): Evaluación del rendimiento y comportamiento del compilador modificado frente a implementaciones manuales clásicas en diversos escenarios.
+		\item Capítulo 7 ( Conclusiones y Trabajo Futuro): Recapitulación de los resultados obtenidos, valoración del impacto de la solución y propuestas para futuras líneas de investigación.
 	\end{itemize}
 	
 	
@@ -1060,7 +1071,7 @@ placement=H
 	\noindent Because there is no constraint forcing \texttt{inv} to be the inverse of \texttt{a}, the link between the input \texttt{a} and the output \texttt{b} is not fully enforced. Therefore, since the assignment \texttt{inv <-}\texttt{- a!= 0 ? 1/a : 0} was not added to the equation system, it effectively does not exist for the verifier. This allows a malicious prover to manipulate the value of \texttt{inv} to generate fake proofs that the system would accept.
 	
 	\vspace{0.2cm}
-	\noindent Beyond this specific example, this error recurs frequently in many Circom programs, particularly those written by beginners. Other instances where this error appears include third-party implementations found in public repositories, such as \textcolor{black}{the game} \textit{"Battleship"} \cite{battlezips_circom}, \textit{Dark Forest} \cite{darkforest_circuits_2021}, or the \textit{Decoder template in Circomlib} \cite{iden3_multiplexer_2023}.
+	\noindent Beyond this specific example, this error recurs frequently in many Circom programs, particularly those written by beginners. Other instances where this error appears include third-party implementations found in public repositories, such as \textcolor{black}{the game} \textit{"Battleship"} \cite{battlezips_circom}, \textit{Dark Forest} \cite{darkforest_circuits_2021}, or the \textit{Decoder template in circomlib} \cite{iden3_multiplexer_2023}.
 	
 	
 	\vspace{0.2cm}
@@ -1105,14 +1116,16 @@ placement=H
 	\noindent To achieve the proposed objectives, this document has been structured into the following chapters:
 	
 	\begin{itemize}
-		\item Chapter 1 (Introduction to Circom): \textcolor{black}{Provides} context regarding the technology being addressed and offers an overview of what we intend to achieve with it throughout this work.
-		\item Chapter 2 (Problem Definition): Defines the problem and presents an example.
-		\item Chapter 3 (Problem Development): Technical specification of the modifications to be carried out within the language compiler.
-		\item Chapter 4 (Implementation): 
-		\item Chapter 5 (Operator Verification): 
-		\item Chapter 6 (Experiments):
-		\item Chapter 7 (Concluding remarks):
+		\item \textbf{Chapter 1 (Introduction to Circom):} \textcolor{black}{Provides the} context regarding the technology addressed in this work and offers an overview of the project's objectives.
+		\item \textbf{Chapter 2 (Problem Definition):} Defines the problem and presents an illustrative example.
+		\item \textbf{Chapter 3 (Problem Development):} Technical specification of the modifications to be carried out within the language compiler.
+		\item \textbf{Chapter 4 (Implementation):} Details the development of the new functionalities within the compiler's source code.
+		\item \textbf{Chapter 5 (Operator Verification):} Analysis of the formal validation process to ensure that the new operators generate correct and equivalent constraint systems.
+		\item \textbf{Chapter 6 (Experiments):} Evaluation of the performance and behavior of the modified compiler compared to traditional manual implementations across various scenarios.
+		\item \textbf{Chapter 7 (Conclusions and Future Work):} Recapitulation of the results obtained, assessment of the solution's impact, and proposals for future lines of research.
 	\end{itemize}
+	
+	
 	\chapter{Definición del problema}
 	
 	\noindent 
@@ -1133,7 +1146,7 @@ placement=H
 	
 	\begin{enumerate}
 		\item \textbf{Asimilar el paradigma de verificación frente al de ejecución}, comprender que el objetivo principal no es realizar un cálculo o cómputo, sino generar un sistema de restricciones con el objetivo de verificar la validez de una demostración.
-		\item  \textcolor{black}{\textbf{Adaptarse a la complejidad del diseño algebraico}, procedimiento que implica construir circuitos en los que cada operación tiene que ser expresada a través de restricciones algebraicas, asegurando de esta manera el cumplimiento del formato R1CS y la descomposición de la lógica algebraica.}
+		\item  \textcolor{black}{\textbf{Adaptarse a la complejidad del diseño algebraico}, procedimiento que implica construir circuitos en los que cada operación tiene que ser expresada a través de restricciones algebraicas, asegurando de esta manera el cumplimiento del formato R1CS.}
 	\end{enumerate}
 	
 	
@@ -1141,10 +1154,10 @@ placement=H
 	\noindent De esta manera, puede observarse que Circom es un lenguaje que presenta una curva de aprendizaje elevada, de forma que requiere de tiempo y dedicación para desarrollar habilidad y destreza. 
 	
 	\vspace{0.2cm}
-	\noindent Por tanto, para aquellas personas que requieran el uso de este lenguaje, pero se enfrenten a la dificultad del cambio de paradigma se expone una solución cuyo objetivo es facilitar el uso de Circom, explotando su cualidad imperativa.
+	\noindent Por tanto, para aquellas personas que requieran el uso de este lenguaje, pero se enfrenten a la dificultad del cambio de paradigma se expone una solución cuyo objetivo es facilitar el uso de Circom, explotando su funcionalidad imperativa.
 	
 	\vspace{0.2cm}
-	\noindent La propuesta radica en la modificación del compilador de Circom para incorporar una nueva funcionalidad que \textcolor{black}{habilite} la traducción del codigo generado por el testigo desarrollado en un programa Circom a ecuaciones algebraicas en formato R1CS equivalentes.
+	\noindent La propuesta radica en la modificación del compilador de Circom para incorporar una nueva funcionalidad que \textcolor{black}{habilite} la traducción del código generado por el testigo en un programa Circom a ecuaciones algebraicas en formato R1CS equivalentes.
 	
 	\vspace{0.2cm}
 	\noindent El código generador del testigo tras la modificación del compilador no sería únicamente funcional para dicha generación, sino que también se permitiría la conversión del código a su equivalente sistema de restricciones R1CS.
@@ -1163,7 +1176,7 @@ placement=H
 	\end{mi_ejemplo}
 	
 	\vspace{0,2cm}
-	\noindent El código de la izquierda emplea Circom sin hacer uso de la nueva funcionalidad, donde el programador debe definir explícitamente las restricciones necesarias para reproducir la lógica buscada. Por otro lado, el código de la derecha utiliza la nueva funcionalidad introducida en el compilador del lenguaje, permitiendo el uso de estructuras condicionales así como operadores lógicos. En este caso, el compilador modificado es el encargado de traducir esa lógica imperativa a restricciones aritméticas equivalentes.
+	\noindent El código de la izquierda emplea Circom sin hacer uso de la nueva funcionalidad, donde el programador debe definir explícitamente las restricciones necesarias para reproducir la lógica buscada. Por otro lado, el código de la derecha utiliza la nueva funcionalidad introducida en el compilador del lenguaje, permitiendo el uso de estructuras condicionales así como operadores lógicos. En este caso, el compilador modificado es el encargado de generar las restricciones aritméticas equivalentes a las operaciones imperativas del circuito de partida.
 
 	\vspace{0,2cm}
 	\noindent Por esto, ambos bloques de código son equivalentes, ya que el código de la izquierda declara manualmente el sistema de ecuaciones que el código de la derecha va a construir automáticamente.
@@ -1175,10 +1188,10 @@ placement=H
 	\noindent Esta restricción permite vincular completamente la entrada \texttt{a} con la salida \texttt{b}. Su ausencia en el código \ref{cod:underc-bug} es lo que provoca el mencionado underconstrained bug. Al añadirla se soluciona el error, ya que, a pesar de que \texttt{inv} podría adoptar un valor distinto al que se le asignó, la señal \texttt{b} queda ahora limitada por el valor de \texttt{a} a través de la restricción \texttt{a*b===0}, la cual sí se incorpora al sistema de ecuaciones. De este modo, existe una restricción que obliga a la señal \texttt{a} a adoptar un único valor, garantizando así un circuito seguro.
 	
 	\vspace{0,2cm}
-	\noindent \textcolor{black}{Por otro lado, el segundo bloque tiene el mismo comportamiento operacional que el primero, con la única diferencia de que éste hace uso de autocomplete. De esta forma se genera un sistema de ecuaciones equivalente al del primer bloque.}
+	\noindent \textcolor{black}{Por otro lado, el segundo bloque tiene el mismo comportamiento operacional que el primero, con la única diferencia de que éste hace uso de \texttt{aautocomplete}. De esta forma se genera un sistema de ecuaciones equivalente al del primer bloque.}
 	
 	\vspace{0,2cm}
-	\noindent A través del análisis del código de este segundo bloque, se distingue la sencillez de un bloque básico \texttt{if-else} que tiene como objetivo determinar si la entrada \texttt{a} es igual a cero o no.
+	\noindent El segundo bloque de código emplea una sentencia \texttt{if-else} para determinar si la entrada es igual a 0 o no.
 	
 	\vspace{0,2cm}
 	\noindent Puede apreciarse que la lógica necesaria para implementar una función tan primaria sin las modificaciones se convierte en una tarea más tediosa, mientras que con las modificaciones esta lógica se convierte en un simple bloque condicional que cualquier persona familiarizada con la programación sabría hacer.
@@ -1206,7 +1219,7 @@ placement=H
 	\end{enumerate}
 	
 	\vspace{0.2cm}
-	\noindent Este juego tan característico y conocido se debe en gran parte a su simplicidad. Sin embargo, transformar su lógica en un programa Circom que lo materialice en un circuito es una tarea más tediosa y compleja.
+	\noindent Aunque las normas de este juego son extremadamente sencillas, traducirlas al lenguaje de Circom no es una tarea sencilla, ya que requiere convertir una lógica simple en un sistema de restricciones mucho más complejo.
 	
 	\vspace{0.2cm}
 	\noindent Con el fin de aclarar esta transición entre la lógica del juego y su implementación técnica, se ha desarrollado un repositorio específico que alberga el código fuente del circuito, implementado tanto con la nueva funcionalidad del compilador como sin ella \cite{rps_circom}. A continuación, se muestra un fragmento de este programa Circom equivalente a la lógica del juego:
@@ -1295,7 +1308,7 @@ placement=H
 	
 	
 	\vspace{0.2cm}
-	\noindent \textcolor{black}{Para simular la lógica del juego partimos de 2 señales de entrada, que representan los dos jugadores (\texttt{jugador1} y \texttt{jugador2}), y una señal de salida (\texttt{ganador}).}
+	\noindent \textcolor{black}{Para simular la lógica del juego partimos de 2 señales de entrada (L1-4), que representan los dos jugadores (\texttt{jugador1} y \texttt{jugador2}), y una señal de salida (\texttt{ganador}).}
 	
 	\subsection{Señales de los jugadores}
 	\vspace{0.2cm}
@@ -1313,11 +1326,20 @@ placement=H
 	\noindent Por ejemplo, si el \texttt{jugador1} elige piedra y el \texttt{jugador2} elige tijera, los valores de estas señales serán \texttt{jugador1 = 0} y \texttt{jugador2 = 2}.
 	
 	\vspace{0.2cm}
-	\noindent Como se ha mencionado en el capítulo anterior, el valor de las señales debe conocerse en tiempo de compilación para poder construir correctamente el circuito. Por esta razón, para determinar qué elemento ha elegido cada jugador es necesario crear un componente por cada alternativa posible (piedra: \texttt{linea 11}, papel: \texttt{linea 13}, tijera: \texttt{linea 15}) y hacer lo mismo con los dos jugadores.
+	\noindent Como se ha mencionado en el capítulo anterior, el valor de las señales debe conocerse en tiempo de compilación para poder construir correctamente el circuito. Para determinar qué elemento ha elegido cada jugador, es necesario instanciar componentes, que en Circom actúan como llamadas a otros \textit{templates} (plantillas) definidos previamente. En este caso, se declaran tres componentes por cada jugador para identificar de forma única su elección: \texttt{J1\_0}, \texttt{J1\_1} y \texttt{J1\_2} para el primero, y \texttt{J2\_0}, \texttt{J2\_1} y \texttt{J2\_2} para el segundo.
 	
 	
 	\vspace{0.2cm}
-	\noindent \textcolor{black}{De esta manera, seremos capaces de determinar cuál fue el elemento elegido por cada jugador y, basándonos en las reglas del juego, podremos establecer si se trata de una victoria del jugador 1, una victoria del jugador 2 o un empate.}
+	\noindent De esta manera, seremos capaces de determinar cuál fue el elemento elegido por cada jugador y, basándonos en las reglas del juego, podremos establecer si se trata de una victoria del jugador 1, una victoria del jugador 2 o un empate.
+	
+	\vspace{0.3cm}
+	\noindent Un ejemplo concreto de esta lógica es la determinación del empate (L26-32). Para identificar esta situación, se declaran tres señales intermedias (\texttt{eq0}, \texttt{eq1} y \texttt{eq2}) que actúan como indicadores de igualdad para cada una de las opciones:
+	
+	\begin{itemize}
+		\item \textbf{\texttt{eq0}} (L29): Multiplica las salidas de \texttt{J1\_0} y \texttt{J2\_0}. Solo será 1 si ambos jugadores eligieron piedra (0).
+		\item \textbf{\texttt{eq1}} (L30): Multiplica las salidas de \texttt{J1\_1} y \texttt{J2\_1}. Solo será 1 si ambos eligieron papel (1).
+		\item \textbf{\texttt{eq2}} (L31): Multiplica las salidas de \texttt{J1\_2} y \texttt{J2\_2}. Solo será 1 si ambos eligieron tijera (2).
+	\end{itemize}
 	
 	\subsection{Señal del ganador}
 	\vspace{0.2cm}
@@ -1327,14 +1349,28 @@ placement=H
 	\begin{enumerate}
 		\item Victoria del Jugador 1: 0
 		\item Victoria del Jugador 2: 1
-		\item Empate: 2
+		\item Empate: 2. Este valor se genera mediante la interacción de la señal \texttt{inv} (L35) y la expresión de la L55. La variable \texttt{inv} representa la inversión del empate (\texttt{1 - eq}); por tanto, si hay empate, \texttt{inv} vale 0. En la expresión final:
+		\begin{equation*}
+			\text{ganador} \longleftarrow ((1 - \text{inv}) \cdot 2) + (\text{out} \cdot \text{inv})
+		\end{equation*}
+		\noindent Si se produce el empate, el término \texttt{(out * inv)} se anula al multiplicarse por cero, mientras que \texttt{(1 - inv) * 2} se convierte en \texttt{(1 - 0) * 2 = 2}, garantizando que el resultado sea el convenio establecido para el empate.
 	\end{enumerate}}
 	
-	\vspace{0.2cm}
-	\noindent Siguiendo el ejemplo anterior, con valores para las señales \texttt{jugador1 = 0} y \texttt{jugador2 = 2}, la señal \texttt{ganador} adquiere el valor 0, ya que el \texttt{jugador1} al sacar piedra gana a la tijera del \texttt{jugador2}, de forma que \texttt{ganador = 2}.
+	
+	\noindent Una vez definida la función de cada señal y el significado de cada componente, la estrategia para reproducir la lógica del juego resulta directa mediante el uso de selectores aritméticos.
 	
 	\vspace{0.2cm}
-	\noindent \textcolor{black}{Una vez definida la función de cada señal y el significado de cada componente, la estrategia para reproducir la lógica del juego resulta directa. }
+	\noindent En esta estrategia, las señales \texttt{j1} (L43) y \texttt{j2} (L51) actúan como acumuladores de victoria. Por ejemplo, la variable \texttt{j2} es el resultado de sumar los productos de las señales de igualdad que representan los casos donde el Jugador 2 gana (Piedra vs Papel, etc.). Al ser casos excluyentes, \texttt{j2} solo puede ser 1 (si el Jugador 2 gana) o 0 (si pierde o empata), restringiendo a estas señales a un valor binario debido a la naturaleza  disyuntivo de las reglas del juego.
+	
+	\vspace{0.2cm}
+	\noindent La variable \texttt{out} (L54) captura este estado de victoria del Jugador 2. De este modo, la expresión de la señal \texttt{ganador} utiliza \texttt{out} e \texttt{inv} como llaves de paso: 
+	
+	\begin{itemize}
+		\item Si no hay empate (\texttt{inv=1}), la salida será directamente el valor de \texttt{out}.
+		\item Si el Jugador 2 ganó, \texttt{out=1} y la salida es 1.
+		\item Si el Jugador 2 no ganó (y sabemos que no hay empate), por eliminación el ganador es el Jugador 1, \texttt{out=0} y la salida es 0.
+	\end{itemize}
+	
 	
 	\vspace{0.2cm}
 	\noindent \textcolor{black}{Mediante la combinación de señales de igualdad y operaciones de suma y producto, el circuito calcula el resultado de manera sistemática. Así, la determinación del ganador se consigue por medio de la interacción entre las señales que están activas, es decir, las señales cuyo valor es 1}
@@ -1502,7 +1538,7 @@ placement=H
 	\noindent Por lo tanto, puede apreciarse que el esfuerzo lógico para describir la lógica del juego utilizando el operador \texttt{<==} es mucho más complejo que aprovechando la nueva funcionalidad añadida. Su uso evita que el programador tenga que transformar manualmente cada bifurcación del algoritmo en expresiones algebraicas, delegando ese trabajo al compilador modificado.
 	
 	\vspace{0.2cm}
-	\noindent Tras analizar ambos bloques de código lógicamente equivalentes, es evidente la simplicidad, legibilidad e independencia que la nueva funcionalidad incorpora al lenguaje.
+	\noindent Tras analizar ambos bloques de código, es evidente la simplicidad y legibilidad que la nueva funcionalidad incorpora al lenguaje. Mientras que el original exige instanciar múltiples componentes y realizar productos de señales para comprobar cada estado, los nuevos condicionales introducidos por la nueva funcionalidad permiten una traducción directa que ofrece al programador una mayor libertad a la hora de construir circuitos.
 	
 	\vspace{0.2cm}
 	\noindent Si bien este beneficio es ya notable en un ejemplo sencillo como este, su verdadero potencial reside en su aplicación a problemas más complejos.
@@ -1548,11 +1584,94 @@ placement=H
 	\noindent Esta sección recoge la documentación sobre la implementación de las reglas de transformación pertinentes para materializar la funcionalidad descrita a la práctica.
 	
 	\vspace{0.2cm}
-	\noindent Las reglas de transformación especificadas abarcan los operadores lógicos, de comparación, aritméticos, de desplazamiento además del acceso a arrays y las expresiones condicionales.
+	\noindent Las reglas de transformación especificadas abarcan los operadores lógicos, de comparación, aritméticos y desplazamiento.
 	
-		
+	
+	
 	\subsubsection{Operadores Aritméticos}
 	
+	
+	\vspace{0.6cm}
+	\noindent \textbf{Traducción de operadores}
+		\vspace{0.4cm}
+	\noindent La formalización de los operadores aritméticos se establece mediante un sistema de reglas de deducción que definen la traducción de cada operación al lenguaje de restricciones del circuito. En la siguiente tabla se detallan estas transformaciones, especificando cómo se generan las señales y restricciones necesarias:
+	
+	\vspace{0.2cm}
+	\renewcommand{\arraystretch}{4} 
+	\begin{longtable}{|c|>{\centering\arraybackslash}m{12cm}|}
+		\hline
+		\textbf{Operación} & \textbf{Regla de Inferencia} \\
+		\hline
+		\endfirsthead
+		
+		\hline
+		\textbf{Operación} & \textbf{Regla de Inferencia} \\
+		\hline
+		\endhead 
+		
+		\texttt{e = a $+$ b} & 
+		\makecell[c]{ 
+			\begin{prooftree} 
+				\hypo{TC(a) = (C_1, a')} 
+				\hypo {TC(b) = (C_2, b')} 
+				\infer2{TC(a + b) = (C_1 \wedge C_2,  a' + b')}
+			\end{prooftree} 
+		} \\ \hline
+		
+		\texttt{e = a $-$ b} & 
+		\makecell[c]{ 
+			\begin{prooftree} 
+				\hypo{TC(a) = (C_1, a')} 
+				\hypo {TC(b) = (C_2, b')} 
+				\infer2{TC(a - b) = (C_1 \wedge C_2, a' - b')}
+			\end{prooftree} 
+		} \\ \hline
+		
+		\texttt{e = a $*$ b} & 
+		\makecell[c]{ 
+			\begin{prooftree} 
+				\hypo{TC(a) = (C_1, a')} 
+				\hypo {TC(b) = (C_2, b')} 
+				\infer2{TC(a * b) = (C_1 \wedge C_2 \wedge \{v_{aux} = a' * b'\}, v_{aux})}
+			\end{prooftree} 
+		} \\ \hline
+		
+		\texttt{e = a $/$ b} & 
+		\makecell[c]{ 
+			\begin{prooftree} 
+				\hypo{TC(a) = (C_1, a')} 
+				\hypo{TC(b) = (C_2, b')} 
+				\hypo{q', r' \text{ son señales intermedias}} 
+				\infer3{TC(a / b) = (C_1 \wedge C_2 \wedge \left\{ 
+					\begin{array}{l} 
+						b' \neq 0, \\ 
+						0 \leq r' < |b'|, \\ 
+						v_{aux} = b' \cdot q',\\ 
+						a' === v_{aux} + r'
+					\end{array} 
+					\right\}, 
+					q')}
+			\end{prooftree} 
+		} \\ \hline
+		
+		\texttt{e = a \% b} & 
+		\makecell[c]{ 
+			\begin{prooftree} 
+				\hypo{TC(a) = (C_1, a')} 
+				\hypo{TC(b) = (C_2, b')} 
+				\hypo{q', r' \text{ son señales intermedias}} 
+				\infer3{TC(a \% b) = (C_1 \wedge C_2 \wedge \left\{ 
+					\begin{array}{l} 
+						b' \neq 0, \\ 
+						0 \leq r' < |b'|, \\ 
+						v_{aux} = b' \cdot q',\\ 
+						a' === v_{aux} + r'
+					\end{array} 
+					\right\}, 
+					r')}
+			\end{prooftree} 
+		} \\ \hline
+	\end{longtable}
 	
 	\noindent Los operadores de \textbf{suma} y \textbf{resta} son los más sencillos de implementar debido a su naturaleza, ya que ninguna de estas operaciones corre el riesgo de generar declaraciones que incumplan el formato R1CS. Por tanto, no se requieren señales intermedias para asegurar el cumplimiento de los estándares algebraicos.
 	
@@ -1631,30 +1750,38 @@ placement=H
 	\vspace{0.3cm}
 	\noindent Así, al obligar a que la expresión sea igual a cero, garantizamos que el cociente $q$ y el resto $r$ tomen los valores exactos que satisfacen el teorema dentro del sistema.
 
-	\vspace{0.3cm}
-	\noindent Para ilustrar el funcionamiento de la división, supongamos el caso de $a = 15$ y $b = 3$. La lógica implementada para este operador debe seguir los siguientes pasos:
-		
-	\begin{mi_ejemplo}
-		\caption{Aplicación del teorema de la división}
+	
+	\begin{ejemplo}
 		\label{ex:teorema-division}
+		\vspace{0.2cm} % Espacio inicial para separar del título del ejemplo
 		
-		\begin{enumerate}
-			\item \textbf{Comprobación entera positiva:} Primeramente, se verifica que $a$ y $b$ sean números enteros positivos. Esta comprobación es fundamental para evitar errores y se realiza mediante la función \hyperref[cod:num2bits]{\textit{Num2Bits()}}. En este caso, $15 > 0$ y $3 > 0$, por lo que la condición se cumple.
+		\vspace{0.3cm}
+		\noindent 
+		Para ilustrar el funcionamiento de la división, supongamos el caso de $a = 15$ y $b = 3$. La lógica implementada para este operador debe seguir los siguientes pasos:
+		
+		\begin{enumerate}[label=\textbf{\arabic*.}, leftmargin=*, itemsep=1.2em, parsep=0.5em]
 			
-			\item \textbf{Validación del divisor:} Se verifica que $b \neq 0$ para asegurar que la operación esté definida. Al ser $b = 3$, el circuito permite continuar con la ejecución.
 			
-			\item \textbf{Restricción del resto:} Se impone la condición $r < b$. Es importante observar que no es necesario verificar $0 \leq r$ ya que $r$ es una señal del circuito y por tanto es un entero positivo naturalmente, asumiendo su positividad. Para $q = 5$ y $r = 0$, comprobamos que $0 < 3$.
+			\item \textbf{Comprobación entera positiva} \\
+			Primeramente, se verifica que $a$ y $b$ sean números enteros positivos mediante la función \hyperref[cod:num2bits]{\textit{Num2Bits()}}. Esta comprobación es fundamental para evitar errores de desbordamiento en el campo finito. En este caso, $15 > 0$ y $3 > 0$, cumpliendo la condición.
 			
-			\item \textbf{Ecuación de la división:} Una vez comprobados los puntos anteriores, se establece la restricción más importante, que es la que nos permite conocer el resultado de la división:
+			\item \textbf{Validación del divisor} \\
+			Se verifica que $b \neq 0$ para asegurar que la operación esté definida. Al ser $b = 3$, el circuito permite continuar con la ejecución sin lanzar una excepción de división por cero.
+			
+			\item \textbf{Restricción del resto} \\
+			Se impone la condición $r < b$. Es importante observar que no es necesario verificar explícitamente $0 \leq r$, ya que en Circom las señales se asumen positivas por defecto dentro del rango del módulo. Para $q = 5$ y $r = 0$, comprobamos que $0 < 3$.
+			
+			\item \textbf{Ecuación de la división} \\
+			Finalmente, se establece la restricción que define el comportamiento del circuito:
 			\begin{equation*}
 				a = b \cdot q + r
 			\end{equation*}
-			Las señales $q$ (cociente) y $r$ (resto) son forzadas a tomar los únicos valores que satisfacen las restricciones impuestas. En este ejemplo, el sistema de restricciones solo admite $q = 5$ y $r = 0$.
+			Las señales $q$ (cociente) e $r$ (resto) son forzadas a tomar los únicos valores que satisfacen el sistema. En este ejemplo, las restricciones solo admiten la solución $q = 5$ y $r = 0$.
 		\end{enumerate}
 		
-		
+		\vspace{0.3cm}
 		\hspace*{\fill} $\blacksquare$
-	\end{mi_ejemplo}
+	\end{ejemplo}
 	
 	
 	\vspace{0.3cm}
@@ -1699,7 +1826,7 @@ placement=H
 		\hspace*{\fill} $\blacksquare$
 	\end{mi_ejemplo}
 	
-	\noindent Las funciones \texttt{IsZero()} y \texttt{LessThan()} pertenecen a la librería \texttt{circomlib} \cite{circomlib_comparators}.
+	\noindent Las funciones \texttt{IsZero()} y \texttt{LessThan()} se utilizan para comprobar si un valor es cero y para comparar si un valor es menor que otro, respectivamente. Ambos componentes pertenecen a \texttt{circomlib} \cite{circomlib_comparators}, una de las librerías de componentes reutilizables más extensas y utilizadas en la comunidad.
 	
 	\vspace{0.3cm}
 	\noindent Para conseguir esta lógica en Circom sin hacer uso de la nueva funcionalidad puede apreciarse que requiere de un diseño aritmético complejo, ya que habría que establecer cada una de las condiciones a mano para simular este comportamiento.
@@ -1735,90 +1862,7 @@ placement=H
 	
 	\noindent Las funciones \texttt{IsZero()} y \texttt{LessThan()} pertenecen a la librería \texttt{circomlib} \cite{circomlib_comparators}.
 	
-	\newpage
 	
-	\vspace{0.6cm}
-	\noindent \textbf{Traducción de operadores}
-	\vspace{0.2cm}
-	
-	\renewcommand{\arraystretch}{5}
-	\begin{tabular}{|c|>{\centering\arraybackslash}m{13cm}|}
-		\hline
-		\textbf{Operación} & \textbf{Deducción} \\
-		\hline
-		
-		\texttt{e = a $+$ b} & 
-		\makecell[c]{ 
-			$$ 
-			\begin{prooftree} 
-				\hypo{TC(a) = (C_1, a_1')} 
-				\hypo {TC(b) = (C_2, b_2')} 
-				\infer2{TC(a + b) = (C_1 \wedge C_2,  a' + b')}
-			\end{prooftree} 
-			$$} \\
-		
-		\hline
-		
-		\texttt{e= a $-$ b} & 
-		\makecell[c]{ 
-			$$ 
-			\begin{prooftree} 
-				\hypo{TC(a) = (C_1, a')} 
-				\hypo {TC(b) = (C_2, b')} 
-				\infer2{TC(a + b) = (C_1 \wedge C_2, a' - b')}
-			\end{prooftree} 
-			$$} \\
-		\hline
-		
-		\texttt{e= a $*$ b} & 
-		\makecell[c]{ 
-			$$ 
-			\begin{prooftree} 
-				\hypo{TC(a) = (C_1, a')} 
-				\hypo {TC(b) = (C_2, b')} 
-				\infer2{TC(a + b) = (C_1 \wedge C_2 \wedge \{v_{aux} = a' * b'\}, v_{aux})}
-			\end{prooftree} 
-			$$} \\
-		\hline
-		
-		\texttt{e = a $/$ b} & 
-		\makecell[c]{ 
-			\begin{prooftree} 
-				\hypo{TC(a) = (C_1, a')} 
-				\hypo{TC(b) = (C_2, b')} 
-				\hypo{q', r' \text{ son señales intermedias}} 
-				\infer3{TC(a / b) = (C_1 \wedge C_2 \wedge \left\{ 
-					\begin{array}{l} 
-						b' \neq 0, \\
-						0 \leq r' < |b'|, \\
-						v_{aux} = b' \cdot q',\\
-						a' === v_{aux} + r'
-					\end{array} 
-					\right\}, 
-					q')}
-			\end{prooftree} 
-		} \\
-		\hline
-		
-		\texttt{e = a \% b} & 
-		\makecell[c]{ 
-			\begin{prooftree} 
-				\hypo{TC(a) = (C_1, a')} 
-				\hypo{TC(b) = (C_2, b')} 
-				\hypo{q', r' \text{ son señales intermedias}} 
-				\infer3{TC(a / b) = (C_1 \wedge C_2 \wedge \left\{ 
-					\begin{array}{l} 
-						b' \neq 0, \\
-						0 \leq r' < |b'|, \\
-						v_{aux} = b' \cdot q',\\
-						a' === v_{aux} + r'
-					\end{array} 
-					\right\}, 
-					r')}
-			\end{prooftree} 
-		} \\
-		\hline
-	\end{tabular}
 	
 	
 	\subsubsection{Operadores Lógicos}
@@ -1878,9 +1922,6 @@ placement=H
 		
 		
 		
-	
-	
-	\newpage
 	
 	\vspace{0.6cm}
 	\noindent \textbf{Traducción de operadores}
@@ -2029,7 +2070,6 @@ placement=H
 	\end{enumerate}
 	
 	
-	\newpage
 	
 	\noindent La función \textit{BinaryOr(n)} recibe dos números decimales ($e'_1$ y $e'_2$), de forma que:
 	
@@ -2039,334 +2079,13 @@ placement=H
 		\item Una vez tenemos los números binarios transformados, podemos aplicar la operación \texttt{OR} entre cada par de bits: $result[i] = e'[i]_{1_{bin}} + e'_[i]_{2_{bin}} - e'[i]_{1_{bin}} \cdot e'[i]_{2_{bin}}$, donde $i \in [0,n)$
 		\item Una vez aplicada la operación \texttt{OR}, \texttt{result} es transformado a decimal con la función $Bits2Num()$, la cuál de forma análoga a $Num2Bits()$ transforma el número binario a decimal.
 	\end{enumerate}
+	
+	\newpage
 
 	\subsubsection{Operadores de Comparación}
-		\noindent \textbf{Tratamiento de número negativos: Num2Bits()}
-		\vspace{0.2cm}
+		\noindent Tras establecer la base de los operadores aritméticos y lógicos, es fundamental definir la lógica correspondiente a los operadores de comparación. En la siguiente tabla se formalizan las reglas de traducción para los operadores relacionales y de igualdad:
 		
-		\label{sssec:tra:num_negativos}
-		
-		\noindent Debido a la forma en la que Circom gestiona los valores numéricos, los números negativos requieren un tratamiento especial (véase el \hyperref[ap:num_negativos]{\textbf{Capítulo \ref{ap:num_negativos}})}.
-		
-		\vspace{0.2cm}
-		\noindent Para solventar este problema, recurrimos a las transformación de los números a comparar de sistema decimal a binario. Esta conversión es estrictamente necesaria para asegurar que los números correspondientes no exceden el rango especificado.
-		
-		\vspace{0.2cm}
-		\noindent La función \textit{Num2Bits(n)} consigue cumplir esta precondición ya que su funcionamiento radica en la transformación numérica de decimal a binario, reconstruyendo el número decimal entrante durante la misma. 
-		
-		\vspace{0.2cm}
-		\noindent De esta forma, al terminar la transformación y antes de salir de la función, se realiza una comprobación para verificar si el número decimal entrante y el número decimal reconstruido durante la transformación son iguales.
-		
-		\vspace{0.2cm}
-		
-		\noindent Debido al excesivo tamaño del número entrante, nunca se cumplirá la restricción de que ambos sean iguales debido a que el tamaño máximo fijado (N) es siempre menor que el tamaño del número negativo, desencadenando que la reconstrucción no realizará un bucle de tamaño mayor al número N fijado.
-		
-		\vspace{0.2cm}
-			
-		\noindent Por tanto, no habrá un bucle que reconstruya un número decimal negativo ya que nunca se realizan las iteraciones necesarias, forzando de esta forma a que solo los números positivos cumplan dicha condición.
-			
-		\vspace{0.3cm}
-		
-		\noindent Intuición del funcionamiento de \textit{Num2Bits(n)} con un número negativo entrante:
-		
-		
-		\begin{enumerate}
-			\item El número negativo se interpreta como el módulo del campo.
-			
-			\item Éste se interpretará como un número superior a \(2^n - 1\), saliéndose fuera del rango [0,\(2^n-1\)], por tanto la restricción \textit{lc1 === in} de la función nunca se cumplirá en este caso y la prueba no se generará.
-		\end{enumerate}
-		
-		\vspace{0.2cm}
-		\noindent En conclusión, \textit{Num2Bits()} garantiza el uso de número positivos dentro del rango mencionado de manera implícita.
-		
-		\vspace{0.2cm}
-		\noindent \textit{Observación: Gracias a la constraint lc1 === in (fuerza a que la entrada cumpla el rango \([0,2^n -1]\)), podemos evitar el uso de número negativos, ya que estos no cumplirán tal restricción.}
-		
-		
-		
-		
-		\vspace{0.2cm}
-		\noindent Un ejemplo para ilustrar el comportamiento de la función en caso de número negativo es el siguiente:
-		
-		\begin{mi_ejemplo}
-			\caption{\textcolor{black}{Comportamiento Num2Bits()}}
-			\label{ex:num2bits}
-			\begin{enumerate}
-				
-				\item Partimos de un número negativo, por ejemplo -3. Este valor, al trabajar sobre un cuerpo finito se codifica como p$-$3.
-				\item La función ejecuta un bucle de n iteraciones, en el que en cada iteración se aplica un desplazamiento a la derecha sobre \texttt{in} en i posiciones, extrayendo el bit menos significativo mediante el and binario, aplicando AND 1. De esta forma, conseguimos que \texttt{out[i]} adquiera la conversión de decimal a binario. 
-				
-				\item Es imprescindible añadir explícitamente la restricción \texttt{out[i] * (out[i] - 1) === 0}. Esta ecuación sí se integra en el sistema de restricciones, asegurando que la señal solo pueda adoptar los valores lógicos 0 o 1. Sin embargo, \texttt{out[i]} \texttt{<-} \texttt{-}\texttt{ (in}$\gg$\texttt{i) \& 1} solo asigna y no es añadida al sistema de ecuaciones.
-				
-				\item Una vez realizadas la asignación y restricción de \texttt{out[i]}, se produce la reconstrucción del valor de entrada, este caso el -3. Es en este punto donde la funcion \textit{Num2Bits()} nos permite determinar si el número es negativo. 
-				
-				\item Como hemos mencionado, al trabajar con un cuerpo finito $\mathbb{F}_p$, el valor $-3$ se representa como $p-3$, un número positivo extremadamente grande que requiere cerca de 254 bits para ser expresado. Dado que el tamaño máximo permitido es 253, el bucle de reconstrucción solo sumará los pesos de a lo sumo 253 bits. 
-				
-				\item Como consecuencia, el resultado final de la reconstrucción en \texttt{lc1} será un valor que nunca igualará al valor de entrada \texttt{in} ($p-3$). Al no cumplirse la restricción \texttt{lc1 === in}, el circuito resultará insatisfacible, detectando así que el número original no es representable con $n$ bits y, por tanto, se comporta como un valor fuera de rango o "negativo".
-			\end{enumerate}
-			
-			
-			\hspace*{\fill} $\blacksquare$
-		\end{mi_ejemplo}
-		
-		\begin{codigo}
-			\textbf{\textit{Num2Bits(n):}}	
-
-			\begin{lstlisting}[language=Circom]
-				template Num2Bits(n){
-					signal input in;
-					signal output out[n];
-					var lc1=0; // Reconstruye el numero decimal a convertir para la constraint
-					
-					var e2=1; // Evitar la potencia
-					for (var i = 0; i<n; i++) {
-						out[i] <-- (in >> i) & 1; // Contruimos el numero en binario
-						out[i] * (out[i] -1 ) === 0;
-						lc1 += out[i] * e2;
-						e2 = e2+e2;
-					}
-					
-					lc1 === in; // Constraint mencionada anteriormente
-				}
-			\end{lstlisting}
-			
-			\caption{Función Num2Bits(n)}
-			\label{cod:num2bits}
-		\end{codigo}
-		
-		
-		\noindent \textcolor{black}{Este bloque de código corresponde a la plantilla \textit{Num2Bits()} de la librería \texttt{circomlib} \cite{iden3_circomlib_bitify}.}
-		
-		\vspace{0.25cm}
-		\noindent \textcolor{black}{Esta función ha sido el modelo de referencia para implementar la conversión decimal$-$binaria dentro de la nueva funcionalidad del compilador desarrollado.}
-		\vspace{0.5cm}
-		
-				
-		\vspace{0.6cm}
-		\noindent \textbf{Tamaño de los números comparados}
-		\vspace{0.2cm}
-		
-		\label{sssec:tamaño-ops}
-		
-		\noindent El tamaño de los números comparados es un factor importante, ya que dicho tamaño puede ser por un lado conocido e igual, mientras que por otro lado puede ser desconocido o de diferentes tamaños.
-		
-		\vspace{0.2cm}	
-		\noindent \textcolor{black}{Un tamaño es desconocido cuando una señal no tiene una restricción de bits predefinida, existiendo únicamente como un valor dentro del rango del cuerpo finito $\mathbb{F}_p$ ([0,$p-1$]). }
-		
-		\vspace{0.2cm}	
-		\noindent Para resolver este problema, vamos a definir un complemento opcional por cada operador de comparación existente.
-		
-		\vspace{0.2cm}	
-		\noindent Dicho complemento consiste en restringir el tamaño de los números comparados a un tamaño especificado por el usuario. Si el usuario no hace uso de este complemento opcional para la especificación del tamaño de los números a comparar, se utilizará el tamaño máximo por defecto, correspondiente a 253.
-		
-		\vspace{0.2cm}	
-		
-		\begin{definicion}[Complemento opcional de tamaño] Vamos a definir el operador: 
-			
-			\noindent \textbf{Operador \textit{op}}
-			\begin{itemize}
-				\item \textit{op}: Comparaciones de cuyos números se conoce el tamaño y además tienen el mismo tamaño.
-				\item La ausencia de dicho componente se traduce a la asunción del 253 como el tamaño fijo de ambos números comparados, el mayor tamaño posible posible.
-			\end{itemize}
-			
-			\noindent \textbf{Operador $op\_(n)$}
-			\begin{itemize}
-				\item $op\_{n}$: Comparaciones de cuyos números no se conoce el tamaño y/o no tiene el mismo tamaño. De esta manera, n indica el tamaño fijado para ambos números comparados.
-			\end{itemize}
-			
-			\label{ex:complemento-opc-tamano}
-		\end{definicion}
-		
-		\vspace{0.2cm}	
-		\noindent Este complemento aplica para todos los operadores de comparación, siguiendo la misma estructura que la del \hyperref[ex:complemento-opc-tamano]{\textit{Ejemplo  \ref{ex:complemento-opc-tamano}}};
-		
-		\vspace{0.2cm}	
-		\noindent Un caso de uso se presenta a continuación para clarificar la naturaleza de dicho complemento, así como su aplicación.
-		
-		\begin{mi_ejemplo}[H]
-					\begin{lstlisting}[language=Circom]
-					template Num2Bits(n) autocomplete{
-						signal input a;
-						signal output b;
-						
-						if(a >_(2) b){
-							b <-- 2;
-						}
-						else if(a ==_(2) b){
-							b <-- 1;
-						}
-						else{
-							b<--0;
-						}
-					}
-				\end{lstlisting}
-			
-				\caption{Caso de uso del complemento opcional de tamaño}
-				\label{ex:uso-complemento-opc}
-				
-				\hspace*{\fill} $\blacksquare$
-		\end{mi_ejemplo}
-		
-		
-		\vspace{0.2cm}	
-		\noindent \textcolor{black}{Siguiendo el ejemplo anterior, la introducción del operador \textit{op\_(n)} permite limitar el tamaño en bits de los operadores \texttt{>} y \texttt{==}, restringiendo así el tamaño de las señales \texttt{a} y \texttt{b} a n=2.}
-		
-		\vspace{0.2cm}	
-		\noindent \textcolor{black}{Este operador resulta de gran utilidad cuando el programador conoce previamente el tamaño de las señales. Si no estuviese disponible, el sistema utilizaría por defecto el tamaño máximo de 253 bits.}
-		
-		\vspace{0.2cm}	
-		\noindent Aunque el usuario conociese que las señales con las que va a trabajar no exceden un tamaño de 2, se generarían 251 señales innecesarias para este circuito, efectando considerablemente a su eficiencia.
-		 
-		\vspace{0.2cm}	
-		\noindent \textcolor{black}{Por ello, si el usuario es conocedor del tamaño, es una herramienta que reduce considerablemente el número de restricciones generadas.}
-	
-		\vspace{0.6cm}
-		\noindent \textbf{Operadores == y !=}
-		\vspace{0.2cm}
-		
-		\label{sss:ops-eq-neq}
-		\vspace{0.2cm}
-		\noindent Los operadores $== \ y \ !=$ plantean una estrategia de implementación basada en dos restricciones claves:
-		
-		\begin{itemize}
-			\item \texttt{(in1-in2) $*$ equal\_signal = 0}
-			\item \texttt{1 $-$ ((in1$-$in2) $*$ inv\_signal) = equal\_signal}
-		\end{itemize}
-		
-		\vspace{0.2cm}
-		\noindent Estas dos ecuaciones son imprescindibles, ya que las usaremos para determinar si \texttt{in1 == in2} o \texttt{in1}$\neq$\texttt{in2}, utilizando  \texttt{equal\_signal} como indicador.
-		
-		% No se si aqui meter referencia al capitulo de circom por lo de la señal
-		\vspace{0.2cm}
-		\noindent La señal  \texttt{equal\_signal} será 1 cuando \texttt{in1 == in2}, o será 0 cuando \texttt{in1}$\neq$\texttt{in2}. Este comportamiento se consigue por medio de las dos ecuaciones descritas anteriormente.
-		
-		\vspace{0.2cm}
-		\noindent \texttt{(in1-in2) $*$ equal\_signal = 0} es imprescindible para obtener que  \texttt{equal\_signal} sea 0 cuando in1 e in2 sean diferentes. Esto se debe a que si in1 es distinto a in2, entonces el resultado de su diferencia será distinto a 0. Por tanto, la ecuación quedaría así:
-		
-		\begin{equation}
-			\begin{aligned}
-				&num \cdot equal\_signal = 0 \\
-				&num \in \mathbb{R} \setminus \{0\}
-			\end{aligned}
-		\end{equation}
-		
-		\vspace{0.2cm}
-		\noindent De esta forma, al ser num un valor distinto de cero, la única forma de que se satisfaga la ecuación es forzar a que  \texttt{equal\_signal} sea obligatoriamente 0. De este modo, la señal será igual a 0, indicando que in1 e in2 son diferentes.
-		
-		\vspace{0.2cm}
-		\noindent \textit{Observación}: Si in1 e in2 fuesen iguales, entonces su diferencia sería igual a 0, por tanto  \texttt{equal\_aux} podría tomar cualquier valor e \texttt{(in1-in2) $*$ equal\_signal = 0} seguiría satisfaciéndose:
-		
-		\begin{equation}
-			\begin{aligned}
-				&0 \cdot equal\_signal = 0 \\
-				&equal\_signal \in \mathbb{R}
-			\end{aligned}
-		\end{equation}
-		
-		\vspace{0.2cm}
-		\noindent Por ello, es importante la segunda ecuación, ya que además de que \texttt{equal\_signal} puede ser cualquier valor, podría ser 0 también, indicando erróneamente que in1 e in2 son diferentes.
-		
-		\vspace{0.2cm}
-		\noindent Esta segunda ecuación, \texttt{1 $-$ ((in1$-$in2) $*$ inv\_signal) = equal\_signal}, además de asegurar que \texttt{equal\_signal} sea distinta de cero, garantiza que el resultado sea estrictamente 1 siempre que \texttt{in1} e \texttt{in2} sean idénticos.
-		
-		\vspace{0.2cm}
-		\noindent Esto se consigue mediante el uso de una segunda señal, \texttt{inv\_signal}, la cual garantiza que \texttt{equal\_signal} tome el valor 1 cuando in1 e in2 son iguales. Dado que en este escenario la diferencia entre ambas entradas es nula, cualquier valor de \texttt{inv\_signal} $\in \mathbb{R}$ resultará en un producto igual a cero, derivando en el siguiente comportamiento:
-		
-		\begin{equation}
-			\begin{aligned}
-				1 - ((in1 - in2) \cdot inv\_signal) &= equal\_signal \\
-				1 - (0 \cdot inv\_signal) &= equal\_signal \\
-				1 - 0 &= equal\_signal \\
-				1 &= equal\_signal
-			\end{aligned}
-		\end{equation}
-		
-		\vspace{0.2cm}
-		\noindent Como puede observarse, aunque en la primera ecuación para in1 == in2 la señal equal\_signal puede tener cualquier valor, con esta segunda ecuación forzamos a que su valor sea 0, en caso de que in1!=in2, o bien 1, si in1==in2.
-		
-		\vspace{0.2cm}
-		\noindent En caso de que $in1 \neq in2$, entonces \texttt{equal\_signal} sería 0, obteniendo un comportamiento diferente:
-		
-		\begin{equation}
-			\begin{aligned}
-				1 - ((in1 - in2) \cdot inv\_signal) &= equal\_signal \\
-				1 - ((in1 - in2) \cdot inv\_signal) &= 0 \\
-				\text{Como } (in1 - in2) &\in \mathbb{R} \setminus \{0\} \\
-				inv\_signal &= \frac{1}{in1 - in2} \\
-				1 - 1 &= 0 \\
-				0 &= 0
-			\end{aligned}
-		\end{equation}
-		
-		\vspace{0.2cm}
-		\noindent Gracias a la señal \texttt{inv\_signal}, incluso cuando ambas entradas son diferentes, la restricción puede satisfacerse ajustando el valor de la señal al inverso de la diferencia, para así obtener como producto de estas el 1.
-		
-		\vspace{0.6cm}
-		\noindent \textbf{Operadores $<, \leq, > \ y \ \geq$}
-		\vspace{0.2cm}
-		
-		\label{sssec:less-greater}
-		
-		\noindent Para la implementación de dichos operadores únicamente es necesaria la función \textit{SecureLessThanEq(n)}.
-		
-		\vspace{0.2cm}
-	
-		\noindent El motivo reside en que una comparación entre una variable a y b, con \textit{SecureLessThanEq(n)} podemos conocer si a <= b o bien a > b en caso contrario (\textit{GreaterThan()}). 
-		
-		\vspace{0.2cm}
-		
-		\noindent Siguiendo esta lógica, podemos usar la misma función invirtiendo el orden de los parámetros, consiguiendo de esta manera los operadores \textit{GreatherThanEq()} y \textit{LessThan()}  si b$\leq$a o b>a.
-
-		\vspace{0.2cm}
-		
-		\noindent La implementación de \textit{SecureLessThanEq(n)}, aparte de utilizar la función \textit{Num2Bits()} para cada par de variables a comparar, aplica Complemento a 2.
-		
-		\vspace{0.2cm}
-		
-		\noindent Es decir, dadas las variables A y B, previamente transformadas a bits, aplicamos (NOT A) + B + 1. La inversión de los bits de A y la suma tanto de B como de 1 es equivalente a la operación $B-A$.
-		
-		\vspace{0.2cm}
-		
-		\noindent Por tanto, cuando el minuendo es mayor o igual que el sustraendo, la suma de los bits junto con el complemento a dos produce un acarreo (overflow) en la posición n (el bit extra, bit más significativo). Por otro lado, si el minuendo es menor que el sustraendo, no se produce dicho overflow.
-		
-		\vspace{0.2cm}
-		
-		\noindent De esta forma sabemos que si el bit de acarreo es 1, podemos concluir que B $\geq$ A, ya que al hacer la suma con Complemento a 2, tenemos que:
-		\begin{equation}
-			\begin{aligned}
-				(\text{NOT } A) + B + 1 \\
-				[(2^n - 1) - A] + B + 1 \\
-				2^n - 1 - A + B + 1 \\
-			    2^n - A + B \\
-				B + (2^n - A)
-			\end{aligned}
-		\end{equation}
-		\vspace{0.2cm}
-		
-		\noindent Como podemos ver en las ecuaciones anteriores, debido al requerimiento de $2^n-1$ por parte de NOT A, es vital el +1 de $(NOT \ A)+B+1$. De lo contrario el resultado de la resta estaría desplazado por una unidad al no eliminar ese -1 de NOT A.
-		
-		\vspace{0.2cm}
-		
-		\noindent Partiendo de $2^n + B - A$, si B es mayor o igual que A, entonces (B-A) $\geq$ 0. De este modo, tendríamos que $2^n + (num. positivo) \geq 2^n$, concluyendo que si B $\geq$ A obtendríamos siempre un resultado mayor o igual a $2^n$, excediendo siempre los n bits y como consecuencia, produciendo un overflow.
-		
-		\vspace{0.2cm}
-		
-		\noindent Siguiendo la misma lógica, si el bit de acarreo es 0 significa que A es mayor que B ya que B-A < 0, y de esta forma obtendríamos $2^n + (num. negativo) < 2^n$, concluyendo así que no podría producirse un overflow.
-		
-		
-		\vspace{0.2cm}	
-		\noindent Con está pequeña modificación, al usar para ambos número a comparar la función \textit{Num2Bits()} nos aseguramos de que se cumpla la restricción de ser número enteros positivos dentro del rango.
-		
-		\newpage
-		
-		\vspace{0.6cm}
-		\noindent \textbf{Traducción de operadores}
-		\vspace{0.2cm}
-		
-		\noindent A continuación, definiremos para cada operador su inferencia.
-		
-		\vspace{0.2cm}
-		
+		\vspace{0.5cm} 
 		\setlength{\LTpre}{0pt} 
 		\setlength{\LTpost}{0pt}
 		\renewcommand{\arraystretch}{3}
@@ -2575,7 +2294,7 @@ placement=H
 						TC(e_1 \leq\_(n)  e_2) =
 						\left(
 						C_1 \wedge C_2 \wedge
-							\left\{ 
+						\left\{ 
 						\begin{array}{l}
 							\{SLTEq(n).in1 = e_1', \\
 							SLTEq(n).in2 = e_2', \\
@@ -2603,7 +2322,7 @@ placement=H
 						TC(e_1 > e_2) =
 						\left(
 						C_1 \wedge C_2 \wedge
-							\left\{ 
+						\left\{ 
 						\begin{array}{l}
 							\{SLTEq(253).in1 = e_1', \\
 							SLTEq(253).in2 = e_2', \\
@@ -2631,7 +2350,7 @@ placement=H
 						TC(e_1 >\_(n)  e_2) =
 						\left(
 						C_1 \wedge C_2 \wedge
-							\left\{ 
+						\left\{ 
 						\begin{array}{l}
 							\{SLTEq(n).in1 = e_1', \\
 							SLTEq(n).in2 = e_2', \\
@@ -2659,7 +2378,7 @@ placement=H
 						TC(e_1 \geq e_2) =
 						\left(
 						C_1 \wedge C_2 \wedge
-							\left\{ 
+						\left\{ 
 						\begin{array}{l}
 							\{SLTEq(253).in1 = e_2', \\
 							SLTEq(253).in2 = e_1', \\
@@ -2687,7 +2406,7 @@ placement=H
 						TC(e_1 \geq\_(n) e_2) =
 						\left(
 						C_1 \wedge C_2 \wedge
-							\left\{ 
+						\left\{ 
 						\begin{array}{l}
 							\{SLTEq(n).in1 = e_2', \\
 							SLTEq(n).in2 = e_1', \\
@@ -2705,14 +2424,335 @@ placement=H
 			\hline 
 		\end{longtable} 
 		
-		\vspace{0.2cm} 
+		\vspace{0.4cm} 
 		\noindent Las siglas \textit{SLTEq} denotan \textit{SecureLessThanEq()}, función que simula el comportamiento explicado en la \hyperref[sssec:less-greater]{\textbf{Operadores $<, \leq, > \ y \ \geq$}} para dos entradas.
-	
+		
 		\vspace{0.2cm} 
 		\noindent \textit{Observación}: Es importante darse cuanta que podemos hacer uso de la misma función para los operadores $<, \leq, > \ y \ \geq$ explotando su carácter reflexivo. Para ello, notesé que las llamadas de los operadores $< \ y \geq $ se invierten.
 		
 		\vspace{0.2cm} 
 		\noindent Por otro lado, EQI denota las siglas \textit{Equality Indicator}, haciendo referencia a una función encargada de imitar al comportamiento explicado en el apartado de  \hyperref[sss:ops-eq-neq]{\textbf{Operadores == y !=}} para dos entradas.
+		
+		\newpage
+	
+		\noindent \textbf{Tratamiento de número negativos: Num2Bits()}
+		\vspace{0.2cm}
+		
+		\label{sssec:tra:num_negativos}
+		
+		\noindent Debido a la forma en la que Circom gestiona los valores numéricos, los números negativos requieren un tratamiento especial (véase el \hyperref[ap:num_negativos]{\textbf{Capítulo \ref{ap:num_negativos}})}.
+		
+		\vspace{0.2cm}
+		\noindent Para solventar este problema, recurrimos a las transformación de los números a comparar de sistema decimal a binario. Esta conversión es estrictamente necesaria para asegurar que los números correspondientes no exceden el rango especificado.
+		
+		\vspace{0.2cm}
+		\noindent La función \textit{Num2Bits(n)} consigue cumplir esta precondición ya que su funcionamiento radica en la transformación numérica de decimal a binario, reconstruyendo el número decimal entrante durante la misma.
+		
+		\vspace{0.3cm}
+		\begin{codigo}
+			\textbf{\textit{Num2Bits(n):}}	
+			
+			\begin{lstlisting}[language=Circom]
+				template Num2Bits(n){
+					signal input in;
+					signal output out[n];
+					var lc1=0; // Reconstruye el numero decimal a convertir para la constraint
+					
+					var e2=1; // Evitar la potencia
+					for (var i = 0; i<n; i++) {
+						out[i] <-- (in >> i) & 1; // Contruimos el numero en binario
+						out[i] * (out[i] -1 ) === 0;
+						lc1 += out[i] * e2;
+						e2 = e2+e2;
+					}
+					
+					lc1 === in; // Constraint permite distinguir entre num.positivo o negativo
+				}
+			\end{lstlisting}
+			
+			\caption{Función Num2Bits(n)}
+			\label{cod:num2bits}
+		\end{codigo}
+		
+		
+		\noindent \textcolor{black}{Este bloque de código corresponde a la plantilla \textit{Num2Bits()} de la librería \texttt{circomlib} \cite{iden3_circomlib_bitify}.} Esta función ha sido el modelo de referencia para implementar la conversión decimal$-$binaria dentro de la nueva funcionalidad del compilador desarrollado.
+		
+		
+		\vspace{0.6cm}
+		\noindent De esta forma, al terminar la transformación y antes de salir de la función, se realiza una comprobación para verificar si el número decimal entrante y el número decimal reconstruido son iguales.\vspace{0.2cm}
+		
+		\vspace{0.2cm}
+		\noindent Debido al excesivo tamaño del número negativo en el campo finito, esta restricción de igualdad nunca se cumplirá. Como el número de bits fijado ($n$) es mucho menor que el tamaño real del número negativo, la reconstrucción solo recupera una fracción del valor, resultando en un número decimal distinto al original.
+		
+		\vspace{0.2cm}
+		\noindent Por tanto, no habrá un bucle que reconstruya un número decimal negativo ya que nunca se realizan las iteraciones necesarias, forzando de esta forma a que solo los números positivos cumplan dicha condición.
+			
+		\vspace{0.3cm}
+		
+		\noindent Intuición del funcionamiento de \textit{Num2Bits(n)} con un número negativo entrante:
+		
+		
+		\begin{enumerate}
+			\item El número negativo se interpreta como el módulo del campo.
+			
+			\item Éste se interpretará como un número superior a \(2^n - 1\), saliéndose fuera del rango [0,\(2^n-1\)], por tanto la restricción \textit{lc1 === in} de la función nunca se cumplirá en este caso y la prueba no se generará.
+		\end{enumerate}
+		
+		\vspace{0.2cm}
+		\noindent En conclusión, \textit{Num2Bits()} garantiza el uso de número positivos dentro del rango mencionado de manera implícita.
+		
+		\vspace{0.2cm}
+		\noindent \textit{Observación: Gracias a la constraint lc1 === in (fuerza a que la entrada cumpla el rango \([0,2^n -1]\)), podemos evitar el uso de número negativos, ya que estos no cumplirán tal restricción.}
+		
+		
+		
+		
+		\vspace{0.2cm}
+		\noindent Un ejemplo para ilustrar el comportamiento de la función en caso de número negativo es el siguiente:
+		
+		\begin{mi_ejemplo}
+			\caption{\textcolor{black}{Comportamiento Num2Bits()}}
+			\label{ex:num2bits}
+			\begin{enumerate}
+				
+				\item Partimos de un número negativo, por ejemplo -3. Este valor, al trabajar sobre un cuerpo finito se codifica como p$-$3.
+				\item La función ejecuta un bucle de n iteraciones, en el que en cada iteración se aplica un desplazamiento a la derecha sobre \texttt{in} en i posiciones, extrayendo el bit menos significativo mediante el and binario, aplicando AND 1. De esta forma, conseguimos que \texttt{out[i]} adquiera la conversión de decimal a binario. 
+				
+				\item Es imprescindible añadir explícitamente la restricción \texttt{out[i] * (out[i] - 1) === 0}. Esta ecuación sí se integra en el sistema de restricciones, asegurando que la señal solo pueda adoptar los valores lógicos 0 o 1. Sin embargo, \texttt{out[i]} \texttt{<-} \texttt{-}\texttt{ (in}$\gg$\texttt{i) \& 1} solo asigna y no es añadida al sistema de ecuaciones.
+				
+				\item Una vez realizadas la asignación y restricción de \texttt{out[i]}, se produce la reconstrucción del valor de entrada, este caso el -3. Es en este punto donde la funcion \textit{Num2Bits()} nos permite determinar si el número es negativo. 
+				
+				\item Como hemos mencionado, al trabajar con un cuerpo finito $\mathbb{F}_p$, el valor $-3$ se representa como $p-3$, un número positivo extremadamente grande que requiere cerca de 254 bits para ser expresado. Dado que el tamaño máximo permitido es 253, el bucle de reconstrucción solo sumará los pesos de a lo sumo 253 bits. 
+				
+				\item Como consecuencia, el resultado final de la reconstrucción en \texttt{lc1} será un valor que nunca igualará al valor de entrada \texttt{in} ($p-3$). Al no cumplirse la restricción \texttt{lc1 === in}, el circuito resultará insatisfacible, detectando así que el número original no es representable con $n$ bits y, por tanto, se comporta como un valor fuera de rango o "negativo".
+			\end{enumerate}
+			
+			
+			\hspace*{\fill} $\blacksquare$
+		\end{mi_ejemplo}
+	
+				
+		\vspace{0.6cm}
+		\noindent \textbf{Tamaño de los números comparados}
+		\vspace{0.2cm}
+		
+		\label{sssec:tamaño-ops}
+		
+		\noindent El tamaño de los números comparados es un factor importante, ya que dicho tamaño puede ser por un lado conocido e igual, mientras que por otro lado puede ser desconocido o de diferentes tamaños.
+		
+		\vspace{0.2cm}	
+		\noindent \textcolor{black}{Un tamaño es desconocido cuando una señal no tiene una restricción de bits predefinida, existiendo únicamente como un valor dentro del rango del cuerpo finito $\mathbb{F}_p$ ([0,$p-1$]). }
+		
+		\vspace{0.2cm}	
+		\noindent Para resolver este problema, vamos a definir un complemento opcional por cada operador de comparación existente.
+		
+		\vspace{0.2cm}	
+		\noindent Dicho complemento consiste en restringir el tamaño de los números comparados a un tamaño especificado por el usuario. Si el usuario no hace uso de este complemento opcional para la especificación del tamaño de los números a comparar, se utilizará el tamaño máximo por defecto, correspondiente a 253.
+		
+		\vspace{0.2cm}	
+		
+		\begin{definicion}[Complemento opcional de tamaño] Vamos a definir el operador: 
+			
+			\noindent \textbf{Operador \textit{op}}
+			\begin{itemize}
+				\item \textit{op}: Comparaciones de cuyos números se conoce el tamaño y además tienen el mismo tamaño.
+				\item La ausencia de dicho componente se traduce a la asunción del 253 como el tamaño fijo de ambos números comparados, el mayor tamaño posible posible.
+			\end{itemize}
+			
+			\noindent \textbf{Operador $op\_(n)$}
+			\begin{itemize}
+				\item $op\_{n}$: Comparaciones de cuyos números no se conoce el tamaño y/o no tiene el mismo tamaño. De esta manera, n indica el tamaño fijado para ambos números comparados.
+			\end{itemize}
+			
+			\label{ex:complemento-opc-tamano}
+		\end{definicion}
+		
+		\vspace{0.2cm}	
+		\noindent Este complemento aplica para todos los operadores de comparación, siguiendo la misma estructura que la del \hyperref[ex:complemento-opc-tamano]{\textit{Ejemplo  \ref{ex:complemento-opc-tamano}}};
+		
+		\vspace{0.2cm}	
+		\noindent Un caso de uso se presenta a continuación para clarificar la naturaleza de dicho complemento, así como su aplicación.
+		
+		\begin{mi_ejemplo}[H]
+					\begin{lstlisting}[language=Circom]
+					template Num2Bits(n) autocomplete{
+						signal input a;
+						signal output b;
+						
+						if(a >_(2) b){
+							b <-- 2;
+						}
+						else if(a ==_(2) b){
+							b <-- 1;
+						}
+						else{
+							b<--0;
+						}
+					}
+				\end{lstlisting}
+			
+				\caption{Caso de uso del complemento opcional de tamaño}
+				\label{ex:uso-complemento-opc}
+				
+				\hspace*{\fill} $\blacksquare$
+		\end{mi_ejemplo}
+		
+		
+		\vspace{0.2cm}	
+		\noindent \textcolor{black}{Siguiendo el ejemplo anterior, la introducción del operador \textit{op\_(n)} permite limitar el tamaño en bits de los operadores \texttt{>} y \texttt{==}, restringiendo así el tamaño de las señales \texttt{a} y \texttt{b} a n=2.}
+		
+		\vspace{0.2cm}	
+		\noindent \textcolor{black}{Este operador resulta de gran utilidad cuando el programador conoce previamente el tamaño de las señales. Si no estuviese disponible, el sistema utilizaría por defecto el tamaño máximo de 253 bits.}
+		
+		\vspace{0.2cm}	
+		\noindent Aunque el usuario conociese que las señales con las que va a trabajar no exceden un tamaño de 2, se generarían 251 señales innecesarias para este circuito, efectando considerablemente a su eficiencia.
+		 
+		\vspace{0.2cm}	
+		\noindent \textcolor{black}{Por ello, si el usuario es conocedor del tamaño, es una herramienta que reduce considerablemente el número de restricciones generadas.}
+	
+		\vspace{0.6cm}
+		\noindent \textbf{Operadores == y !=}
+		\vspace{0.2cm}
+		
+		\label{sss:ops-eq-neq}
+		\vspace{0.2cm}
+		\noindent Los operadores $== \ y \ !=$ plantean una estrategia de implementación basada en dos restricciones claves:
+		
+		\begin{itemize}
+			\item \texttt{(in1-in2) $*$ equal\_signal = 0}
+			\item \texttt{1 $-$ ((in1$-$in2) $*$ inv\_signal) = equal\_signal}
+		\end{itemize}
+		
+		\vspace{0.2cm}
+		\noindent Estas dos ecuaciones son imprescindibles, ya que las usaremos para determinar si \texttt{in1 == in2} o \texttt{in1}$\neq$\texttt{in2}, utilizando  \texttt{equal\_signal} como indicador.
+		
+		% No se si aqui meter referencia al capitulo de circom por lo de la señal
+		\vspace{0.2cm}
+		\noindent La señal  \texttt{equal\_signal} será 1 cuando \texttt{in1 == in2}, o será 0 cuando \texttt{in1}$\neq$\texttt{in2}. Este comportamiento se consigue por medio de las dos ecuaciones descritas anteriormente.
+		
+		\vspace{0.2cm}
+		\noindent \texttt{(in1-in2) $*$ equal\_signal = 0} es imprescindible para obtener que  \texttt{equal\_signal} sea 0 cuando in1 e in2 sean diferentes. Esto se debe a que si in1 es distinto a in2, entonces el resultado de su diferencia será distinto a 0. Por tanto, la ecuación quedaría así:
+		
+		\begin{equation}
+			\begin{aligned}
+				&num \cdot equal\_signal = 0 \\
+				&num \in \mathbb{R} \setminus \{0\}
+			\end{aligned}
+		\end{equation}
+		
+		\vspace{0.2cm}
+		\noindent De esta forma, al ser num un valor distinto de cero, la única forma de que se satisfaga la ecuación es forzar a que  \texttt{equal\_signal} sea obligatoriamente 0. De este modo, la señal será igual a 0, indicando que in1 e in2 son diferentes.
+		
+		\vspace{0.2cm}
+		\noindent \textit{Observación}: Si in1 e in2 fuesen iguales, entonces su diferencia sería igual a 0, por tanto  \texttt{equal\_aux} podría tomar cualquier valor e \texttt{(in1-in2) $*$ equal\_signal = 0} seguiría satisfaciéndose:
+		
+		\begin{equation}
+			\begin{aligned}
+				&0 \cdot equal\_signal = 0 \\
+				&equal\_signal \in \mathbb{R}
+			\end{aligned}
+		\end{equation}
+		
+		\vspace{0.2cm}
+		\noindent Por ello, es importante la segunda ecuación, ya que además de que \texttt{equal\_signal} puede ser cualquier valor, podría ser 0 también, indicando erróneamente que in1 e in2 son diferentes.
+		
+		\vspace{0.2cm}
+		\noindent Esta segunda ecuación, \texttt{1 $-$ ((in1$-$in2) $*$ inv\_signal) = equal\_signal}, además de asegurar que \texttt{equal\_signal} sea distinta de cero, garantiza que el resultado sea estrictamente 1 siempre que \texttt{in1} e \texttt{in2} sean idénticos.
+		
+		\vspace{0.2cm}
+		\noindent Esto se consigue mediante el uso de una segunda señal, \texttt{inv\_signal}, la cual garantiza que \texttt{equal\_signal} tome el valor 1 cuando in1 e in2 son iguales. Dado que en este escenario la diferencia entre ambas entradas es nula, cualquier valor de \texttt{inv\_signal} $\in \mathbb{R}$ resultará en un producto igual a cero, derivando en el siguiente comportamiento:
+		
+		\begin{equation}
+			\begin{aligned}
+				1 - ((in1 - in2) \cdot inv\_signal) &= equal\_signal \\
+				1 - (0 \cdot inv\_signal) &= equal\_signal \\
+				1 - 0 &= equal\_signal \\
+				1 &= equal\_signal
+			\end{aligned}
+		\end{equation}
+		
+		\vspace{0.2cm}
+		\noindent Como puede observarse, aunque en la primera ecuación para in1 == in2 la señal equal\_signal puede tener cualquier valor, con esta segunda ecuación forzamos a que su valor sea 0, en caso de que in1!=in2, o bien 1, si in1==in2.
+		
+		\vspace{0.2cm}
+		\noindent En caso de que $in1 \neq in2$, entonces \texttt{equal\_signal} sería 0, obteniendo un comportamiento diferente:
+		
+		\begin{equation}
+			\begin{aligned}
+				1 - ((in1 - in2) \cdot inv\_signal) &= equal\_signal \\
+				1 - ((in1 - in2) \cdot inv\_signal) &= 0 \\
+				\text{Como } (in1 - in2) &\in \mathbb{R} \setminus \{0\} \\
+				inv\_signal &= \frac{1}{in1 - in2} \\
+				1 - 1 &= 0 \\
+				0 &= 0
+			\end{aligned}
+		\end{equation}
+		
+		\vspace{0.2cm}
+		\noindent Gracias a la señal \texttt{inv\_signal}, incluso cuando ambas entradas son diferentes, la restricción puede satisfacerse ajustando el valor de la señal al inverso de la diferencia, para así obtener como producto de estas el 1.
+		
+		\vspace{0.6cm}
+		\noindent \textbf{Operadores $<, \leq, > \ y \ \geq$}
+		\vspace{0.2cm}
+		
+		\label{sssec:less-greater}
+		
+		\noindent Para la implementación de dichos operadores únicamente es necesaria la función \textit{SecureLessThanEq(n)}.
+		
+		\vspace{0.2cm}
+	
+		\noindent El motivo reside en que una comparación entre una variable a y b, con \textit{SecureLessThanEq(n)} podemos conocer si a <= b o bien a > b en caso contrario (\textit{GreaterThan()}). 
+		
+		\vspace{0.2cm}
+		
+		\noindent Siguiendo esta lógica, podemos usar la misma función invirtiendo el orden de los parámetros, consiguiendo de esta manera los operadores \textit{GreatherThanEq()} y \textit{LessThan()}  si b$\leq$a o b>a.
+
+		\vspace{0.2cm}
+		
+		\noindent La implementación de \textit{SecureLessThanEq(n)}, aparte de utilizar la función \textit{Num2Bits()} para cada par de variables a comparar, aplica Complemento a 2.
+		
+		\begin{definicion}[Complemento a dos]
+			Dado un número entero $A$ representado en el sistema binario con $n$ bits, su complemento a dos se define como el valor obtenido al invertir todos sus bits (complemento a uno) y sumar una unidad al resultado:
+				$$C_2(A) = \bar{A} + 1 = (2^n - 1 - A) + 1 = 2^n - A$$
+				
+			\noindent Esta representación permite realizar la operación de sustracción $B - A$ mediante la suma aritmética $B + C_2(A)$ en un sistema de $n$ bits, donde el bit de acarreo resultante determina el signo del resultado.
+		\end{definicion}
+		
+		
+		\noindent La implementación de \textit{SecureLessThanEq(n)}, como hemos mencionado anteriormente, aplica este concepto. Es decir, dadas las variables $A$ y $B$, previamente transformadas a bits, aplicamos $(\text{NOT } A) + B + 1$. La inversión de los bits de $A$ y la suma tanto de $B$ como de $1$ es equivalente a la operación $B-A$.
+		
+		\vspace{0.2cm}
+		
+		\noindent Por tanto, cuando el minuendo es mayor o igual que el sustraendo, la suma de los bits junto con el complemento a dos produce un acarreo (overflow) en la posición n (el bit extra, bit más significativo). Por otro lado, si el minuendo es menor que el sustraendo, no se produce dicho overflow.
+		
+		\vspace{0.2cm}
+		
+		\noindent De esta forma sabemos que si el bit de acarreo es 1, podemos concluir que B $\geq$ A, ya que al hacer la suma con Complemento a 2, tenemos que:
+		\begin{equation}
+			\begin{aligned}
+				(\text{NOT } A) + B + 1 \\
+				[(2^n - 1) - A] + B + 1 \\
+				2^n - 1 - A + B + 1 \\
+			    2^n - A + B \\
+				B + (2^n - A)
+			\end{aligned}
+		\end{equation}
+		\vspace{0.2cm}
+		
+		\noindent Como podemos ver en las ecuaciones anteriores, debido al requerimiento de $2^n-1$ por parte de NOT A, es vital el +1 de $(NOT \ A)+B+1$. De lo contrario el resultado de la resta estaría desplazado por una unidad al no eliminar ese -1 de NOT A.
+		
+		\vspace{0.2cm}
+		
+		\noindent Partiendo de $2^n + B - A$, si B es mayor o igual que A, entonces (B-A) $\geq$ 0. De este modo, tendríamos que $2^n + (num. positivo) \geq 2^n$, concluyendo que si B $\geq$ A obtendríamos siempre un resultado mayor o igual a $2^n$, excediendo siempre los n bits y como consecuencia, produciendo un overflow.
+		
+		\vspace{0.2cm}
+		
+		\noindent Siguiendo la misma lógica, si el bit de acarreo es 0 significa que A es mayor que B ya que B-A < 0, y de esta forma obtendríamos $2^n + (num. negativo) < 2^n$, concluyendo así que no podría producirse un overflow.
+		
+		
+		\vspace{0.2cm}	
+		\noindent Con está pequeña modificación, al usar para ambos número a comparar la función \textit{Num2Bits()} nos aseguramos de que se cumpla la restricción de ser número enteros positivos dentro del rango.
+		
 		
 
 	\subsubsection{Operadores de desplazamiento}
@@ -2790,7 +2830,7 @@ placement=H
 		
 		\begin{tabular}{|c|>{\centering\arraybackslash}p{13cm}|}
 			\hline
-			\textbf{Operación} & \textbf{Deducción} \\
+			\textbf{Operación} & \textbf{Regla de Inferencia} \\
 			\hline
 			
 			\texttt{$e= e_1 \ll e_2$} & 
@@ -2921,12 +2961,42 @@ placement=H
 	\noindent Como se ha mencionado anteriormente, en Circom cada señal representa un cable del circuito cuyo valor es único. Por esta razón, no pueden cambiar su valor de forma dinámica una vez establecidas, ya que el sistema de restricciones debe ser estático para su correcta verificación.
 	
 	\vspace{0.3cm}
-	
 	\noindent Para simular decisiones condicionales basadas en entradas, se deben usar expresiones aritméticas que implementen la lógica de selección, de manera que una señal no pueda reasignar su valor.
 	
 	\vspace{0.3cm}
-	% Tabla con codigo C y Circom
+	\noindent Esta lógica de selección se basa en combinar los posibles resultados mediante una operación aritmética. En lugar de saltar de una línea de código a otra, el circuito calcula ambos caminos y utiliza la condición como un interruptor encargado de resolver la bifurcación, decidiendo qué valor se asigna finalmente a la señal.
+	 
+	 \vspace{0.3cm}
+	 \noindent Formalmente, definimos una variable de control binaria $cond \in \{0, 1\}$, que representa el resultado final obtenido tras la evaluación de la condición \texttt{cond}. La selección entre dos estados o expresiones, $S_1$ (correspondiente al bloque \texttt{if}) y $S_2$ (correspondiente al bloque \texttt{else}), se formaliza mediante la combinación lineal de la condición y su correspondiente bloque de ecuaciones. 
+	 
+	 \vspace{0.3cm}
+	 \noindent El resultado de la selección, representado por una variable auxiliar $v_{aux}$, se define mediante el siguiente sistema de restricciones:
+	 
+	 \begin{equation}
+	 	v_{aux} = cond \cdot S_1 + (1 - cond) \cdot S_2
+	 \end{equation}
+	 
+	 \noindent Esta estructura garantiza que:
+	 
+	 \begin{itemize}
+	 	\item Si $cond = 1$ (la condición es verdadera), el término $(1-cond)$ se anula, resultando en $v_{aux} = S_1$.
+	 	\item Si $cond = 0$ (la condición es falsa), el término $cond$ se anula, resultando en $v_{aux} = S_2$.
+	 \end{itemize}\vspace{0.3cm}
 	
+	
+	\vspace{0.3cm}
+	\noindent La idea es partir de este caso baso para implementar las estructuras condicionales anidadas de forma inductiva. De esta forma, para ejecutar un determinado bloque de restricciones, todos las condiciones lógicas deben cumplirse.
+	
+	\vspace{0.3cm}
+	\noindent En términos prácticos, esto significa que la variable de activación de un bloque anidado es el producto de su propia condición por la variable de control del nivel superior. De esta manera, cualquier camino lógico dentro de una jerarquía se define mediante una cadena de productos de las condiciones ($cond_i$) o sus inversas ($1-cond_i$), dependiendo de la ruta tomada, donde $i$ es el nivel $n$ de anidamiento.
+	\begin{equation*}
+		v_{activacion} = cond_1 \cdot cond2 \cdot \dots \cdot cond_n \quad \text{donde } cond_i \in {cond_i, 1-cond_i}
+	\end{equation*}
+	
+	\vspace{0.3cm}
+	\noindent Este enfoque permite que el compilador transforme cualquier árbol de decisiones, sin importar su profundidad, en una combinación de señales donde cada camino lógico tiene asignado un filtro exclusivo basado en el cumplimiento de todas sus condiciones precedentes. Así, el sistema de restricciones asociado a un bloque solo se incorporará al archivo \textit{R1CS} cuando el producto de todas sus condiciones precedentes sea igual a 1.
+	
+	\vspace{0.3cm}
 	\noindent Un ejemplo específico de conversión de un bloque condicional a su equivalente utilizando restricciones en Circom sería el siguiente:
 	
 	\vspace{0.3cm}
@@ -3111,7 +3181,7 @@ placement=H
 	\renewcommand{\arraystretch}{2} 
 	\begin{tabular}{|>{\centering\arraybackslash}m{0.25\linewidth}|>{\centering\arraybackslash}m{0.70\linewidth}|}
 		\hline
-		\textbf{Operación} & \textbf{Deducción } \tabularnewline \hline
+		\textbf{Operación} & \textbf{Regla de Inferencia } \tabularnewline \hline
 		& \\[-2em] 
 		\texttt{if \textit{cond} then $S_1$ else $S_2$} & 
 		\begin{minipage}{0.85\linewidth}
@@ -3134,9 +3204,7 @@ placement=H
 		\end{minipage}
 		\tabularnewline \hline
 	\end{tabular}
-	
-	\subsubsection{Acceso a Arrays}
-	\noindent La implementación de las operaciones de indexación y acceso a estructuras de datos tipo array se ha diferido para una implementación futura del sistema. Esta decisión tiene su motivo en que es necesario realizar una adaptación del compilador. Por tanto, se ha optado por priorizar y consolidar primeramente la integridad de los operadores así como las instrucciones condicionales antes de pasar a la implementación de los accesos, cuyo desarrollo requiere una mayor complejidad.
+
 	
 
 	\chapter{Implementación del problema}
@@ -3716,12 +3784,100 @@ placement=H
 	
 	\chapter{Experimentos}
 	\section{Aplicación de la generación automática sobre juegos simples}
-	\section{Aplicación de la generación automática sobre circomLib y comparación de constraints}
+	\section{Aplicación de la generación automática sobre circomlib y comparación de constraints}
 	\section{Caso de uso, verificación y búsqueda de bugs}
 	
 	
-	\chapter{Conclusiones}
-	\chapter{Concluding remarks}
+	\chapter{Conclusiones y Trabajo Futuro}
+	\section{Conclusiones}
+	
+	\noindent El propósito principal de este trabajo se ha cumpliendo, consiguiendo de forma exitosa el objetivo de dotar al compilador de \textbf{Circom} de una mayor facilidad en cuanto a su uso, ofreciendo más opciones a la hora tanto de programar como de aprender el lenguaje.
+		
+	\vspace{0.2cm}
+	\noindent A lo largo del proyecto, se ha conseguido automatizar la generación de restricciones para un gran cantidad de operadores y expresiones que antes de la incorporación de la nueva funcionalidad requerían una implementación manual tediosa y un proceso de adaptación largo, sobre todo en el primer contacto con Circom.
+	
+	\vspace{0.2cm}
+	\noindent En términos de implementación, se han alcanzado con éxito los siguientes objetivos:
+	
+	\begin{itemize}
+		\item \textbf{Simplificación en la implementación:} Gracias a la automatización de las restricciones, se reduce el volumen de código escrito a mano por el programador. Esto permite que el desarrollador construya circuitos complejos de forma mucho más rápida y con menos errores.
+		\item \textbf{Aprendizaje y validación:} Al generar restricciones que siempre son correctas (ya que han sido verificadas), el programador puede usar esta herramienta para comprobar si sus circuitos en Circom están bien construidos. De esta forma, el sistema sirve como un referente, garantizando que el circuito se comporta exactamente como se espera.
+		\item \textbf{Programación más natural:} Se elimina la barrera de tener que pensar en términos de sistemas de ecuaciones. El programador puede expresar la lógica  deseada tal y como quiere, dejando que el sistema se encargue de la traducción, lo que hace que trabajar con Circom sea mucho más sencillo.
+	\end{itemize}
+	
+	\vspace{0.2cm}
+	
+	\noindent Un aspecto imprescindible para alcanzar los objetivos propuestos ha sido la verificación formal. Se ha comprobado que las reglas de traducción implementadas son deterministas y que los valores de salida corresponden exactamente con los de la lógica esperada para cada operadore sy expresión. Sin embargo, el proceso de verificación mediante \textit{ZKGEVER} ha expuesto la gran dificultad de los operadores aritméticos de división y módulo. 
+	
+	\vspace{0.2cm}
+	\noindent Aunque estas funciones fueron implementadas en el compilador y se pudo verificar que son deterministas y que sus valores de salida son los esperados, la comprobación de equivalencia tuvo como resultado \textit{timeout}, lo que impidió verificar formalmente su equivalencia con los códigos de referencia que fueron desarrollados haciendo uso de funciones propias de la \texttt{circomlib} [\ref{sec:ver-modulo}].
+	
+	\vspace{0.2cm}
+	\noindent Por otro lado, excluyendo la división y el módulo, todos los demás consiguieron ser verificados con éxito, demostrando su equivalencia respecto a los operadores implementados utilizando Circom sin la nueva funcionalidad y funciones previamente implementadas en la librería \texttt{circomlib}.
+	
+	\vspace{0.2cm}
+	
+	\noindent En conclusión, este trabajo demuestra que es posible trabajar sobre el compilador para conseguir un comportamiento que simule la lógica de cada operador y expresión deseada, reduciendo la aparición de errores al hacer que el programador no este en la obligación de implementar sus propios operadores y expresiones, haciendo que el desarrollo de circuitos sea más accesible para programadores que no son expertos en lenguajes destinados a la generación de estos.
+	
+	\section{Trabajo Futuro}
+	
+	\noindent Partiendo de los resultados obtenidos, se plantean las siguientes propuestas de desarrollo futuro:
+	\begin{itemize}
+		\item \textbf{Implementación de otras estructuras:} Extender la traducción automática a estructuras de datos más avanzadas, como pueden ser los accesos a arrays, lo que permitiría manejar datos de forma más flexible.
+		
+		\item \textbf{Reducción del número de restricciones:} Revisar las reglas de traducción para intentar reducir el número de restricciones en cada operador. El objetivo es que el compilador sea lo más eficiente posible, generando circuitos más simples y fáciles de procesar.
+		
+		\item \textbf{Mejora de la eficiencia en la verificación.:} Explorar otras técnicas de verificación formal u otros entornos con mayor capacidad para validar los operadores de división y módulo.
+		
+		
+		\item \textbf{Integración de la circomlib:} Automatizar el uso de las plantillas estándar de la librería. La idea es que los operadores del lenguaje puedan invocar directamente estas funciones sin que el programador tenga que conectarlas manualmente.
+	\end{itemize}
+	
+	\chapter{Conclusions and Future Work}
+	\section{Conclusions}
+	
+	\noindent The development of this work has fulfilled the main objective of providing the \textbf{Circom} compiler with greater expressivity, offering more options for both programming and learning the language. Throughout the project, the generation of constraints has been successfully automated for a wide range of functionalities that, until now, required a much more tedious manual implementation and adaptation process, especially during the initial contact with Circom.
+	
+	\vspace{0.2cm}
+	
+	\noindent In terms of implementation, the following objectives have been successfully achieved:
+	
+	\begin{itemize}
+		\item \textbf{Implementation optimization:} Thanks to the automation of constraints, the volume of code written by hand is significantly reduced. This allows the developer to build complex circuits much faster and with fewer errors.
+		\item \textbf{Learning and validation:} By generating constraints that are always correct, the programmer can use this tool to verify whether their own Circom circuits are well-constructed. In this way, the system serves as a reference, guaranteeing that the circuit behaves exactly as expected.
+		\item \textbf{More natural programming:} The barrier of having to think in terms of systems of equations is removed. The programmer can express the desired logic exactly as imagined, letting the system handle the translation, which makes the workflow much more agile and fluid.
+	\end{itemize}
+	
+	\vspace{0.2cm}
+	
+	\noindent A critical aspect in achieving the proposed objectives has been formal verification. It has been confirmed that the implemented translation rules are deterministic and that the output values correspond exactly to the expected logic for each operator and expression. However, the verification process using \textit{ZKGEVER} exposed the significant difficulty posed by the arithmetic operators for division and modulo.
+	
+	\vspace{0.2cm}
+	\noindent Although these functions were implemented in the compiler and verified to be deterministic with the expected output values, the equivalence check resulted in a \textit{timeout}. This prevented formal verification of their equivalence with the reference codes developed using standard \texttt{circomlib} functions [\ref{sec:ver-modulo}].
+	
+	\vspace{0.2cm}
+	\noindent On the other hand, excluding division and modulo, all other operators were successfully verified, demonstrating their equivalence to operators implemented in Circom without the new functionality and functions previously implemented in the \texttt{circomlib} library.
+	
+	\vspace{0.2cm}
+	\noindent In conclusion, this work demonstrates that it is possible to modify the compiler to simulate the desired logic for each operator and expression. This reduces the occurrence of errors by removing the requirement for programmers to implement their own operators and expressions, making circuit development more accessible to developers who are not experts in languages designed for circuit generation.
+	
+	\section{Future Work}
+	
+	\noindent Based on the results obtained, the following proposals for future development are presented:
+	
+	\begin{itemize}
+		\item \textbf{Implementation of additional structures:} Extend automatic translation to more advanced data structures, such as array access, allowing for more flexible data handling.
+		
+		\item \textbf{Reduction of the number of constraints:} Review the translation rules to minimize the number of constraints applied to each operator. The goal is to make the compiler as efficient as possible, generating simpler and easier-to-process circuits.
+		
+		\item \textbf{Efficiency improvements in verification:} Explore alternative formal verification techniques or environments with greater capacity to validate division and modulo operators.
+		
+		\item \textbf{Integration of circomlib:} Automate the use of standard library templates. The idea is for language operators to directly invoke these functions without the programmer having to connect them manually.
+		
+	\end{itemize}
+	
+	
+	
 	\bibliographystyle{unsrt} 
 	\bibliography{referencias}
 	%\printbibliography
@@ -3874,7 +4030,7 @@ placement=H
 		\small % Tamaño de fuente adecuado para el ancho de página
 		\begin{tabular}{|p{0.46\textwidth}|p{0.46\textwidth}|}
 			\hline
-			\centering \textbf{Implementación Circomlib (Manual)} & \centering \textbf{Implementación Autocomplete} \cr \hline
+			\centering \textbf{Implementación circomlib (Manual)} & \centering \textbf{Implementación Autocomplete} \cr \hline
 			\begin{lstlisting}[language=Circom, basicstyle=\tiny\ttfamily, numbers=none, frame=none, xleftmargin=0pt]
 				template BitwiseOr(n) {
 					signal input a, b;
@@ -3927,7 +4083,7 @@ placement=H
 		\small % Tamaño de fuente adecuado para el ancho de página
 		\begin{tabular}{|p{0.46\textwidth}|p{0.46\textwidth}|}
 			\hline
-			\centering \textbf{Implementación Circomlib (Manual)} & \centering \textbf{Implementación Autocomplete} \cr \hline
+			\centering \textbf{Implementación circomlib (Manual)} & \centering \textbf{Implementación Autocomplete} \cr \hline
 			\begin{lstlisting}[language=Circom, basicstyle=\tiny\ttfamily, numbers=none, frame=none, xleftmargin=0pt]
 				template BitwiseOr(n) {
 					signal input a, b;
