@@ -143,6 +143,15 @@ name=Código,
 placement=H
 ]{codigo}
 
+\newenvironment{agradecimientos}{%
+	\begin{center}
+		\bfseries Agradecimientos
+	\end{center}
+	\small
+	\begin{quotation}
+	}{
+	\end{quotation}
+}
 
 % Lenguaje
 \lstdefinelanguage{Circom}{
@@ -194,10 +203,95 @@ placement=H
 	\end{center}
 	
 
+	\thispagestyle{empty}
+	  
+	\begin{center}
+		\begin{center}
+			{\Huge \textbf{Synthesis, translation and verifi-}}\\
+			\vspace{0.2cm}  
+			{\Huge \textbf{cation of constraints systems in the}} \\
+			\vspace{0.3cm}  
+			{\Huge \textbf{context of Zero Knowledge Protocols}} \\ [1.5cm]
+		\end{center}
+		
+		
+		{\LARGE Lucía Martínez Martínez}\\[1cm]  
+		
+		{\large Degree in Computer Science}\\[0.1cm] 
+		{\large Complutense University of Madrid}\\[1cm]  
+		
+		
+		\includegraphics[width=9cm]{imagenes/logo.png} \\ [0.5cm]
+		
+		
+		\textbf{{\large Final-year project}} \\[0.1cm]
+		{\large Academic Year 2025–2026}
+	\end{center}
 	
-	\tableofcontents
+	\vfill  % Empuja lo siguiente hacia abajo
+	
+	
+	\begin{center}
+		\begin{minipage}{6cm}
+			\centering % Centra el texto dentro de la minipage
+			\large \textbf{Directors}:\\
+			\large Clara Rodríguez Núñez\\
+			\large Alejandro Hernández Cerezo
+		\end{minipage}
+	\end{center}
+
 
 	
+	
+	\begin{abstract}
+		Este trabajo presenta la implementación de una nueva funcionalidad para el compilador de Circom, diseñada para simplificar la creación de circuitos mediante una traducción automática de operadores de alto nivel a restricciones algebraicas. La complejidad de este lenguaje radica en la necesidad de definir manualmente un sistema de ecuaciones en formato R1CS coherente y seguro, ya que una implementación incompleta o errónea de estas restricciones puede comprometer la integridad del circuito, permitiendo la generación de pruebas falsas. 
+		
+		\vspace{0.2cm}
+		\noindent
+		Con el objetivo de resolver esta problemática, se han especificado reglas que permiten transformar operaciones complejas (como comparaciones, divisiones, expresiones condicionales, etc.) en ecuaciones válidas para una prueba de conocimiento cero, garantizando que el witness generado sea siempre fiel a la lógica imperativa del programador.
+		
+		
+		\vspace{0.2cm}
+		\noindent
+		Finalmente, la validez de estas reglas ha sido sometida a un proceso de verificación mediante la herramienta ZK-GENVER, asegurando que las restricciones resultantes sean robustas y seguras frente a posibles vulnerabilidades, para luego ser aplicadas sobre circuitos reales, incluyendo implementaciones de juegos simples.
+		
+		\vspace{0.5cm}
+				
+		\noindent \textbf{Palabras clave}: Circom, compilador, circuitos, R1CS, witness, prueba de conocimiento cero, sistemas de ecuaciones R1CS, circuitos aritméticos 
+	\end{abstract}
+	
+
+	
+	\cleardoublepage 
+	\renewcommand{\abstractname}{Abstract} 
+	\begin{abstract}
+		This work presents the implementation of a new functionality for the Circom compiler, designed to simplify circuit creation through the automatic translation of high-level operators into algebraic constraints. The complexity of this language lies in the need to manually define a coherent and secure system of equations in R1CS format, since an incomplete or erroneous implementation of these constraints can compromise the integrity of the circuit, allowing the generation of false proofs.
+		
+		\vspace{0.2cm}
+		\noindent
+		With the aim of resolving this issue, rules have been specified that allow the transformation of complex operations (such as comparisons, divisions, conditional expressions, etc.) into valid equations for a zero-knowledge proof, guaranteeing that the generated witness is always faithful to the programmer's imperative logic.
+		
+		
+		\vspace{0.2cm}
+		\noindent
+		Finally, the validity of these rules has been subjected to a verification process using the ZK-GENVER tool, ensuring that the resulting constraints are robust and secure against potential vulnerabilities, to then be applied to real-world circuits, including simple game implementations.
+		
+		\vspace{0.5cm}
+		
+		\noindent \textbf{Keywords}: Circom, compiler, circuits, R1CS, witness, zero-knowledge proof, R1CS equation systems, arithmetic circuits
+	\end{abstract}
+	
+	
+	\begin{agradecimientos}
+		agradecimientos blablabla
+	\end{agradecimientos}
+	
+	
+	
+	\tableofcontents
+	\clearpage
+	
+		
 	\titleformat{\chapter}[frame]
 	{\normalfont} 
 	{\filcenter\large\enspace CAPÍTULO \thechapter\enspace}
@@ -205,16 +299,6 @@ placement=H
 	{\Huge\bfseries\filcenter #1} 
 	
 	\renewcommand{\thesection}{\thechapter.\arabic{section}}
-	
-	\begin{abstract}
-		Este trabajo presenta la implementación de una nueva funcionalidad para el \textbf{compilador de Circom}, diseñada para simplificar la creación de \textbf{circuitos} mediante una traducción automática de operadores de alto nivel a restricciones algebraicas. La complejidad de este lenguaje radica en la necesidad de definir manualmente un sistema de ecuaciones en \textbf{formato R1CS} coherente y seguro, ya que una implementación incompleta o errónea de estas restricciones puede comprometer la integridad del circuito, permitiendo la generación de pruebas falsas. Para resolverlo, se han especificado reglas que permiten transformar operaciones complejas (como comparaciones, divisiones, expresiones condicionales, etc) en ecuaciones válidas para una \textbf{prueba de conocimiento cero}, garantizando que el \textbf{witness} generado sea siempre fiel a la lógica imperativa del programador. Finalmente, la validez de estas reglas ha sido sometida a un tedioso proceso de verificación mediante la herramienta \textbf{ZKGEVER}, asegurando que las restricciones resultantes sean robustas y seguras frente a posibles vulnerabilidades.
-	\end{abstract}
-	
-	\cleardoublepage 
-	\renewcommand{\abstractname}{Abstract} 
-	\begin{abstract}
-		This work presents the development of a new functionality for the \textbf{Circom compiler}, designed to simplify the creation of \textbf{circuits} through the automatic translation of high-level operators into algebraic constraints. The complexity of this language lies in the need to manually define a coherent \textbf{R1CS format} system of equations; an incomplete or erroneous implementation of these constraints can compromise the circuit's integrity, leading to the potential generation of forged proofs. To address this, specific rules have been defined to transform complex operations (such as comparisons, divisions, conditional expressions, etc) into valid equations for a \textbf{zero-knowledge proof}, ensuring that the generated \textbf{witness} consistently reflects the programmer's imperative logic. Finally, the validity of these rules has undergone a rigorous verification process using the \textbf{ZKGEVER} tool, ensuring that the resulting constraints are robust and secure against potential vulnerabilities.
-	\end{abstract}
 	
 	\chapter{Introducción a Circom}
 	
@@ -291,7 +375,7 @@ placement=H
 
 	\vspace{0.25cm}
 	
-	\noindent Dada la complejidad que implica implementar estos protocolos desde cero, se han desarrollado lenguajes de programación específicos denominados \textbf{Domain Specific Languages}, conocidos como DSL. 
+	\noindent Dada la complejidad que implica implementar estos protocolos desde cero, se han desarrollado lenguajes de programación específicos, también conocidos como \textbf{Domain Specific Languages} o DSL.
 	
 	\vspace{0.25cm}
 		
@@ -428,11 +512,9 @@ placement=H
 		\label{ex:zkp-transformacion}
 	\end{figura}
 	
-	\textcolor{black}{Reestructurado para evitar espacio en blanco}
-	
 	\vspace{0.3cm}
 	
-	\noindent Una característica fundamental de Circom es que es un lenguaje basado en circuitos, donde la estructura del mismo debe ser estática; esto implica que cualquier valor determinante en la estructura del circuito (como tamaños de arrays, número de iteraciones de un bucle, etc..) \textbf{debe conocerse en tiempo de compilación}. Esto se debe a que el archivo R1CS contiene las restricciones algebraicas que describen el circuito, las cuales no pueden depender de los valores de las señales de entrada.
+	\noindent Una característica fundamental de Circom es que es un lenguaje basado en circuitos, donde la estructura del mismo debe ser estática. Esto implica que cualquier valor determinante en la estructura del circuito (como tamaños de arrays, número de iteraciones de un bucle, etc..) \textbf{debe conocerse en tiempo de compilación}. Esto se debe a que el archivo R1CS contiene las restricciones algebraicas que describen el circuito, las cuales no pueden depender de los valores de las señales de entrada.
 	
 
 	\vspace{0.3cm}
@@ -555,7 +637,7 @@ placement=H
 	\section{Snarkjs}
 	\label{sec:snarkjs}
 	
-	\noindent Snarkjs es una librería de JavaScript creada para la generación y verificación de pruebas de conocimiento cero partiendo de las restricciones en formato R1CS correspondientes, que puede ser ejecutado tanto en dispositivos \textcolor{black}{móviles} como en servidores con \textit{Node.js}, materializando el concepto de \hyperref[def:zk-snarks]{\textit{ \ref{def:zk-snarks} zk-SNARKS}} nombrado anteriormente \cite{thesis_clara}\cite{circom_articulo_clara}.
+	\noindent Snarkjs es una librería de JavaScript creada para la generación y verificación de pruebas de conocimiento cero partiendo de las restricciones en formato R1CS correspondientes, que puede ser ejecutado tanto en dispositivos \textcolor{black}{móviles} como en servidores con \textit{Node.js}, materializando el concepto de \hyperref[def:zk-snarks]{\textit{zk-SNARKS}} nombrado anteriormente \cite{thesis_clara}\cite{circom_articulo_clara}.
 	
 	\vspace{0.25cm}
 	
@@ -625,7 +707,7 @@ placement=H
 	\noindent De esta forma, al no haber ninguna restricción que obligue a que \texttt{inv} sea el inverso de \texttt{a}, el vínculo entre la entrada \texttt{a} con la salida \texttt{b} no se cumple totalmente. Por tanto, al no ser añadida la asignación \texttt{inv <-}\texttt{- a!= 0 ? 1/a : 0} al sistema de ecuaciones, no existe para el verifier, permitiendo que un prover malicioso  pueda manipular el valor de \texttt{inv} para generar pruebas falsas que el sistema aceptaría.
 	 
 	\vspace{0.2cm}
-	\noindent Más allá del ejemplo expuesto, este error se repite de forma recurrente en muchos programas Circom, sobre todo aquellos desarrollados por principiantes en el lenguaje. Otros ejemplos donde este error está presente son en implementaciones de terceros que pueden encontrarse en repositorios públicos como \textcolor{black}{el juego de} \textit{"Hundir la flota"} \cite{battlezips_circom}, \textit{Dark Forest} \cite{darkforest_circuits_2021} o \textit{Decoder template en circomlib} \cite{iden3_multiplexer_2023}.
+	\noindent Más allá del ejemplo expuesto, este error se repite de forma recurrente en muchos programas Circom, sobre todo aquellos desarrollados por principiantes en el lenguaje. Otros ejemplos donde este error está presente son en implementaciones de terceros que pueden encontrarse en repositorios públicos como \textcolor{black}{el juego de} \textit{"Hundir la flota"} \cite{battlezips_circom}, \textit{Dark Forest} \cite{darkforest_circuits_2021} o el \textit{Decoder template en circomlib} \cite{iden3_multiplexer_2023}.
 	
 	
 	\vspace{0.2cm}
@@ -1188,13 +1270,13 @@ placement=H
 	\noindent Esta restricción permite vincular completamente la entrada \texttt{a} con la salida \texttt{b}. Su ausencia en el código \ref{cod:underc-bug} es lo que provoca el mencionado underconstrained bug. Al añadirla se soluciona el error, ya que, a pesar de que \texttt{inv} podría adoptar un valor distinto al que se le asignó, la señal \texttt{b} queda ahora limitada por el valor de \texttt{a} a través de la restricción \texttt{a*b===0}, la cual sí se incorpora al sistema de ecuaciones. De este modo, existe una restricción que obliga a la señal \texttt{a} a adoptar un único valor, garantizando así un circuito seguro.
 	
 	\vspace{0,2cm}
-	\noindent \textcolor{black}{Por otro lado, el segundo bloque tiene el mismo comportamiento operacional que el primero, con la única diferencia de que éste hace uso de \texttt{aautocomplete}. De esta forma se genera un sistema de ecuaciones equivalente al del primer bloque.}
+	\noindent \textcolor{black}{Por otro lado, el segundo bloque tiene el mismo comportamiento operacional que el primero, con la única diferencia de que éste hace uso de \texttt{autocomplete}. De esta forma se genera un sistema de ecuaciones equivalente al del primer bloque.}
 	
 	\vspace{0,2cm}
 	\noindent El segundo bloque de código emplea una sentencia \texttt{if-else} para determinar si la entrada es igual a 0 o no.
 	
 	\vspace{0,2cm}
-	\noindent Puede apreciarse que la lógica necesaria para implementar una función tan primaria sin las modificaciones se convierte en una tarea más tediosa, mientras que con las modificaciones esta lógica se convierte en un simple bloque condicional que cualquier persona familiarizada con la programación sabría hacer.
+	\noindent Puede apreciarse que la lógica necesaria para implementar una función tan básica sin las modificaciones se convierte en una tarea más tediosa, mientras que con las modificaciones esta lógica se convierte en un simple bloque condicional que cualquier persona familiarizada con la programación sabría hacer.
 	
 	\vspace{0.2cm}
 	\noindent De esta forma, Circom sería un lenguaje de programación mucho mas accesible para los usuarios, al facilitar su uso incorporando esta nueva funcionalidad.
@@ -1204,9 +1286,6 @@ placement=H
 	
 	\section{Ejemplo: Piedra, Papel y Tijera}
 	
-	
-	\vspace{0.2cm}
-	\noindent Una manera más precisa de materializar esta propuesta es por medio de un ejemplo, utilizando para ello un programa real en Circom.
 	
 	\vspace{0.2cm}
 	\noindent El programa que utilizaremos como ejemplo es el clásico juego de \textit{piedra, papel y tijera}. Éste consiste en 3 reglas principales.
@@ -1366,7 +1445,7 @@ placement=H
 	\noindent La variable \texttt{out} (L54) captura este estado de victoria del Jugador 2. De este modo, la expresión de la señal \texttt{ganador} utiliza \texttt{out} e \texttt{inv} como llaves de paso: 
 	
 	\begin{itemize}
-		\item Si no hay empate (\texttt{inv=1}), la salida será directamente el valor de \texttt{out}.
+		\item Si no hay empate (\texttt{inv=1}), la salida será directamente el valor de \texttt{out=2}.
 		\item Si el Jugador 2 ganó, \texttt{out=1} y la salida es 1.
 		\item Si el Jugador 2 no ganó (y sabemos que no hay empate), por eliminación el ganador es el Jugador 1, \texttt{out=0} y la salida es 0.
 	\end{itemize}
@@ -1532,7 +1611,7 @@ placement=H
 	
 
 	\vspace{0.2cm}
-	\noindent Ambos bloques de código son equivalentes. El bloque de código de la izquierda íntegramente escrito con el operador \texttt{<==} para incorporar todas las restricciones al sistema de ecuaciones. El código de la derecha, aunque no utiliza el operador \texttt{<==}, puede usar el operador \texttt{<-}\texttt{-} sin inconvenientes debido a las modificaciones que hemos añadido sobre el compilador; de este modo, las restricciones se añaden también al archivo R1CS y no solo al testigo.
+	\noindent Ambos bloques de código son equivalentes. El bloque de código de la izquierda íntegramente escrito con el operador \texttt{<==} para incorporar todas las restricciones al sistema de ecuaciones. El código de la derecha, aunque no utiliza el operador \texttt{<==}, puede usar el operador \texttt{<-}\texttt{-} sin inconvenientes debido a las modificaciones que hemos añadido sobre el compilador. De este modo, las restricciones se añaden también al archivo R1CS y no solo al testigo.
 	
 	\vspace{0.2cm}
 	\noindent Por lo tanto, puede apreciarse que el esfuerzo lógico para describir la lógica del juego utilizando el operador \texttt{<==} es mucho más complejo que aprovechando la nueva funcionalidad añadida. Su uso evita que el programador tenga que transformar manualmente cada bifurcación del algoritmo en expresiones algebraicas, delegando ese trabajo al compilador modificado.
@@ -1544,17 +1623,26 @@ placement=H
 	\noindent Si bien este beneficio es ya notable en un ejemplo sencillo como este, su verdadero potencial reside en su aplicación a problemas más complejos.
 	
 	\vspace{0.2cm}
-    \noindent Al trasladar esta lógica a sistemas de mayor envergadura, los beneficios en términos de mantenibilidad, reducción de errores y accesibilidad en el diseño de circuitos pueden ser exponenciales.
-	
+    \noindent Al trasladar esta lógica a sistemas de mayor envergadura, se mejora la mantenibilidad y la accesibilidad en el diseño de circuitos a la vez que se reducen las posibles situaciones de error.
+    
 	\chapter{Desarrollo del problema}
 	
 	\section{Síntesis de restricciones para la traducción de expresiones}
 		\noindent A lo largo del documento estudiaremos cómo traducir instrucciones y expresiones generadas por un lenguaje imperativo simple en un conjunto de ecuaciones en formato R1CS equivalente definimos las siguientes funciones: 
 		
 		\begin{definicion}[Traducción de expresiones]
-			Sea $\mathcal{C}$ un conjunto de restricciones en formato R1CS y $Expr$ el conjunto de expresiones aritméticas. Definimos la función de traducción $TC: Expr \to \mathcal{C} \times Expr$ tal que para cada expresión $e \in Expr$:
+			\noindent Sea $\mathcal{C}$ un conjunto de restricciones en formato R1CS. Definimos el conjunto de expresiones $Expr$ de forma inductiva mediante la siguiente sintaxis:
+			\[ e := c \mid x \mid e_1 \oplus_{bin} e_2 \mid \ominus_{un} e\]
+			donde $c$ es una constante, $x$ es una variable, y los operadores se dividen en:
+			\begin{itemize}
+				\item $\oplus_{bin} \in \{+, -, \times, /, \%, \&\&, ||, \&, |, <, >, \le, \ge, ==, \neq, \ll, \gg\}$ representa los operadores binarios.
+				\item $\ominus_{un} \in \{!\}$ representa los operadores unarios.
+			\end{itemize}
+			
+			\vspace{0.2cm}
+			\noindent Definimos la función de traducción $TC: Expr \to \mathcal{C} \times Expr$ tal que para cada expresión $e \in Expr$:
 			\[ TC(e) = (C, e') \]
-			donde $C \in \mathcal{C}$ es el conjunto de restricciones aplicadas y $e'$ es la representación de la expresión original.
+			donde $C \in \mathcal{C}$ es el conjunto de restricciones acumuladas y $e'$ es la expresión que representa el resultado de la expresión original.
 			\label{def:traduccion}
 		\end{definicion}
 		
@@ -1593,7 +1681,8 @@ placement=H
 	
 	\vspace{0.6cm}
 	\noindent \textbf{Traducción de operadores}
-		\vspace{0.4cm}
+	
+	\vspace{0.4cm}
 	\noindent La formalización de los operadores aritméticos se establece mediante un sistema de reglas de deducción que definen la traducción de cada operación al lenguaje de restricciones del circuito. En la siguiente tabla se detallan estas transformaciones, especificando cómo se generan las señales y restricciones necesarias:
 	
 	\vspace{0.2cm}
@@ -1704,7 +1793,7 @@ placement=H
 	\noindent La especificación de la división es posible gracias al teorema de la división, el cual dice lo siguiente:
 	
 	
-		\begin{definicion}[Teorema de la división]
+	\begin{definicion}[Teorema de la división]
 		\label{def:teo-div}
 		\textcolor{black}{
 			Dados dos enteros $a$ (dividendo) y $b$ (divisor), con $b \neq 0$, existen únicamente dos enteros $q$ y $r$ tales que:
@@ -1727,7 +1816,16 @@ placement=H
 	\noindent Partiendo de la ecuación \(a = b * q + r\), podemos llegar al resultado de la operación \(a / b\) mediante el cociente y el resto.
 	
 	\vspace{0.3cm}
-	\noindent En Circom, al trabajar sobre un cuerpo finito $\mathbb{F}_p$ implica que el valor de todas las señales debe ser un elemento del mismo, restringiendo de esta manera los valores al conjunto de los enteros. Por este motivo, la división decimal nunca existirá en este contexto.
+	\noindent En Circom, trabajar sobre un cuerpo finito $\mathbb{F}_p$ implica que el valor de todas las señales debe ser un elemento de este conjunto, restringiendo de esta manera los valores al campo de los enteros módulo $p$. Por este motivo, la división decimal nunca existirá en este contexto. En su lugar, la división se calcula utilizando el inverso multiplicativo del divisor.
+	
+	\begin{ejemplo}
+			
+	Si aplicamos esto a un caso concreto, supongamos que trabajamos en el cuerpo finito $\mathbb{F}_5$ y queremos calcular la división $3 / 2$. El inverso multiplicativo de $2$ en este cuerpo es $3$ (ya que $(2 \times 3) \pmod 5 = 1$). Por lo tanto, la operación se transforma en una multiplicación:
+	\[ 3 / 2 = 3 \times 2^{-1} = 3 \times 3 = 9 \pmod 5 = 4 \]
+	De esta manera, el resultado de la división sigue siendo un número entero dentro del cuerpo (en este caso, $4$).
+	
+	%\caption{División dentro de un campo finito}
+	\end{ejemplo} 
 	
 	\vspace{0.3cm}
 	\noindent Por tanto, en esta situación es el cociente $q$ el valor que buscamos para esta operación. Esto no significa que el resto $r$ sea despreciado, ya que es fundamental para satisfacer las restricciones  $a = b \cdot q + r $ y $0 \leq r < |b|$. Únicamente con el cumplimiento de estas restricciones se garantiza que el valor de $q$ sea único y correcto según el teorema.
@@ -2021,9 +2119,9 @@ placement=H
 						C_1 \wedge C_2 \wedge 
 						\left\{ 
 						\begin{array}{l} 
-						BinaryAnd().in[0] <== e'_1 \\
-						BinaryAnd().in[1] <== e'_2 \\
-						BinaryAnd().out = v_{aux}	
+						BinaryAnd(n).in[0] <== e'_1 \\
+						BinaryAnd(n).in[1] <== e'_2 \\
+						BinaryAnd(n).out = v_{aux}	
 						\end{array} 
 						\right\}, 
 						v_{aux}
@@ -2080,7 +2178,6 @@ placement=H
 		\item Una vez aplicada la operación \texttt{OR}, \texttt{result} es transformado a decimal con la función $Bits2Num()$, la cuál de forma análoga a $Num2Bits()$ transforma el número binario a decimal.
 	\end{enumerate}
 	
-	\newpage
 
 	\subsubsection{Operadores de Comparación}
 		\noindent Tras establecer la base de los operadores aritméticos y lógicos, es fundamental definir la lógica correspondiente a los operadores de comparación. En la siguiente tabla se formalizan las reglas de traducción para los operadores relacionales y de igualdad:
@@ -2440,7 +2537,8 @@ placement=H
 		
 		\label{sssec:tra:num_negativos}
 		
-		\noindent Debido a la forma en la que Circom gestiona los valores numéricos, los números negativos requieren un tratamiento especial (véase el \hyperref[ap:num_negativos]{\textbf{Capítulo \ref{ap:num_negativos}})}.
+		\noindent Debido a la forma en la que Circom gestiona los valores numéricos, los números negativos requieren un tratamiento especial (véase el \hyperref[ap:num_negativos]{\textbf{Anexo \ref{ap:num_negativos}})}.
+		% TODO: De alguna manera, hay que relacionarlo con el valor de 253 bits máximo y hablar sobre este valor. Porque entiendo que es un problema no solo de los números negativos, sino de ciertos números negativos que se representan como números positivos muy grandes.
 		
 		\vspace{0.2cm}
 		\noindent Para solventar este problema, recurrimos a las transformación de los números a comparar de sistema decimal a binario. Esta conversión es estrictamente necesaria para asegurar que los números correspondientes no exceden el rango especificado.
@@ -2967,20 +3065,28 @@ placement=H
 	\noindent Esta lógica de selección se basa en combinar los posibles resultados mediante una operación aritmética. En lugar de saltar de una línea de código a otra, el circuito calcula ambos caminos y utiliza la condición como un interruptor encargado de resolver la bifurcación, decidiendo qué valor se asigna finalmente a la señal.
 	 
 	 \vspace{0.3cm}
-	 \noindent Formalmente, definimos una variable de control binaria $cond \in \{0, 1\}$, que representa el resultado final obtenido tras la evaluación de la condición \texttt{cond}. La selección entre dos estados o expresiones, $S_1$ (correspondiente al bloque \texttt{if}) y $S_2$ (correspondiente al bloque \texttt{else}), se formaliza mediante la combinación lineal de la condición y su correspondiente bloque de ecuaciones. 
+	 \noindent Formalmente, definimos una variable binaria $cond \in \{0, 1\}$, que representa el resultado final obtenido tras la evaluación de la condición \texttt{cond}. La selección entre dos estados o expresiones, $S_1$ (correspondiente al bloque \texttt{if}) se formaliza mediante la combinación lineal de la condición y su correspondiente bloque de ecuaciones. 
 	 
 	 \vspace{0.3cm}
-	 \noindent El resultado de la selección, representado por una variable auxiliar $v_{aux}$, se define mediante el siguiente sistema de restricciones:
+	 \noindent El resultado de la selección para la expresión if, representado por una variable auxiliar $v_{aux}$, se define mediante el siguiente sistema de restricciones:
 	 
 	 \begin{equation}
-	 	v_{aux} = cond \cdot S_1 + (1 - cond) \cdot S_2
+	 	(v_{aux} - S_1) * cond = 0
 	 \end{equation}
+	 
+	\vspace{0.3cm}
+	\noindent De manera análoga, si se presentase una instrucción condicional con estructura \texttt{if-else} que evalúa la condición \texttt{cond}, junto con los bloques de instrucciones $S_1$ y $S_2$ para los cuerpos del \texttt{if} y del \texttt{else} respectivamente, el sistema de restricciones generado sería el siguiente:
+	 
+	\begin{align}
+		(v_{aux} - S_1) * cond &= 0 \\
+		(v_{aux} - S_2) * (1-cond) &= 0
+	\end{align}
 	 
 	 \noindent Esta estructura garantiza que:
 	 
 	 \begin{itemize}
-	 	\item Si $cond = 1$ (la condición es verdadera), el término $(1-cond)$ se anula, resultando en $v_{aux} = S_1$.
-	 	\item Si $cond = 0$ (la condición es falsa), el término $cond$ se anula, resultando en $v_{aux} = S_2$.
+	 	\item Si $cond = 1$, el término $(1-cond)$ se anula y y $(v_{aux} - S_2)$ es forzado a ser 0, resultando en $v_{aux} = S_1$.
+	 	\item Si $cond = 0$, el término $cond$ se anula y $(v_{aux} - S_1)$ es forzado a ser 0, resultando en $v_{aux} = S_2$.
 	 \end{itemize}\vspace{0.3cm}
 	
 	
@@ -2990,11 +3096,11 @@ placement=H
 	\vspace{0.3cm}
 	\noindent En términos prácticos, esto significa que la variable de activación de un bloque anidado es el producto de su propia condición por la variable de control del nivel superior. De esta manera, cualquier camino lógico dentro de una jerarquía se define mediante una cadena de productos de las condiciones ($cond_i$) o sus inversas ($1-cond_i$), dependiendo de la ruta tomada, donde $i$ es el nivel $n$ de anidamiento.
 	\begin{equation*}
-		v_{activacion} = cond_1 \cdot cond2 \cdot \dots \cdot cond_n \quad \text{donde } cond_i \in {cond_i, 1-cond_i}
+		v_{activacion} = v_{cond-1} * v_{cond-2} * ... * v_{cond-n} \ donde \ v_{cond-i} \in \{condi, 1-condi\}. 
 	\end{equation*}
 	
 	\vspace{0.3cm}
-	\noindent Este enfoque permite que el compilador transforme cualquier árbol de decisiones, sin importar su profundidad, en una combinación de señales donde cada camino lógico tiene asignado un filtro exclusivo basado en el cumplimiento de todas sus condiciones precedentes. Así, el sistema de restricciones asociado a un bloque solo se incorporará al archivo \textit{R1CS} cuando el producto de todas sus condiciones precedentes sea igual a 1.
+	\noindent Este enfoque permite que el compilador transforme cualquier árbol de decisiones, sin importar su profundidad, en una combinación de señales donde cada camino lógico tiene asignado un filtro exclusivo basado en el cumplimiento de todas sus condiciones precedentes. Así, el sistema de restricciones asociado a un bloque condicional se aplicará cuando el producto de todas sus condiciones precedentes sea igual a uno.
 	
 	\vspace{0.3cm}
 	\noindent Un ejemplo específico de conversión de un bloque condicional a su equivalente utilizando restricciones en Circom sería el siguiente:
@@ -3002,31 +3108,31 @@ placement=H
 	\vspace{0.3cm}
 	
 	\begin{mi_ejemplo}
-		\caption{Comparación entre bloque condicional imperativo y declarativo}
-		\label{ex:c-circom-condicional}
 		\centering
 		\begin{tabular}{|>{\raggedright\arraybackslash}p{0.46\textwidth} | >{\raggedright\arraybackslash}p{0.46\textwidth}|}% Usar l para que el código no se estire de forma rara
 			\hline
-			\textbf{Programación Imperativa} & \textbf{Programación Declarativa (Circom} \\
+			\textbf{Programación Imperativa} & \textbf{Programación Declarativa} \\
 			\hline
+		
 			\begin{minipage}[t]{0.48\textwidth}
 				\begin{lstlisting}[language=C,xleftmargin=-55pt,frame=none,numbers=none]
-					// Logica de control de flujo
+					signal input entrada;
+					signal output salida;
+					
 					if(entrada % 2 == 0){ 
-						printf("Es par");
+						salida <-- 0;
 					} else {
-						printf("Es impar");
+						salida <-- 1;
 					}
 				\end{lstlisting} 
 			\end{minipage}
 			&
 			\begin{minipage}[t]{0.48\textwidth}
-				\begin{lstlisting}[language=C,xleftmargin=-55pt,frame=none,numbers=none]
-					// Definicion de restricciones
+				\begin{lstlisting}[language=Circom,xleftmargin=-55pt,frame=none,numbers=none]
 					signal input entrada;
 					signal output salida;
 					var var_div = entrada \ 2;
-					// Restriccion cuadratica
+					
 					entrada === 2 * var_div + salida;
 					salida * (salida - 1) === 0;
 				\end{lstlisting}
@@ -3034,46 +3140,55 @@ placement=H
 			\\ \hline
 		\end{tabular}
 		
+			\caption{Comparación entre bloque condicional imperativo y declarativo}
+		\label{ex:c-circom-condicional}
 		\vspace{0.2cm}
 		\hspace*{\fill} $\blacksquare$
 	\end{mi_ejemplo}
 	
 	
 	\vspace{0.3cm}
-	\noindent El ejemplo anterior ilustra el proceso de transformación de una expresión condicional en una expresión aritmética equivalente, evitando reasignar la señal de salida.
+	\noindent El ejemplo anterior ilustra el proceso de transformación de una expresión condicional a una expresión aritmética equivalente, evitando reasignar la señal de salida.
 	
 	\vspace{0.3cm}
 	\noindent De la misma forma expuesta en el ejemplo, definiremos la inducción partiendo del caso base.
 	
-	\newpage
+	\vspace{0.3cm}
 	\noindent \textbf{Caso base: if-else}
 	\vspace{0.3cm}
+	\begin{lstlisting}[language=C]
+		// Codigo en Circom haciendo uso de nuestra nueva funcionalidad
+		signal input age;
+		signal output out;
+		
+		if (age < 0) {
+			out <-- 0;
+		} else {
+			out <-- 1;
+		}
+		
+	\end{lstlisting} 
 	
 	\begin{mi_ejemplo}
-		\caption{Caso base condicional}
-		\label{ex:caso-base-cond}
-		\begin{lstlisting}[language=C]
-			
-			// Codigo en C
-			if (age < 0) {
-				printf("Edad invalida.\n");
-			} else {
-				printf("Perfil: adulto mayor.\n");
-			}
-		\end{lstlisting} 
+	
 		
 		\begin{lstlisting}[language=Circom]
-			
 			// Codigo en Circom
+			
+			signal input age;
+			signal output out;
+			
 			component less_0 = LessThan()(age,0);
 			
 			signal less_0 = less_0.out;
 			signal not_less_0 = 1 - less_0.out;
 			
-			mensaje <== less_0 * m1 + not_less_0 * m2;
+			out <== (1 - less_0)  + not_less_0;
 		\end{lstlisting}
 		
 		\hspace*{\fill} $\blacksquare$
+			\caption{Caso base condicional}
+		\label{ex:caso-base-cond}
 	\end{mi_ejemplo}
 	
 	\vspace{0.2cm}
@@ -3101,77 +3216,76 @@ placement=H
 	\noindent A continuación, un ejemplo guiado donde aplicamos las hipótesis del caso base para llegar al resultado final.
 	
 	\begin{mi_ejemplo}
+	
 	\caption{Caso inductivo condicional}
 	\label{ex:caso-inductivo-cond}
-	
 	\lstset{basicstyle=\footnotesize\ttfamily, aboveskip=1pt, belowskip=1pt}
 	
 	\begin{lstlisting}[language=C]
-		
-		// Codigo en C
+		signal input age;
+		signal input out;
 		
 		if (age < 20) {
 			if(age < 10){
-				printf("Perfil: ninyo.\n");
+				out <-- 1;
 			}
 			else{
-				printf("Perfil: adolescente.\n");
+				out <-- 2;
 			}
 		} else if(age < 40){
 			if(age < 30){
-				printf("Perfil: adulto joven.\n");
+				out <-- 3;
 			}
 			else {
-				printf("Perfil: adulto mayor.\n");
+				out <-- 4;
 			}
 		}
 		else{
-			printf("Perfil: adulto mayor.\n");
+			out <-- 5;
 		}
 	\end{lstlisting}
 	
 	
 	\begin{itemize}
-		\item Por cada condición de igualdad/desigualdad se crea un componente correspondiente, como en los casos anteriores.
+		\item Por cada condición de igualdad o desigualdad se crea un componente correspondiente, como en los casos anteriores.
 		
-		\begin{lstlisting}[language=Circom]
+		\begin{lstlisting}[language=Circom, breaklines=true]
 			component less_10 = LessThan()(age,10);
 			component less_20 = LessThan()(age,20);
 			component less_30 = LessThan()(age,30);
 			component less_40 = LessThan()(age,40);
 		\end{lstlisting}
 		
-		\item Partiendo de lo citado an los apartados anteriores, tenemos que generar las condiciones excluyentes.
+		\item Partiendo de lo expuesto en los apartados anteriores, las condiciones excluyentes de cada bloque condicional actúan como selectores, permitiendo que la señal \texttt{out} tome el valor correcto en función del camino ejecutado.
 		
-		\begin{lstlisting}[language=Circom]
-			signal is_less_20 = less_20.out;
-			signal is_less_10 = is_less_20 * less_10.out;
-			signal isnt_less_10 = is_less_20 * (1 - less_10.out);
+		\begin{lstlisting}[language=Circom, breaklines=true]
+			signal v_aux_less_10;
+			signal v_aux_less_30;
+			signal v_aux_less_40;
 			
-			signal is_less_40 = less_40.out;
-			signal is_less_30 = is_less_40 * less_30.out;
-			signal isnt_less_30 = is_less_40 * (1 - less_30.out);
+			v_aux_less_10 <== less_10.out * 1 
+			+ (1 - less_10.out) * 2;
 			
+			v_aux_less_30 <== less_30.out * 3 
+			+ (1 - less_30.out) * 4;
 			
-			signal is_greater_40 = (1-is_less_40);
+			v_aux_less_40 <== less_40.out * v_aux_less_30 
+			+ (1 - less_40.out) * 5;
+			
+			out <== less_20.out * v_aux_less_10 + (1 - less_20.out) * v_aux_less_40;
 		\end{lstlisting}
 		
-		\item Combinación ponderada de los mensajes:
-		\begin{lstlisting}[language=Circom]
-			mensaje <== is_less_10 * m1 + isnt_less_10 * m2 +
-			is_less_30 * m3 + isnt_less_30 * m4 +
-			is_greater_40 * m5;
-		\end{lstlisting}
+		\item El uso de las variables auxiliares \texttt{v\_aux\_less\_10}, \texttt{v\_aux\_less\_30} y \texttt{v\_aux\_less\_40} es estrictamente necesario para asegurar que la construcción de los productos resulte en una operación cuadrática, evitando así ecuaciones de grado superior.
+		
 	\end{itemize}
-	
 	\hspace*{\fill} $\blacksquare$
 	\end{mi_ejemplo}
 	
-	\noindent Aplicando la inducción, puede intuirse que siempre se repite el mismo patrón en el que cada condición utiliza la negación de las condiciones anteriores y el resultado de la comparación actual construir los bloques \texttt{if-else}
+	\noindent Aplicando la inducción, se repite el mismo patrón en el que utiliza la condición actual y la negación de sus anteriores, construyendo de esta forma las expresiones condicionales necesarias para representar correctamente en el sistema de ecuaciones el acceso a cada bloque condicional.
 	
 	
 	\vspace{0.2cm}
-	\noindent De esta manera, podemos transformas cualquier bloque condicional en un sistema de ecuaciones equivalente, cumpliendo con la naturaleza estática de Circom.
+	\noindent De esta manera, podemos transformar cualquier bloque condicional en un sistema de ecuaciones equivalente, cumpliendo con la naturaleza estática de Circom.
 	
 	\vspace{0.5cm}
 	\noindent \textbf{Traducción de operadores}
@@ -3219,7 +3333,7 @@ placement=H
 
 	
 	\begin{definicion}
-		Un árbol de sintaxis abstracta es una representación simplificada del código fuente escrito en cierto lenguaje de programación, donde cada nodo del árbol denota una construcción del lenguaje que ocurre en el código fuente. \cite{wikipedia_ast}. 
+		Un árbol de sintaxis abstracta es una representación simplificada del código fuente escrito en un lenguaje de programación dado, donde cada nodo del árbol denota una construcción del lenguaje que ocurre en el código fuente. \cite{wikipedia_ast}. 
 	\end{definicion}
 	
 	\noindent Una construcción del lenguaje podría ser una declaración, una expresión, un operador, etc.
@@ -3292,7 +3406,7 @@ placement=H
 	\noindent A la hora de realizar la conversión a binario tenemos que realizar una  comprobación previa sobre el tamaño del desplazamiento.
 	
 	\vspace{0.2cm}
-	\noindent Tal y como se explicó en la \hyperref[sssec:tamaño-ops]{\textbf{Sección \ref{sssec:tamaño-ops}}} y se definió en la \hyperref[sssec:desp-izq]{\textbf{Sección \ref{sssec:desp-izq}}}, si el usuario conoce el tamaño de los valores con los que va a trabajar puede utilizar el \texttt{op\_(n)} sobre los operadores de desplazamientos, de forma que podrá acotar el tamaño de los operandos utilizando esta utilidad.
+	\noindent Tal y como se explicó en la \hyperref[sssec:tamaño-ops]{\textbf{Sección \ref{sssec:tamaño-ops}}} y se definió en la \hyperref[sssec:desp-izq]{\textbf{Sección \ref{sssec:desp-izq}}}, si el usuario conoce el tamaño de los valores con los que va a trabajar puede utilizar el \texttt{$\ll$\_(n)} sobre los operadores de desplazamientos, de forma que podrá acotar el tamaño de los operandos utilizando esta utilidad.
 	
 	\vspace{0.2cm}
 	\noindent Por tanto, si el tamaño de los valores a desplazar es conocido, el usuario podría limitar el tamaño, ya que por defecto la funcionalidad utiliza el tamaño máximo correspondiente a 253, lo que implica muchas más restricciones de las necesarias.
@@ -3459,7 +3573,7 @@ placement=H
 	\noindent Para el resto de operadores se aplica la misma lógica pero siguiendo las reglas de traducción especificadas. De hecho, muchas funciones como los operadores \texttt{Igual} y \texttt{Distinto} presentan la misma lógica con lo que puede abstraerse mucho código.
 	
 	\vspace{0.2cm}
-	\noindent En resumen, siguiendo esta vía se transita desde una idea hasta un sistema que funciona de verdad, logrando unir la parte teórica de las reglas de traducción con la parte práctica destinada a la implementación de estas reglas, consiguiendo que estos operadores funcionen según lo esperado.
+	\noindent En resumen, siguiendo esta vía se transita desde una idea hasta un sistema más útil, logrando unir la parte teórica de las reglas de traducción con la parte práctica destinada a la implementación de estas reglas, consiguiendo que estos operadores funcionen según lo esperado.
 	
 	\chapter{Verificación de los operadores}
 	
@@ -3473,6 +3587,7 @@ placement=H
 		 ZK-GENVER es una herramienta diseñada para la verificación de sistemas de ecuaciones en formato R1CS. 
 	\end{definicion}
 	
+	%TODO: Algo del smt2
 	\noindent Esta herramienta ofrece tres funcionalidades principales. En primer lugar, la verificación determinista del sistema de ecuaciones, comprobando que para cada entrada produce una única salida. En segundo lugar, la generación de archivos \texttt{smt2}, que contienen las ecuaciones del circuito, las cuales pueden ser alteradas manualmente para así asignar valores de entrada específicos con el fin de consultar la salida correspondiente y validar así que la lógica es la esperada. Por último, la comparación de equivalencia entre dos archivos R1CS, transformándolos a archivos \texttt{smt2}, lo que posibilita contrastar el código base de Circom con el que incorpora la nueva funcionalidad.
 	
 	\vspace{0.2cm}
@@ -3485,12 +3600,12 @@ placement=H
 	\end{enumerate}
 	
 	\vspace{0.2cm}
-	\noindent \textit{ZK-GENVER} realiza la verificación determinista a partir de los archivos \texttt{smt2}, los cuales son generados automáticamente por la herramienta tomando como base los archivos R1CS que contienen todas las restricciones del programa original. Este archivo \texttt{smt2} es pasado al \textit{solver}.
+	\noindent \textit{ZK-GENVER} realiza la verificación determinista a partir de los archivos \texttt{smt2}, los cuales son generados automáticamente por la herramienta tomando como base los archivos R1CS que contienen todas las restricciones del programa original. Este archivo \texttt{smt2} es pasado al \textit{resolutor SMT}.
 	
 		
 	\vspace{0.2cm}
 	\begin{definicion}
-		Un solver SMT es una herramienta capaz de determinar si un sistema de ecuaciones es \textit{satisfactible}, es decir, si existe al menos una asignación de valores que lo satisfaga, o \textit{insatisfactible}, en caso de que no exista ninguna.
+		Un resolutor SMT es una herramienta capaz de determinar si un sistema de ecuaciones es \textit{satisfactible}, es decir, si existe al menos una asignación de valores que lo satisfaga, o \textit{insatisfactible}, en caso de que no exista ninguna.
 	\end{definicion}
 	
 	\vspace{0.2cm}
@@ -3791,7 +3906,7 @@ placement=H
 	\chapter{Conclusiones y Trabajo Futuro}
 	\section{Conclusiones}
 	
-	\noindent El propósito principal de este trabajo se ha cumpliendo, consiguiendo de forma exitosa el objetivo de dotar al compilador de \textbf{Circom} de una mayor facilidad en cuanto a su uso, ofreciendo más opciones a la hora tanto de programar como de aprender el lenguaje.
+	\noindent El propósito principal de este trabajo se ha cumplido, consiguiendo de forma exitosa el objetivo de dotar al compilador de \textbf{Circom} de una mayor facilidad en cuanto a su uso, ofreciendo más opciones a la hora tanto de programar como de aprender el lenguaje.
 		
 	\vspace{0.2cm}
 	\noindent A lo largo del proyecto, se ha conseguido automatizar la generación de restricciones para un gran cantidad de operadores y expresiones que antes de la incorporación de la nueva funcionalidad requerían una implementación manual tediosa y un proceso de adaptación largo, sobre todo en el primer contacto con Circom.
@@ -3807,7 +3922,7 @@ placement=H
 	
 	\vspace{0.2cm}
 	
-	\noindent Un aspecto imprescindible para alcanzar los objetivos propuestos ha sido la verificación formal. Se ha comprobado que las reglas de traducción implementadas son deterministas y que los valores de salida corresponden exactamente con los de la lógica esperada para cada operadore sy expresión. Sin embargo, el proceso de verificación mediante \textit{ZKGEVER} ha expuesto la gran dificultad de los operadores aritméticos de división y módulo. 
+	\noindent Un aspecto imprescindible para alcanzar los objetivos propuestos ha sido la verificación formal. Se ha comprobado que las reglas de traducción implementadas son deterministas y que los valores de salida corresponden exactamente con los de la lógica esperada para cada operadores y expresión. Sin embargo, el proceso de verificación mediante \textit{ZK-GENVER} ha expuesto la gran dificultad de los operadores aritméticos de división y módulo. 
 	
 	\vspace{0.2cm}
 	\noindent Aunque estas funciones fueron implementadas en el compilador y se pudo verificar que son deterministas y que sus valores de salida son los esperados, la comprobación de equivalencia tuvo como resultado \textit{timeout}, lo que impidió verificar formalmente su equivalencia con los códigos de referencia que fueron desarrollados haciendo uso de funciones propias de la \texttt{circomlib} [\ref{sec:ver-modulo}].
