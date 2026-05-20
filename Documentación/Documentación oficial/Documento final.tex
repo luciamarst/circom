@@ -1820,9 +1820,17 @@ placement=H
 	
 	\begin{ejemplo}
 			
-	Si aplicamos esto a un caso concreto, supongamos que trabajamos en el cuerpo finito $\mathbb{F}_5$ y queremos calcular la división $3 / 2$. El inverso multiplicativo de $2$ en este cuerpo es $3$ (ya que $(2 \times 3) \pmod 5 = 1$). Por lo tanto, la operación se transforma en una multiplicación:
-	\[ 3 / 2 = 3 \times 2^{-1} = 3 \times 3 = 9 \pmod 5 = 4 \]
-	De esta manera, el resultado de la división sigue siendo un número entero dentro del cuerpo (en este caso, $4$).
+	\noindent Si aplicamos esto a un caso concreto, supongamos que trabajamos en el cuerpo finito $\mathbb{F}_5$ y queremos calcular la división $3 / -2$. 
+	
+	\vspace{0.3cm}
+	\noindent
+	En este contexto, primero debemos transformar el número negativo $-2$ a su equivalente positivo dentro del cuerpo, lo cual se hace sumándole el módulo ($5 - 2 = 3$), por lo que $-2 \equiv 3 \pmod 5$. A partir de ahí, buscamos el inverso multiplicativo de $3$, que es $2$ (ya que $(3 \times 2) \pmod 5 = 1$). 
+	
+	\vspace{0.3cm}
+	\noindent
+	Por lo tanto, la operación se resuelve como una multiplicación por dicho inverso:
+	\[ 3 / -2 = 3 / 3 = 3 \times 3^{-1} = 3 \times 2 = 6 \pmod 5 = 1 \]
+	De esta manera, el resultado de la división sigue siendo un número entero dentro del cuerpo (en este caso, $1$).
 	
 	%\caption{División dentro de un campo finito}
 	\end{ejemplo} 
