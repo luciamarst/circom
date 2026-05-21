@@ -145,14 +145,13 @@ placement=H
 
 \newenvironment{agradecimientos}{%
 	\begin{center}
-		\bfseries Agradecimientos
+		\bfseries\Large Agradecimientos
 	\end{center}
-	\small
-	\begin{quotation}
-	}{
-	\end{quotation}
+	\vspace{0.5cm}
+	\noindent 
+}{
+	\par\vspace{1cm}
 }
-
 % Lenguaje
 \lstdefinelanguage{Circom}{
 	keywords={template, signal, input, output, component},
@@ -278,12 +277,51 @@ placement=H
 		
 		\vspace{0.5cm}
 		
-		\noindent \textbf{Keywords}: Circom, compiler, circuits, R1CS, witness, zero-knowledge proof, R1CS equation systems, arithmetic circuits
+		\noindent \textbf{Keywords}: Circom, compilers, R1CS, witness computation, zero-knowledge proof, R1CS equation systems, arithmetic circuits
 	\end{abstract}
 	
 	
 	\begin{agradecimientos}
-		agradecimientos blablabla
+	 	\noindent A Clara y Alejandro, por la oportunidad de realizar este trabajo con ellos y por introducirme en el mundo de Circom. Un área que era completamente desconocida para mí y que hoy en día se ha convertido en uno de los campos de la informática que más despiertan mi interés.
+	 	
+	 	\vspace{0.3cm}
+	 	\noindent También quiero agradecerles su atención, paciencia y dedicación. Un apoyo que, en el caso de Clara, viene de mucho antes. Su ayuda en múltiples asignaturas a lo largo de la carrera ha sido fundamental para afrontar las asignaturas más difíciles y evitar que todo se volviese cuesta arriba.
+	 	
+	 	\vspace{0.3cm}
+	 	\noindent A la Universidad Complutense de Madrid, por permitirme cursar mis estudios aquí y formarme en lo que más me ha gustado desde pequeña, la informática. Una etapa que me ha brindado la mejor educación posible y un gran crecimiento personal.
+	 	
+	 	\vspace{0.3cm}
+	 	\noindent A la educación pública, ya que sin ella nunca habría podido tener acceso a una carrera universitaria, y mucho menos en Madrid.
+	 	
+	 	\vspace{0.3cm}
+	 	\noindent Al IES Melchor de Macanaz, lugar donde cursé mis estudios obligatorios y bachillerato, conociendo a grandes profesores. Entre ellos, agradecer especialmente a Dani y Pilar, ya que sin ellos no habría despertado mi interés en las matemáticas y la física, las cuales despertaron la curiosidad que me hizo decantarme finalmente por la informática.
+	 	
+	 	\vspace{0.3cm}
+	 	\noindent A mi familia. Sin ellos no habría podido tener la posibilidad de poder estudiar una carrera, y mucho menos en Madrid, apoyándome tanto económicamente como emocionalmente, siendo un pilar fundamental durante mis estudios.
+	 	
+	 	\vspace{0.3cm}
+	 	\noindent En especial a mi madre, Gloria, por escucharme pacientemente en todo lo que le contaba sobre la carrera, aunque no entendiese nada, y por apoyarme de forma incondicional, llegando a firmar el alquiler de un piso en Madrid incluso antes de que hiciera la prueba de acceso a la universidad.
+	 	
+	 	\vspace{0.3cm}
+	 	\noindent A mis abuelos, Lourdes y Juanjo, por interesarse siempre por cómo me iba en Madrid cada vez que regresaba, esperándome con los brazos abiertos. A mi abuela, por sus tuppers de comida, sobre todo los de carrilleras. Y a mi abuelo, por esas ganas de que llegara para tomarnos juntos un trago de su vino (según él, aguachirri).
+	 	
+	 	\vspace{0.3cm}
+	 	\noindent A mi tía Rosana, por estar siempre ahí, especialmente durante un primer curso que se me hizo cuesta arriba. Su cercanía, apoyo y ayuda me dieron el empujón definitivo para recordarme de lo que era capaz.
+	 	
+	 	\vspace{0.3cm}
+	 	\noindent A Ana, por ser mi mayor apoyo en Madrid y la persona que me enseñó a disfrutar de la ciudad. Por recordarme que no todo es estudiar y que la vida también va de exprimir y disfrutar cada momento.
+	 	
+	 	\vspace{0.3cm}
+	 	\noindent A Bonita, por ser la perra que más ha impedido el desarrollo de este trabajo por ponerse encima del teclado para llamar mi atención.
+	 	
+	 	\vspace{0.3cm}
+	 	\noindent A mis amigas del pueblo, que aunque ya no estén, fueron una gran parte de esta etapa, guardando grandes recuerdos.
+	 	
+	 	\vspace{0.3cm}
+	 	\noindent Pero sobre todo, a mi pueblo, Hellín. Al acabar bachillerato lo único que pensaba era en irme de allí y empezar una nueva vida en una gran ciudad. A día de hoy, solo echo la mirada atrás, pensando en volver.
+	 	
+	 	\vspace{0.3cm}
+	 	\noindent 
 	\end{agradecimientos}
 	
 	
@@ -1628,7 +1666,7 @@ placement=H
 	\chapter{Desarrollo del problema}
 	
 	\section{Síntesis de restricciones para la traducción de expresiones}
-		\noindent A lo largo del documento estudiaremos cómo traducir instrucciones y expresiones generadas por un lenguaje imperativo simple en un conjunto de ecuaciones en formato R1CS equivalente definimos las siguientes funciones: 
+		\noindent A lo largo del documento estudiaremos cómo traducir instrucciones y expresiones generadas por un lenguaje imperativo simple en un conjunto de ecuaciones en formato R1CS equivalente. Para ello definimos las siguientes funciones: 
 		
 		\begin{definicion}[Traducción de expresiones]
 			\noindent Sea $\mathcal{C}$ un conjunto de restricciones en formato R1CS. Definimos el conjunto de expresiones $Expr$ de forma inductiva mediante la siguiente sintaxis:
@@ -1636,7 +1674,7 @@ placement=H
 			donde $c$ es una constante, $x$ es una variable, y los operadores se dividen en:
 			\begin{itemize}
 				\item $\oplus_{bin} \in \{+, -, \times, /, \%, \&\&, ||, \&, |, <, >, \le, \ge, ==, \neq, \ll, \gg\}$ representa los operadores binarios.
-				\item $\ominus_{un} \in \{!\}$ representa los operadores unarios.
+				\item $\ominus_{un} \in \{!, -\}$ representa los operadores unarios.
 			\end{itemize}
 			
 			\vspace{0.2cm}
@@ -1689,12 +1727,12 @@ placement=H
 	\renewcommand{\arraystretch}{4} 
 	\begin{longtable}{|c|>{\centering\arraybackslash}m{12cm}|}
 		\hline
-		\textbf{Operación} & \textbf{Regla de Inferencia} \\
+		\textbf{Operación} & \textbf{Regla de Transformación} \\
 		\hline
 		\endfirsthead
 		
 		\hline
-		\textbf{Operación} & \textbf{Regla de Inferencia} \\
+		\textbf{Operación} & \textbf{Regla de Transformación} \\
 		\hline
 		\endhead 
 		
@@ -1812,8 +1850,6 @@ placement=H
 	
 	\vspace{0.2cm}
 	\noindent Conociendo este teorema \cite{studocu_division_entera}, en las siguientes secciones se especificará la aplicación de este teorema para conseguir la traducción a las restricciones algebraicas deseadas para los operadores división y módulo.
-	
-	\noindent Partiendo de la ecuación \(a = b * q + r\), podemos llegar al resultado de la operación \(a / b\) mediante el cociente y el resto.
 	
 	\vspace{0.3cm}
 	\noindent En Circom, trabajar sobre un cuerpo finito $\mathbb{F}_p$ implica que el valor de todas las señales debe ser un elemento de este conjunto, restringiendo de esta manera los valores al campo de los enteros módulo $p$. Por este motivo, la división decimal nunca existirá en este contexto. En su lugar, la división se calcula utilizando el inverso multiplicativo del divisor.
@@ -1966,10 +2002,6 @@ placement=H
 		\hspace*{\fill} $\blacksquare$
 	\end{mi_ejemplo}
 	
-	\noindent Las funciones \texttt{IsZero()} y \texttt{LessThan()} pertenecen a la librería \texttt{circomlib} \cite{circomlib_comparators}.
-	
-	
-	
 	
 	\subsubsection{Operadores Lógicos}
 	
@@ -2031,16 +2063,17 @@ placement=H
 	
 	\vspace{0.6cm}
 	\noindent \textbf{Traducción de operadores}
-	\vspace{0.2cm}
-		
-		\renewcommand{\arraystretch}{3}
+	\vspace{0.2cm}		
+	
+	\renewcommand{\arraystretch}{3}
+	{\footnotesize 
 		\begin{longtable}{|l|c|}
 			\hline
-			\textbf{Operación} & \textbf{Regla de Inferencia} \\ \hline
+			\textbf{Operación} & \textbf{Regla de Transformación} \\ \hline
 			\endfirsthead 
 			
 			\hline
-			\textbf{Operación} & \textbf{Regla de Inferencia (cont.)} \\ \hline
+			\textbf{Operación} & \textbf{Regla de Transformación (cont.)} \\ \hline
 			\endhead
 			
 			\hline
@@ -2137,8 +2170,6 @@ placement=H
 					} 
 				\end{prooftree}
 			} \\ 
-			\hline
-	
 			
 			\texttt{$e_1 \mid e_2$} & 
 			\makecell[c]{ \\
@@ -2161,9 +2192,9 @@ placement=H
 					} 
 				\end{prooftree}
 			} \\ 
-			\hline
 			
 		\end{longtable}
+	}
 
 	\vspace{0.2cm} 
 	\noindent La función \textit{BinaryAnd(n)} recibe dos números decimales ($e'_1$ y $e'_2$), de forma que:
@@ -2193,354 +2224,263 @@ placement=H
 		\vspace{0.5cm} 
 		\setlength{\LTpre}{0pt} 
 		\setlength{\LTpost}{0pt}
-		\renewcommand{\arraystretch}{3}
-		\begin{longtable}{|l|c|}
-			\hline
-			\textbf{Operación} & \textbf{Regla de Inferencia} \\ \hline
-			\endfirsthead 
-			
-			\hline
-			\textbf{Operación} & \textbf{Regla de Inferencia (cont.)} \\ \hline
-			\endhead
-			
-			\hline
-			\multicolumn{2}{r}{\textit{Continúa en la siguiente página...}} \\
-			\endfoot 
-			
-			\hline
-			\endlastfoot
-			
-			\texttt{$e = e_1 == e_2$} & 
-			\makecell[c]{ \\
-				\begin{prooftree} 
-					\hypo{TC(e_1) = (C_1, e'_1)} 
-					\hypo{TC(e_2) = (C_2, e'_2)} 
-					\infer2{ 
-						TC(e_1 == e_2) = 
-						\left( 
-						C_1 \wedge C_2 \wedge 
-						\left\{ 
-						\begin{array}{l} 
-							EQI(253).in[0] = e'_1, \\ 
-							EQI(253).in[1] = e'_2, \\ 
-							EQI(253).out = v_{aux}, 
-						\end{array} 
-						\right\}, 
-						v_{aux}
-						\right) 
-					} 
-				\end{prooftree}
-				$$} \\ 
-			
-			\hline 
-			
-			\texttt{$e = e_1 ==\_(n) \ e_2$} & 
-			\makecell[c]{ \\
-				\begin{prooftree} 
-					\hypo{TC(e_1) = (C_1, e'_1)} 
-					\hypo{TC(e_2) = (C_2, e'_2)} 
-					\infer2{ 
-						TC(e_1 ==\_(n) e_2) = 
-						\left( 
-						C_1 \wedge C_2 \wedge 
-						\left\{ 
-						\begin{array}{l} 
-							EQI(n).in[0] = e'_1, \\ 
-							EQI(n).in[1] = e'_2, \\ 
-							EQI(n).out = v_{aux}, 
-						\end{array} 
-						\right\}, 
-						v_{aux}
-						\right) 
-					} 
-				\end{prooftree}
-				$$} \\ 
-			
-			\hline 
-			
-			\texttt{$e = e_1 \neq e_2$} & 
-			\makecell[c]{ \\
-				\begin{prooftree} 
-					\hypo{TC(e_1) = (C_1, e'_1)} 
-					\hypo{TC(e_2) = (C_2, e'_2)} 
-					\infer2{ 
-						TC(e_1 \neq e_2) = 
-						\left( 
-						C_1 \wedge C_2 \wedge 
-						\left\{ 
-						\begin{array}{l} 
-							EQI.in[0] = e'_1, \\ 
-							EQI.in[1] = e'_2, \\ 
-							EQI.out = v_{aux}, 
-						\end{array} 
-						\right\}, 
-						1- v_{aux}
-						\right) 
-					} 
-				\end{prooftree}
-				$$} \\ 
-			
-			\hline 
-			
-			
-			\texttt{$e = e_1 \neq\_(n) \ e_2$} & 
-			\makecell[c]{ \\
-				\begin{prooftree} 
-					\hypo{TC(e_1) = (C_1, e'_1)} 
-					\hypo{TC(e_2) = (C_2, e'_2)} 
-					\infer2{ 
-						TC(e_1 \neq\_(n) e_2) = 
-						\left( 
-						C_1 \wedge C_2 \wedge 
-						\left\{ 
-						\begin{array}{l} 
-							EQI(n).in[0] = e'_1, \\ 
-							EQI(n).in[1] = e'_2, \\ 
-							EQI(n).out = v_{aux}, 
-						\end{array} 
-						\right\}, 
-						1- v_{aux}
-						\right) 
-					} 
-				\end{prooftree}
-				$$} \\ 
-			
-			\hline 
-			
-			\texttt{\(e = e_1 < e_2\)} & 
-			\makecell[c]{ \\[1pt] 
-				$$ \begin{prooftree} 
-					\hypo{TC(e_1) = (C_1, e'_1)} 
-					\hypo {TC(e_2) = (C_2, e'_2)} 
-					\[
-					\infer2{
-						TC(e_1 < e_2) =
-						\left(
-						C_1 \wedge C_2 \wedge
-						\left\{ 
-						\begin{array}{l}
-							\{SLTEq(253).in1 = e_2', \\
-							SLTEq(253).in2 = e_1', \\
-							SLTEq(253).out = v_{aux} 
-							\}, 
-						\end{array}
-						\right\}, 
-						1- v_{aux}
-						\right)
-					}
-					\]
-				\end{prooftree} 
-				$$} \\ 
-			\hline 
-			
-			\texttt{\(e = e_1 <\_(n) \ e_2\)} & 
-			\makecell[c]{ \\
-				$$ \begin{prooftree} 
-					\hypo{TC(e_1) = (C_1, e'_1)} 
-					\hypo {TC(e_2) = (C_2, e'_2)} 
-					\[
-					\infer2{
-						TC(e_1 <\_(n)  e_2) =
-						\left(
-						C_1 \wedge C_2 \wedge
-						\left\{ 
-						\begin{array}{l}
-							\{SLTEq(n).in1 = e_2', \\
-							SLTEq(n).in2 = e_1', \\
-							SLTEq(n).out = v_{aux} 
-							\}, 
-						\end{array}
-						\right\}, 
-						1- v_{aux}
-						\right)
-					}
-					\]
-				\end{prooftree} 
-				$$} \\ 
-			
-			\hline 
-			
-			\texttt{\(e = e_1 \leq e_2\)} & 
-			\makecell[c]{ \\
-				$$ 
-				\begin{prooftree} 
-					\hypo{TC(e_1) = (C_1, e'_1)} 
-					\hypo {TC(e_2) = (C_2, e'_2)} 
-					\[
-					\infer2{
-						TC(e_1 \leq e_2) =
-						\left(
-						C_1 \wedge C_2 \wedge
-						\left\{ 
-						\begin{array}{l}
-							\{SLTEq(253).in1 = e_1', \\
-							SLTEq(253).in2 = e_2', \\
-							SLTEq(253).out = v_{aux} 
-							\}, 
-						\end{array}
-						\right\}, 
-						v_{aux}
-						\right)
-					}
-					\]
-				\end{prooftree} 
-				$$} \\ 
-			
-			\hline
-			
-			\texttt{\(e = e_1 \leq\_(n) \ e_2\)} & 
-			\makecell[c]{ \\
-				$$ 
-				\begin{prooftree} 
-					\hypo{TC(e_1) = (C_1, e'_1)} 
-					\hypo {TC(e_2) = (C_2, e'_2)} 
-					\[
-					\infer2{
-						TC(e_1 \leq\_(n)  e_2) =
-						\left(
-						C_1 \wedge C_2 \wedge
-						\left\{ 
-						\begin{array}{l}
-							\{SLTEq(n).in1 = e_1', \\
-							SLTEq(n).in2 = e_2', \\
-							SLTEq(n).out = v_{aux} 
-							\}, 
-						\end{array}
-						\right\}, 
-						v_{aux}
-						\right)
-					}
-					\]
-				\end{prooftree} 
-				$$} \\ 
-			
-			\hline
-			
-			\texttt{\(e = e_1 > e_2\)} & 
-			\makecell[c]{ \\
-				$$ 
-				\begin{prooftree} 
-					\hypo{TC(e_1) = (C_1, e'_1)} 
-					\hypo {TC(e_2) = (C_2, e'_2)} 
-					\[
-					\infer2{
-						TC(e_1 > e_2) =
-						\left(
-						C_1 \wedge C_2 \wedge
-						\left\{ 
-						\begin{array}{l}
-							\{SLTEq(253).in1 = e_1', \\
-							SLTEq(253).in2 = e_2', \\
-							SLTEq(253).out = v_{aux} 
-							\}, 
-						\end{array}
-						\right\}, 
-						1- v_{aux}
-						\right)
-					}
-					\]
-				\end{prooftree} 
-				$$} \\
-			
-			\hline 
-			
-			\texttt{\(e = e_1 >\_(n) \ e_2\)} & 
-			\makecell[c]{ \\
-				$$ 
-				\begin{prooftree} 
-					\hypo{TC(e_1) = (C_1, e'_1)} 
-					\hypo {TC(e_2) = (C_2, e'_2)} 
-					\[
-					\infer2{
-						TC(e_1 >\_(n)  e_2) =
-						\left(
-						C_1 \wedge C_2 \wedge
-						\left\{ 
-						\begin{array}{l}
-							\{SLTEq(n).in1 = e_1', \\
-							SLTEq(n).in2 = e_2', \\
-							SLTEq(n).out = v_{aux} 
-							\}, 
-						\end{array}
-						\right\}, 
-						1- v_{aux}
-						\right)
-					}
-					\]
-				\end{prooftree} 
-				$$} \\
-			
-			\hline 
-			
-			\texttt{\(e = e_1 \geq e_2\)} & 
-			\makecell[c]{ \\
-				$$ 
-				\begin{prooftree} 
-					\hypo{TC(e_1) = (C_1, e'_1)} 
-					\hypo {TC(e_2) = (C_2, e'_2)} 
-					\[
-					\infer2{
-						TC(e_1 \geq e_2) =
-						\left(
-						C_1 \wedge C_2 \wedge
-						\left\{ 
-						\begin{array}{l}
-							\{SLTEq(253).in1 = e_2', \\
-							SLTEq(253).in2 = e_1', \\
-							SLTEq(253).out = v_{aux} 
-							\}, 
-						\end{array}
-						\right\}, 
-						v_{aux}
-						\right)
-					}
-					\]
-				\end{prooftree} 
-				$$} \\ 
-			
-			\hline 
-			
-			\texttt{\(e = e_1 \geq\_(n) \ e_2\)} & 
-			\makecell[c]{ \\
-				$$ 
-				\begin{prooftree} 
-					\hypo{TC(e_1) = (C_1, e'_1)} 
-					\hypo {TC(e_2) = (C_2, e'_2)} 
-					\[
-					\infer2{
-						TC(e_1 \geq\_(n) e_2) =
-						\left(
-						C_1 \wedge C_2 \wedge
-						\left\{ 
-						\begin{array}{l}
-							\{SLTEq(n).in1 = e_2', \\
-							SLTEq(n).in2 = e_1', \\
-							SLTEq(n).out = v_{aux} 
-							\}, 
-						\end{array}
-						\right\}, 
-						v_{aux}
-						\right)
-					}
-					\]
-				\end{prooftree} 
-				$$} \\ 
-			
-			\hline 
-		\end{longtable} 
+		\renewcommand{\arraystretch}{2} 
+		
+		{\footnotesize
+			\begin{longtable}{|l|c|}
+				\hline
+				\textbf{Operación} & \textbf{Regla de Transformación} \\ \hline
+				\endfirsthead 
+				
+				\hline
+				\textbf{Operación} & \textbf{Regla de Transformación (cont.)} \\ \hline
+				\endhead
+				
+				\hline
+				\multicolumn{2}{r}{\textit{Continúa en la siguiente página...}} \\
+				\endfoot 
+				
+				\hline
+				\endlastfoot
+				
+				\texttt{$e = e_1 == e_2$} & 
+				\makecell[c]{ \\
+					\begin{prooftree} 
+						\hypo{TC(e_1) = (C_1, e'_1)} 
+						\hypo{TC(e_2) = (C_2, e'_2)} 
+						\infer2{ 
+							TC(e_1 == e_2) = 
+							\left( 
+							C_1 \wedge C_2 \wedge 
+							\left\{ 
+							\begin{array}{l} 
+								EQI().in[0] = e'_1, \\ 
+								EQI().in[1] = e'_2, \\ 
+								EQI().out = v_{aux} 
+							\end{array} 
+							\right\}, 
+							v_{aux}
+							\right) 
+						} 
+					\end{prooftree}
+				} \\ 
+				
+				\hline 
+				
+				\texttt{$e = e_1 \neq e_2$} & 
+				\makecell[c]{ \\
+					\begin{prooftree} 
+						\hypo{TC(e_1) = (C_1, e'_1)} 
+						\hypo{TC(e_2) = (C_2, e'_2)} 
+						\infer2{ 
+							TC(e_1 \neq e_2) = 
+							\left( 
+							C_1 \wedge C_2 \wedge 
+							\left\{ 
+							\begin{array}{l} 
+								EQI().in[0] = e'_1, \\ 
+								EQI().in[1] = e'_2, \\ 
+								EQI().out = v_{aux} 
+							\end{array} 
+							\right\}, 
+							1- v_{aux}
+							\right) 
+						} 
+					\end{prooftree}
+				} \\ 
+				
+				\hline 
+				
+				\texttt{\(e = e_1 <\_(n) \ e_2\)} & 
+				\makecell[c]{ \\
+					\begin{prooftree} 
+						\hypo{TC(e_1) = (C_1, e'_1)} 
+						\hypo {TC(e_2) = (C_2, e'_2)} 
+						\infer2{
+							TC(e_1 <\_(n)  e_2) =
+							\left(
+							C_1 \wedge C_2 \wedge
+							\left\{ 
+							\begin{array}{l}
+								SLTEq(n).in1 = e_2', \\
+								SLTEq(n).in2 = e_1', \\
+								SLTEq(n).out = v_{aux} 
+							\end{array}
+							\right\}, 
+							1- v_{aux}
+							\right)
+						}
+					\end{prooftree} 
+				} \\ 
+				
+				\hline 
+				
+				\texttt{\(e = e_1 \leq\_(n) \ e_2\)} & 
+				\makecell[c]{ \\
+					\begin{prooftree} 
+						\hypo{TC(e_1) = (C_1, e'_1)} 
+						\hypo {TC(e_2) = (C_2, e'_2)} 
+						\infer2{
+							TC(e_1 \leq\_(n)  e_2) =
+							\left(
+							C_1 \wedge C_2 \wedge
+							\left\{ 
+							\begin{array}{l}
+								SLTEq(n).in1 = e_1', \\
+								SLTEq(n).in2 = e_2', \\
+								SLTEq(n).out = v_{aux} 
+							\end{array}
+							\right\}, 
+							v_{aux}
+							\right)
+						}
+					\end{prooftree} 
+				} \\ 
+				
+				\hline
+				
+				\texttt{\(e = e_1 >\_(n) \ e_2\)} & 
+				\makecell[c]{ \\
+					\begin{prooftree} 
+						\hypo{TC(e_1) = (C_1, e'_1)} 
+						\hypo {TC(e_2) = (C_2, e'_2)} 
+						\infer2{
+							TC(e_1 >\_(n)  e_2) =
+							\left(
+							C_1 \wedge C_2 \wedge
+							\left\{ 
+							\begin{array}{l}
+								SLTEq(n).in1 = e_1', \\
+								SLTEq(n).in2 = e_2', \\
+								SLTEq(n).out = v_{aux} 
+							\end{array}
+							\right\}, 
+							1- v_{aux}
+							\right)
+						}
+					\end{prooftree} 
+				} \\
+				
+				\hline 
+				
+				\texttt{\(e = e_1 \geq\_(n) \ e_2\)} & 
+				\makecell[c]{ \\
+					\begin{prooftree} 
+						\hypo{TC(e_1) = (C_1, e'_1)} 
+						\hypo {TC(e_2) = (C_2, e'_2)} 
+						\infer2{
+							TC(e_1 \geq\_(n) e_2) =
+							\left(
+							C_1 \wedge C_2 \wedge
+							\left\{ 
+							\begin{array}{l}
+								SLTEq(n).in1 = e_2', \\
+								SLTEq(n).in2 = e_1', \\
+								SLTEq(n).out = v_{aux} 
+							\end{array}
+							\right\}, 
+							v_{aux}
+							\right)
+						}
+					\end{prooftree} 
+				} \\ 
+				
+			\end{longtable} 
+		}
+		
+		\vspace{0.4cm} 
+		\noindent Los operadores $==$ y $!=$ no dependen del valor de $n$, por lo que el operador \texttt{op\_(n)} no se aplica a ellos. En cambio, para el resto de los operadores sí aplica. De este modo, si el programador no lo utiliza, se asumirá por defecto un tamaño de $n = 253$.
 		
 		\vspace{0.4cm} 
 		\noindent Las siglas \textit{SLTEq} denotan \textit{SecureLessThanEq()}, función que simula el comportamiento explicado en la \hyperref[sssec:less-greater]{\textbf{Operadores $<, \leq, > \ y \ \geq$}} para dos entradas.
 		
-		\vspace{0.2cm} 
-		\noindent \textit{Observación}: Es importante darse cuanta que podemos hacer uso de la misma función para los operadores $<, \leq, > \ y \ \geq$ explotando su carácter reflexivo. Para ello, notesé que las llamadas de los operadores $< \ y \geq $ se invierten.
 		
 		\vspace{0.2cm} 
 		\noindent Por otro lado, EQI denota las siglas \textit{Equality Indicator}, haciendo referencia a una función encargada de imitar al comportamiento explicado en el apartado de  \hyperref[sss:ops-eq-neq]{\textbf{Operadores == y !=}} para dos entradas.
 		
-		\newpage
+		
+		\vspace{0.2cm} 
+		\noindent \textit{Observación}: Es importante darse cuanta que podemos hacer uso de la misma función para los operadores $<, \leq, > \ y \ \geq$ explotando su carácter reflexivo. Para ello, notesé que las llamadas de los operadores $< \ y \geq $ se invierten.
+		
+		\noindent \textbf{Tamaño de los números comparados}
+		\vspace{0.2cm}
+		
+		\label{sssec:tamaño-ops}
+		
+		\noindent El tamaño de los números comparados es un factor importante, ya que dicho tamaño puede ser por un lado conocido e igual, mientras que por otro lado puede ser desconocido o de diferentes tamaños.
+		
+		\vspace{0.2cm}	
+		\noindent \textcolor{black}{Un tamaño es desconocido cuando una señal no tiene una restricción de bits predefinida, existiendo únicamente como un valor dentro del rango del cuerpo finito $\mathbb{F}_p$ ([0,$p-1$]). }
+		
+		\vspace{0.2cm}	
+		\noindent Para resolver este problema, vamos a definir un complemento opcional por cada operador de comparación existente.
+		
+		\vspace{0.2cm}	
+		\noindent Dicho complemento consiste en restringir el tamaño de los números comparados a un tamaño especificado por el usuario. Si el usuario no hace uso de este complemento opcional para la especificación del tamaño de los números a comparar, se utilizará el tamaño máximo por defecto, correspondiente a 253.
+		
+		\vspace{0.2cm}	
+		
+		\begin{definicion}[Complemento opcional de tamaño] Vamos a definir el operador: 
+			
+			\noindent \textbf{Operador \textit{op}}
+			\begin{itemize}
+				\item \textit{op}: Comparaciones de cuyos números se conoce el tamaño y además tienen el mismo tamaño.
+				\item La ausencia de dicho componente se traduce a la asunción del 253 como el tamaño fijo de ambos números comparados, el mayor tamaño posible posible.
+			\end{itemize}
+			
+			\noindent \textbf{Operador $op\_(n)$}
+			\begin{itemize}
+				\item $op\_{n}$: Comparaciones de cuyos números no se conoce el tamaño y/o no tiene el mismo tamaño. De esta manera, n indica el tamaño fijado para ambos números comparados.
+			\end{itemize}
+			
+			\label{ex:complemento-opc-tamano}
+		\end{definicion}
+		
+		\vspace{0.2cm}	
+		\noindent Este complemento aplica para todos los operadores de comparación, siguiendo la misma estructura que la del \hyperref[ex:complemento-opc-tamano]{\textit{Ejemplo  \ref{ex:complemento-opc-tamano}}}.
+		
+		\vspace{0.2cm}	
+		\noindent Un caso de uso se presenta a continuación para clarificar la naturaleza de dicho complemento, así como su aplicación.
+		
+		\begin{mi_ejemplo}[H]
+			\begin{lstlisting}[language=Circom]
+				template comparacion(n) autocomplete{
+					signal input a;
+					signal output b;
+					
+					if(a >_(2) b){
+						b <-- 2;
+					}
+					else if(a ==_(2) b){
+						b <-- 1;
+					}
+					else{
+						b<--0;
+					}
+				}
+			\end{lstlisting}
+			
+			\caption{Caso de uso del complemento opcional de tamaño}
+			\label{ex:uso-complemento-opc}
+			
+			\hspace*{\fill} $\blacksquare$
+		\end{mi_ejemplo}
+		
+		
+		\vspace{0.2cm}	
+		\noindent \textcolor{black}{Siguiendo el ejemplo anterior, la introducción del operador \textit{op\_(n)} permite limitar el tamaño en bits de los operadores \texttt{>} y \texttt{==}, restringiendo así el tamaño de las señales \texttt{a} y \texttt{b} a n=2.}
+		
+		\vspace{0.2cm}	
+		\noindent \textcolor{black}{Este operador resulta de gran utilidad cuando el programador conoce previamente el tamaño de las señales. Si no estuviese disponible, el sistema utilizaría por defecto el tamaño máximo de 253 bits.}
+		
+		\vspace{0.2cm}	
+		\noindent Aunque el usuario conociese que las señales con las que va a trabajar no exceden un tamaño de 2, se generarían 251 señales innecesarias para este circuito, efectando considerablemente a su eficiencia.
+		
+		\vspace{0.2cm}	
+		\noindent \textcolor{black}{Por ello, si el usuario es conocedor del tamaño, es una herramienta que reduce considerablemente el número de restricciones generadas.}
+		
 	
-		\noindent \textbf{Tratamiento de número negativos: Num2Bits()}
+		\noindent \textbf{Tratamiento de bits}
 		\vspace{0.2cm}
 		
 		\label{sssec:tra:num_negativos}
@@ -2606,31 +2546,27 @@ placement=H
 		
 		\vspace{0.2cm}
 		\noindent En conclusión, \textit{Num2Bits()} garantiza el uso de número positivos dentro del rango mencionado de manera implícita.
-		
-		\vspace{0.2cm}
-		\noindent \textit{Observación: Gracias a la constraint lc1 === in (fuerza a que la entrada cumpla el rango \([0,2^n -1]\)), podemos evitar el uso de número negativos, ya que estos no cumplirán tal restricción.}
-		
-		
-		
+	
 		
 		\vspace{0.2cm}
 		\noindent Un ejemplo para ilustrar el comportamiento de la función en caso de número negativo es el siguiente:
 		
 		\begin{mi_ejemplo}
-			\caption{\textcolor{black}{Comportamiento Num2Bits()}}
+			\caption{\textcolor{black}{Comportamiento Num2Bits(10)}}
 			\label{ex:num2bits}
 			\begin{enumerate}
 				
 				\item Partimos de un número negativo, por ejemplo -3. Este valor, al trabajar sobre un cuerpo finito se codifica como p$-$3.
-				\item La función ejecuta un bucle de n iteraciones, en el que en cada iteración se aplica un desplazamiento a la derecha sobre \texttt{in} en i posiciones, extrayendo el bit menos significativo mediante el and binario, aplicando AND 1. De esta forma, conseguimos que \texttt{out[i]} adquiera la conversión de decimal a binario. 
+				
+				\item La función ejecuta un bucle de 10 iteraciones, en el que en cada iteración se aplica un desplazamiento a la derecha sobre \texttt{in} en i posiciones, extrayendo el bit menos significativo mediante el and binario, aplicando AND 1. De esta forma, conseguimos que \texttt{out[i]} adquiera la conversión de decimal a binario. 
 				
 				\item Es imprescindible añadir explícitamente la restricción \texttt{out[i] * (out[i] - 1) === 0}. Esta ecuación sí se integra en el sistema de restricciones, asegurando que la señal solo pueda adoptar los valores lógicos 0 o 1. Sin embargo, \texttt{out[i]} \texttt{<-} \texttt{-}\texttt{ (in}$\gg$\texttt{i) \& 1} solo asigna y no es añadida al sistema de ecuaciones.
 				
 				\item Una vez realizadas la asignación y restricción de \texttt{out[i]}, se produce la reconstrucción del valor de entrada, este caso el -3. Es en este punto donde la funcion \textit{Num2Bits()} nos permite determinar si el número es negativo. 
 				
-				\item Como hemos mencionado, al trabajar con un cuerpo finito $\mathbb{F}_p$, el valor $-3$ se representa como $p-3$, un número positivo extremadamente grande que requiere cerca de 254 bits para ser expresado. Dado que el tamaño máximo permitido es 253, el bucle de reconstrucción solo sumará los pesos de a lo sumo 253 bits. 
+				\item Como hemos mencionado, al trabajar con un cuerpo finito $\mathbb{F}_p$, el valor $-3$ se representa como $p-3$, un número positivo extremadamente grande que requiere cerca de 254 bits para ser expresado. Dado que el tamaño máximo permitido es 10, el bucle de reconstrucción solo sumará los pesos de a lo sumo 10 bits. 
 				
-				\item Como consecuencia, el resultado final de la reconstrucción en \texttt{lc1} será un valor que nunca igualará al valor de entrada \texttt{in} ($p-3$). Al no cumplirse la restricción \texttt{lc1 === in}, el circuito resultará insatisfacible, detectando así que el número original no es representable con $n$ bits y, por tanto, se comporta como un valor fuera de rango o "negativo".
+				\item Como consecuencia, el resultado final de la reconstrucción en \texttt{lc1} será un valor que nunca igualará al valor de entrada \texttt{in} ($p-3$). Al no cumplirse la restricción \texttt{lc1 === in}, el circuito resultará insatisfacible, detectando así que el número original no es representable con 10 bits y, por tanto, se comporta como un valor fuera de rango o "negativo".
 			\end{enumerate}
 			
 			
@@ -2638,84 +2574,6 @@ placement=H
 		\end{mi_ejemplo}
 	
 				
-		\vspace{0.6cm}
-		\noindent \textbf{Tamaño de los números comparados}
-		\vspace{0.2cm}
-		
-		\label{sssec:tamaño-ops}
-		
-		\noindent El tamaño de los números comparados es un factor importante, ya que dicho tamaño puede ser por un lado conocido e igual, mientras que por otro lado puede ser desconocido o de diferentes tamaños.
-		
-		\vspace{0.2cm}	
-		\noindent \textcolor{black}{Un tamaño es desconocido cuando una señal no tiene una restricción de bits predefinida, existiendo únicamente como un valor dentro del rango del cuerpo finito $\mathbb{F}_p$ ([0,$p-1$]). }
-		
-		\vspace{0.2cm}	
-		\noindent Para resolver este problema, vamos a definir un complemento opcional por cada operador de comparación existente.
-		
-		\vspace{0.2cm}	
-		\noindent Dicho complemento consiste en restringir el tamaño de los números comparados a un tamaño especificado por el usuario. Si el usuario no hace uso de este complemento opcional para la especificación del tamaño de los números a comparar, se utilizará el tamaño máximo por defecto, correspondiente a 253.
-		
-		\vspace{0.2cm}	
-		
-		\begin{definicion}[Complemento opcional de tamaño] Vamos a definir el operador: 
-			
-			\noindent \textbf{Operador \textit{op}}
-			\begin{itemize}
-				\item \textit{op}: Comparaciones de cuyos números se conoce el tamaño y además tienen el mismo tamaño.
-				\item La ausencia de dicho componente se traduce a la asunción del 253 como el tamaño fijo de ambos números comparados, el mayor tamaño posible posible.
-			\end{itemize}
-			
-			\noindent \textbf{Operador $op\_(n)$}
-			\begin{itemize}
-				\item $op\_{n}$: Comparaciones de cuyos números no se conoce el tamaño y/o no tiene el mismo tamaño. De esta manera, n indica el tamaño fijado para ambos números comparados.
-			\end{itemize}
-			
-			\label{ex:complemento-opc-tamano}
-		\end{definicion}
-		
-		\vspace{0.2cm}	
-		\noindent Este complemento aplica para todos los operadores de comparación, siguiendo la misma estructura que la del \hyperref[ex:complemento-opc-tamano]{\textit{Ejemplo  \ref{ex:complemento-opc-tamano}}};
-		
-		\vspace{0.2cm}	
-		\noindent Un caso de uso se presenta a continuación para clarificar la naturaleza de dicho complemento, así como su aplicación.
-		
-		\begin{mi_ejemplo}[H]
-					\begin{lstlisting}[language=Circom]
-					template Num2Bits(n) autocomplete{
-						signal input a;
-						signal output b;
-						
-						if(a >_(2) b){
-							b <-- 2;
-						}
-						else if(a ==_(2) b){
-							b <-- 1;
-						}
-						else{
-							b<--0;
-						}
-					}
-				\end{lstlisting}
-			
-				\caption{Caso de uso del complemento opcional de tamaño}
-				\label{ex:uso-complemento-opc}
-				
-				\hspace*{\fill} $\blacksquare$
-		\end{mi_ejemplo}
-		
-		
-		\vspace{0.2cm}	
-		\noindent \textcolor{black}{Siguiendo el ejemplo anterior, la introducción del operador \textit{op\_(n)} permite limitar el tamaño en bits de los operadores \texttt{>} y \texttt{==}, restringiendo así el tamaño de las señales \texttt{a} y \texttt{b} a n=2.}
-		
-		\vspace{0.2cm}	
-		\noindent \textcolor{black}{Este operador resulta de gran utilidad cuando el programador conoce previamente el tamaño de las señales. Si no estuviese disponible, el sistema utilizaría por defecto el tamaño máximo de 253 bits.}
-		
-		\vspace{0.2cm}	
-		\noindent Aunque el usuario conociese que las señales con las que va a trabajar no exceden un tamaño de 2, se generarían 251 señales innecesarias para este circuito, efectando considerablemente a su eficiencia.
-		 
-		\vspace{0.2cm}	
-		\noindent \textcolor{black}{Por ello, si el usuario es conocedor del tamaño, es una herramienta que reduce considerablemente el número de restricciones generadas.}
-	
 		\vspace{0.6cm}
 		\noindent \textbf{Operadores == y !=}
 		\vspace{0.2cm}
@@ -2815,49 +2673,28 @@ placement=H
 
 		\vspace{0.2cm}
 		
-		\noindent La implementación de \textit{SecureLessThanEq(n)}, aparte de utilizar la función \textit{Num2Bits()} para cada par de variables a comparar, aplica Complemento a 2.
-		
-		\begin{definicion}[Complemento a dos]
-			Dado un número entero $A$ representado en el sistema binario con $n$ bits, su complemento a dos se define como el valor obtenido al invertir todos sus bits (complemento a uno) y sumar una unidad al resultado:
-				$$C_2(A) = \bar{A} + 1 = (2^n - 1 - A) + 1 = 2^n - A$$
-				
-			\noindent Esta representación permite realizar la operación de sustracción $B - A$ mediante la suma aritmética $B + C_2(A)$ en un sistema de $n$ bits, donde el bit de acarreo resultante determina el signo del resultado.
-		\end{definicion}
-		
-		
-		\noindent La implementación de \textit{SecureLessThanEq(n)}, como hemos mencionado anteriormente, aplica este concepto. Es decir, dadas las variables $A$ y $B$, previamente transformadas a bits, aplicamos $(\text{NOT } A) + B + 1$. La inversión de los bits de $A$ y la suma tanto de $B$ como de $1$ es equivalente a la operación $B-A$.
+		\noindent La implementación de \textit{SecureLessThanEq(n)}, aparte de utilizar la función \textit{Num2Bits()} para asegurar que cada ambas variables no son números negativos, aplicamos sobre ella la operación $2^n - A + B$. Es decir, dadas las variables $A$ y $B$, aplicamos $-A + B$. La inversión del valor de $A$ y la suma de $B$ es equivalente a la operación $B-A$. Una vez terminada esta operación es transformada a binario para ser evaluada.
 		
 		\vspace{0.2cm}
 		
-		\noindent Por tanto, cuando el minuendo es mayor o igual que el sustraendo, la suma de los bits junto con el complemento a dos produce un acarreo (overflow) en la posición n (el bit extra, bit más significativo). Por otro lado, si el minuendo es menor que el sustraendo, no se produce dicho overflow.
+		\noindent Por tanto, cuando el minuendo es mayor o igual que el sustraendo, el resultado de la transformación binaria de la suma $B-A$ produce un acarreo (overflow) en la posición n (el bit extra, bit más significativo). Por otro lado, si el minuendo es menor que el sustraendo, no se produce dicho overflow.
 		
 		\vspace{0.2cm}
 		
-		\noindent De esta forma sabemos que si el bit de acarreo es 1, podemos concluir que B $\geq$ A, ya que al hacer la suma con Complemento a 2, tenemos que:
+		\noindent De esta forma sabemos que si el bit de acarreo es 1, podemos concluir que B $\geq$ A, ya que al hacer la suma con $2^n -  A + B$, tenemos que:
 		\begin{equation}
 			\begin{aligned}
-				(\text{NOT } A) + B + 1 \\
-				[(2^n - 1) - A] + B + 1 \\
-				2^n - 1 - A + B + 1 \\
 			    2^n - A + B \\
 				B + (2^n - A)
 			\end{aligned}
 		\end{equation}
 		\vspace{0.2cm}
 		
-		\noindent Como podemos ver en las ecuaciones anteriores, debido al requerimiento de $2^n-1$ por parte de NOT A, es vital el +1 de $(NOT \ A)+B+1$. De lo contrario el resultado de la resta estaría desplazado por una unidad al no eliminar ese -1 de NOT A.
-		
-		\vspace{0.2cm}
-		
-		\noindent Partiendo de $2^n + B - A$, si B es mayor o igual que A, entonces (B-A) $\geq$ 0. De este modo, tendríamos que $2^n + (num. positivo) \geq 2^n$, concluyendo que si B $\geq$ A obtendríamos siempre un resultado mayor o igual a $2^n$, excediendo siempre los n bits y como consecuencia, produciendo un overflow.
-		
-		\vspace{0.2cm}
-		
-		\noindent Siguiendo la misma lógica, si el bit de acarreo es 0 significa que A es mayor que B ya que B-A < 0, y de esta forma obtendríamos $2^n + (num. negativo) < 2^n$, concluyendo así que no podría producirse un overflow.
+		\noindent Siguiendo la misma lógica, si el bit de acarreo es 0 significa que A es mayor que B ya que $B - A < 0$, y de esta forma obtendríamos $2^n + (num. negativo) < 2^n$, concluyendo así que no podría producirse un overflow.
 		
 		
 		\vspace{0.2cm}	
-		\noindent Con está pequeña modificación, al usar para ambos número a comparar la función \textit{Num2Bits()} nos aseguramos de que se cumpla la restricción de ser número enteros positivos dentro del rango.
+		\noindent Con esta pequeña modificación, al usar para ambos número a comparar la función \textit{Num2Bits()} nos aseguramos de que se cumpla la restricción de ser número enteros positivos dentro del rango.
 		
 		
 
@@ -2929,137 +2766,115 @@ placement=H
 		
 		\noindent De la misma forma en la que se ha desarrollado estas operaciones, se definirán las ecuaciones que formarán parte del sistema dentro del compilador para reflejar ambos comportamientos.
 		
-		\vspace{0.2cm}
+		\vspace{0.5cm}
 		\noindent \textbf{Traducción de operadores}
 		\vspace{0.2cm}
 		
 		
-		\begin{tabular}{|c|>{\centering\arraybackslash}p{13cm}|}
-			\hline
-			\textbf{Operación} & \textbf{Regla de Inferencia} \\
-			\hline
-			
-			\texttt{$e= e_1 \ll e_2$} & 
-			\makecell[c]{ 
-				\\
-				$$ 
-				\begin{prooftree} 
-					\hypo{TC(e_1) = (C_1, e'_1)} 
-					\hypo {TC(e_2) = (C_2, e'_2)} 
-					\[
-					\infer2{
-						TC(e_1 \ll e_2) =
-						\left(
-						C_1 \wedge C_2 \wedge
-						\left\{ 
-						\begin{array}{l}
-							\{DL(253).in1 = e_2', \\
-							DL(253).in2 = e_1', \\
-							DL(253).out = v_{aux} 
-							\}, 
-						\end{array}
-						\right\}, 
-						v_{aux}
-						\right)
-					}
-					\]
-				\end{prooftree} 
-				$$} 
-				\\
-			
+		\renewcommand{\arraystretch}{2} 
+		{\footnotesize 
+			\begin{tabular}{|c|>{\centering\arraybackslash}p{11cm}|} 
+				\hline
+				\textbf{Operación} & \textbf{Regla de Transformación} \\
+				\hline
 				
-			\hline
-			
-			\texttt{$e= e_1 \gg e_2$} & 
-			\makecell[c]{ 
-				\\
-				$$ 
-				\begin{prooftree} 
-					\hypo{TC(e_1) = (C_1, e'_1)} 
-					\hypo {TC(e_2) = (C_2, e'_2)} 
-					\[
-					\infer2{
-						TC(e_1 \gg e_2) =
-						\left(
-						C_1 \wedge C_2 \wedge
-						\left\{ 
-						\begin{array}{l}
-							\{DR(253).in1 = e_2', \\
-							DR(253).in2 = e_1', \\
-							DR(253).out = v_{aux} 
-							\}, 
-						\end{array}
-						\right\}, 
-						v_{aux}
-						\right)
-					}
-					\]
-				\end{prooftree} 
-				$$} \\
-			
-			\hline
-			
-			\texttt{$e= e_1 \ll\_(n) e_2$} & 
-			\makecell[c]{ 
-			\\
-			$$ 
-			\begin{prooftree} 
-				\hypo{TC(e_1) = (C_1, e'_1)} 
-				\hypo {TC(e_2) = (C_2, e'_2)} 
-				\[
-				\infer2{
-					TC(e_1 \ll\_(n) e_2) =
-					\left(
-					C_1 \wedge C_2 \wedge
-					\left\{ 
-					\begin{array}{l}
-						\{DL(n).in1 = e_2', \\
-						DL(n).in2 = e_1', \\
-						DL(n).out = v_{aux} 
-						\}, 
-					\end{array}
-					\right\}, 
-					v_{aux}
-					\right)
-				}
-				\]
-			\end{prooftree} 
-			$$} 
-			\\
-			
-			
-			\hline
-			
-			\texttt{$e= e_1 \gg\_(n) e_2$} & 
-			\makecell[c]{ 
-			\\
-			$$ 
-			\begin{prooftree} 
-				\hypo{TC(e_1) = (C_1, e'_1)} 
-				\hypo {TC(e_2) = (C_2, e'_2)} 
-				\[
-				\infer2{
-					TC(e_1 \gg\_(n) e_2) =
-					\left(
-					C_1 \wedge C_2 \wedge
-					\left\{ 
-					\begin{array}{l}
-						\{DR(n).in1 = e_2', \\
-						DR(n).in2 = e_1', \\
-						DR(n).out = v_{aux} 
-						\}, 
-					\end{array}
-					\right\}, 
-					v_{aux}
-					\right)
-				}
-				\]
-			\end{prooftree} 
-			$$} \\
-			
-			\hline
-		\end{tabular}
-	
+				\texttt{$e= e_1 \ll e_2$} & 
+				\makecell[c]{ \\
+					\begin{prooftree} 
+						\hypo{TC(e_1) = (C_1, e'_1)} 
+						\hypo {TC(e_2) = (C_2, e'_2)} 
+						\infer2{
+							TC(e_1 \ll e_2) =
+							\left(
+							C_1 \wedge C_2 \wedge
+							\left\{ 
+							\begin{array}{l}
+								DL(253).in1 = e_2', \\
+								DL(253).in2 = e_1', \\
+								DL(253).out = v_{aux} 
+							\end{array}
+							\right\}, 
+							v_{aux}
+							\right)
+						}
+					\end{prooftree} 
+				} \\
+				
+				\hline
+				
+				\texttt{$e= e_1 \gg e_2$} & 
+				\makecell[c]{ \\
+					\begin{prooftree} 
+						\hypo{TC(e_1) = (C_1, e'_1)} 
+						\hypo {TC(e_2) = (C_2, e'_2)} 
+						\infer2{
+							TC(e_1 \gg e_2) =
+							\left(
+							C_1 \wedge C_2 \wedge
+							\left\{ 
+							\begin{array}{l}
+								DR(253).in1 = e_2', \\
+								DR(253).in2 = e_1', \\
+								DR(253).out = v_{aux} 
+							\end{array}
+							\right\}, 
+							v_{aux}
+							\right)
+						}
+					\end{prooftree} 
+				} \\
+				
+				\hline
+				
+				\texttt{$e= e_1 \ll\_(n) e_2$} & 
+				\makecell[c]{ \\
+					\begin{prooftree} 
+						\hypo{TC(e_1) = (C_1, e'_1)} 
+						\hypo {TC(e_2) = (C_2, e'_2)} 
+						\infer2{
+							TC(e_1 \ll\_(n) e_2) =
+							\left(
+							C_1 \wedge C_2 \wedge
+							\left\{ 
+							\begin{array}{l}
+								DL(n).in1 = e_2', \\
+								DL(n).in2 = e_1', \\
+								DL(n).out = v_{aux} 
+							\end{array}
+							\right\}, 
+							v_{aux}
+							\right)
+						}
+					\end{prooftree} 
+				} \\
+				
+				\hline
+				
+				\texttt{$e= e_1 \gg\_(n) e_2$} & 
+				\makecell[c]{ \\
+					\begin{prooftree} 
+						\hypo{TC(e_1) = (C_1, e'_1)} 
+						\hypo {TC(e_2) = (C_2, e'_2)} 
+						\infer2{
+							TC(e_1 \gg\_(n) e_2) =
+							\left(
+							C_1 \wedge C_2 \wedge
+							\left\{ 
+							\begin{array}{l}
+								DR(n).in1 = e_2', \\
+								DR(n).in2 = e_1', \\
+								DR(n).out = v_{aux} 
+							\end{array}
+							\right\}, 
+							v_{aux}
+							\right)
+						}
+					\end{prooftree} 
+				} \\
+				
+				\hline
+			\end{tabular}
+		} 
 	
 	\subsection{Casos inductivos: Reglas de transformación de instrucciones}
 	\subsubsection{Instrucciones condicionales}
@@ -3072,30 +2887,31 @@ placement=H
 	\vspace{0.3cm}
 	\noindent Esta lógica de selección se basa en combinar los posibles resultados mediante una operación aritmética. En lugar de saltar de una línea de código a otra, el circuito calcula ambos caminos y utiliza la condición como un interruptor encargado de resolver la bifurcación, decidiendo qué valor se asigna finalmente a la señal.
 	 
-	 \vspace{0.3cm}
-	 \noindent Formalmente, definimos una variable binaria $cond \in \{0, 1\}$, que representa el resultado final obtenido tras la evaluación de la condición \texttt{cond}. La selección entre dos estados o expresiones, $S_1$ (correspondiente al bloque \texttt{if}) se formaliza mediante la combinación lineal de la condición y su correspondiente bloque de ecuaciones. 
-	 
-	 \vspace{0.3cm}
-	 \noindent El resultado de la selección para la expresión if, representado por una variable auxiliar $v_{aux}$, se define mediante el siguiente sistema de restricciones:
-	 
-	 \begin{equation}
-	 	(v_{aux} - S_1) * cond = 0
-	 \end{equation}
-	 
 	\vspace{0.3cm}
-	\noindent De manera análoga, si se presentase una instrucción condicional con estructura \texttt{if-else} que evalúa la condición \texttt{cond}, junto con los bloques de instrucciones $S_1$ y $S_2$ para los cuerpos del \texttt{if} y del \texttt{else} respectivamente, el sistema de restricciones generado sería el siguiente:
-	 
+	\noindent Formalmente, definimos una variable binaria $cond \in \{0, 1\}$, que representa el resultado final obtenido tras la evaluación de la condición \texttt{cond}. La selección de valores dentro de un bloque condicional se formaliza aplicando restricciones aritméticas sobre cada asignación de variables contenida en dichos bloques. 
+	
+	\vspace{0.3cm}
+	\noindent Si dentro del bloque \texttt{if} (al que llamaremos $S_1$) se realiza una asignación de la forma $v_{aux} = \text{valor}_{if}$, esta se define mediante el siguiente sistema de restricciones:
+	
+	\begin{equation}
+		(v_{aux} - \text{valor}_{if}) * cond = 0
+	\end{equation}
+	
+	\vspace{0.3cm}
+	\noindent De manera análoga, si se presentase una instrucción condicional con estructura \texttt{if-else}, para cada par de asignaciones equivalentes sobre una misma variable $v_{aux}$ en los bloques de instrucciones $S_1$ (donde $v_{aux} = \text{valor}_{if}$) y $S_2$ (donde $v_{aux} = \text{valor}_{else}$), el sistema de restricciones generado sería el siguiente:
+	
 	\begin{align}
-		(v_{aux} - S_1) * cond &= 0 \\
-		(v_{aux} - S_2) * (1-cond) &= 0
+		(v_{aux} - \text{valor}_{if}) * cond &= 0 \\
+		(v_{aux} - \text{valor}_{else}) * (1-cond) &= 0
 	\end{align}
-	 
-	 \noindent Esta estructura garantiza que:
-	 
-	 \begin{itemize}
-	 	\item Si $cond = 1$, el término $(1-cond)$ se anula y y $(v_{aux} - S_2)$ es forzado a ser 0, resultando en $v_{aux} = S_1$.
-	 	\item Si $cond = 0$, el término $cond$ se anula y $(v_{aux} - S_1)$ es forzado a ser 0, resultando en $v_{aux} = S_2$.
-	 \end{itemize}\vspace{0.3cm}
+	
+	\noindent Esta estructura garantiza que:
+	
+	\begin{itemize}
+		\item Si $cond = 1$, el término $(1-cond)$ se anula, activando la primera restricción y resultando en $v_{aux} = \text{valor}_{if}$.
+		\item Si $cond = 0$, el término $cond$ se anula, activando la segunda restricción y resultando en $v_{aux} = \text{valor}_{else}$.
+	\end{itemize}
+	\vspace{0.3cm}
 	
 	
 	\vspace{0.3cm}
@@ -3109,6 +2925,9 @@ placement=H
 	
 	\vspace{0.3cm}
 	\noindent Este enfoque permite que el compilador transforme cualquier árbol de decisiones, sin importar su profundidad, en una combinación de señales donde cada camino lógico tiene asignado un filtro exclusivo basado en el cumplimiento de todas sus condiciones precedentes. Así, el sistema de restricciones asociado a un bloque condicional se aplicará cuando el producto de todas sus condiciones precedentes sea igual a uno.
+	
+	\vspace{0.3cm}
+	\noindent El producto de todas estas condiciones no se puede realizar directamente en una sola restricción. Dado que los sistemas R1CS limitan las restricciones a expresiones cuadráticas, es necesario introducir variables auxiliares intermedias. De este modo, se descompone la operación en una secuencia de productos binarios, garantizando que el circuito sea válido.
 	
 	\vspace{0.3cm}
 	\noindent Un ejemplo específico de conversión de un bloque condicional a su equivalente utilizando restricciones en Circom sería el siguiente:
@@ -3127,11 +2946,9 @@ placement=H
 					signal input entrada;
 					signal output salida;
 					
-					if(entrada % 2 == 0){ 
-						salida <-- 0;
-					} else {
+					if(entrada == 0){ 
 						salida <-- 1;
-					}
+					} 
 				\end{lstlisting} 
 			\end{minipage}
 			&
@@ -3139,10 +2956,11 @@ placement=H
 				\begin{lstlisting}[language=Circom,xleftmargin=-55pt,frame=none,numbers=none]
 					signal input entrada;
 					signal output salida;
-					var var_div = entrada \ 2;
+					signal is_zero_variable;
 					
-					entrada === 2 * var_div + salida;
-					salida * (salida - 1) === 0;
+					is_zero_variable <-- entrada == 0;
+					(salida - 1) * is_zero_variable === 0;
+					
 				\end{lstlisting}
 			\end{minipage}
 			\\ \hline
@@ -3182,16 +3000,16 @@ placement=H
 		
 		\begin{lstlisting}[language=Circom]
 			// Codigo en Circom
-			
 			signal input age;
 			signal output out;
+			signal is_less_than_zero;
 			
-			component less_0 = LessThan()(age,0);
+			// Evaluamos la condicion de forma directa
+			is_less_than_zero <-- age < 0;
 			
-			signal less_0 = less_0.out;
-			signal not_less_0 = 1 - less_0.out;
-			
-			out <== (1 - less_0)  + not_less_0;
+			// Restricciones para cada asignacion:
+			(out - 0) * is_less_than_zero === 0;
+			(out - 1) * (1 - is_less_than_zero) === 0;
 		\end{lstlisting}
 		
 		\hspace*{\fill} $\blacksquare$
@@ -3255,35 +3073,35 @@ placement=H
 	
 	
 	\begin{itemize}
-		\item Por cada condición de igualdad o desigualdad se crea un componente correspondiente, como en los casos anteriores.
+		\item Por cada condición de igualdad o desigualdad, debe crearse una variable encargada de calcular la condición correspondiente.
 		
 		\begin{lstlisting}[language=Circom, breaklines=true]
-			component less_10 = LessThan()(age,10);
-			component less_20 = LessThan()(age,20);
-			component less_30 = LessThan()(age,30);
-			component less_40 = LessThan()(age,40);
+			signal input age;
+			signal input out;
+			signal lt_10 <-- age < 10;
+			signal lt_20 <-- age < 20;
+			signal lt_30 <-- age < 30;
+			signal lt_40 <-- age < 40;
 		\end{lstlisting}
 		
 		\item Partiendo de lo expuesto en los apartados anteriores, las condiciones excluyentes de cada bloque condicional actúan como selectores, permitiendo que la señal \texttt{out} tome el valor correcto en función del camino ejecutado.
 		
 		\begin{lstlisting}[language=Circom, breaklines=true]
-			signal v_aux_less_10;
-			signal v_aux_less_30;
-			signal v_aux_less_40;
+			signal lt_20_10 <== lt_10 * lt_20;
+			signal lt_20_not_10 <== (1 - lt_10) * lt_20;
+			signal rama_else_if <== lt_40 * (1 - lt_20);
+			signal lt_40_30 <== lt_30 * rama_else_if;
+			signal lt_40_not_30 <== (1 - lt_30) * rama_else_if;
+			signal lt_not_20_not_40 <== (1 - lt_20) * (1 - lt_40);
 			
-			v_aux_less_10 <== less_10.out * 1 
-			+ (1 - less_10.out) * 2;
-			
-			v_aux_less_30 <== less_30.out * 3 
-			+ (1 - less_30.out) * 4;
-			
-			v_aux_less_40 <== less_40.out * v_aux_less_30 
-			+ (1 - less_40.out) * 5;
-			
-			out <== less_20.out * v_aux_less_10 + (1 - less_20.out) * v_aux_less_40;
+			(out - 1) * lt_20_10 === 0;
+			(out - 2) * lt_20_not_10 === 0;
+			(out - 3) * lt_40_30 === 0;
+			(out - 4) * lt_40_not_30 === 0;
+			(out - 5) * lt_not_20_not_40 === 0;
 		\end{lstlisting}
 		
-		\item El uso de las variables auxiliares \texttt{v\_aux\_less\_10}, \texttt{v\_aux\_less\_30} y \texttt{v\_aux\_less\_40} es estrictamente necesario para asegurar que la construcción de los productos resulte en una operación cuadrática, evitando así ecuaciones de grado superior.
+		\item El uso de las señales intermedias \texttt{rama\_else\_if} es estrictamente necesario para asegurar que la construcción de los productos resulte en una operación cuadrática, evitando así ecuaciones de grado superior.
 		
 	\end{itemize}
 	\hspace*{\fill} $\blacksquare$
@@ -3303,7 +3121,7 @@ placement=H
 	\renewcommand{\arraystretch}{2} 
 	\begin{tabular}{|>{\centering\arraybackslash}m{0.25\linewidth}|>{\centering\arraybackslash}m{0.70\linewidth}|}
 		\hline
-		\textbf{Operación} & \textbf{Regla de Inferencia } \tabularnewline \hline
+		\textbf{Operación} & \textbf{Regla de Transformación } \tabularnewline \hline
 		& \\[-2em] 
 		\texttt{if \textit{cond} then $S_1$ else $S_2$} & 
 		\begin{minipage}{0.85\linewidth}
@@ -3948,7 +3766,9 @@ placement=H
 	\begin{itemize}
 		\item \textbf{Implementación de otras estructuras:} Extender la traducción automática a estructuras de datos más avanzadas, como pueden ser los accesos a arrays, lo que permitiría manejar datos de forma más flexible.
 		
-		\item \textbf{Reducción del número de restricciones:} Revisar las reglas de traducción para intentar reducir el número de restricciones en cada operador. El objetivo es que el compilador sea lo más eficiente posible, generando circuitos más simples y fáciles de procesar.
+		\item \textbf{Reducción del número de restricciones de cada operador:} Revisar las reglas de traducción para intentar reducir el número de restricciones en cada operador. El objetivo es que el compilador sea lo más eficiente posible, generando circuitos más simples y fáciles de procesar.
+		
+		\item \textbf{Reducción del número de restricciones global:} Una vez construido el sistema final de restricciones, aplicar optimizaciones para evitar restricciones duplicadas por diferentes expresiones, así como explorar otras vías de optimización del sistema completo.
 		
 		\item \textbf{Mejora de la eficiencia en la verificación.:} Explorar otras técnicas de verificación formal u otros entornos con mayor capacidad para validar los operadores de división y módulo.
 		
@@ -3973,7 +3793,7 @@ placement=H
 	
 	\vspace{0.2cm}
 	
-	\noindent A critical aspect in achieving the proposed objectives has been formal verification. It has been confirmed that the implemented translation rules are deterministic and that the output values correspond exactly to the expected logic for each operator and expression. However, the verification process using \textit{ZKGEVER} exposed the significant difficulty posed by the arithmetic operators for division and modulo.
+	\noindent A critical aspect in achieving the proposed objectives has been formal verification. It has been confirmed that the implemented translation rules are deterministic and that the output values correspond exactly to the expected logic for each operator and expression. However, the verification process using \textit{ZK-GENVER} exposed the significant difficulty posed by the arithmetic operators for division and modulo.
 	
 	\vspace{0.2cm}
 	\noindent Although these functions were implemented in the compiler and verified to be deterministic with the expected output values, the equivalence check resulted in a \textit{timeout}. This prevented formal verification of their equivalence with the reference codes developed using standard \texttt{circomlib} functions [\ref{sec:ver-modulo}].
@@ -3991,7 +3811,9 @@ placement=H
 	\begin{itemize}
 		\item \textbf{Implementation of additional structures:} Extend automatic translation to more advanced data structures, such as array access, allowing for more flexible data handling.
 		
-		\item \textbf{Reduction of the number of constraints:} Review the translation rules to minimize the number of constraints applied to each operator. The goal is to make the compiler as efficient as possible, generating simpler and easier-to-process circuits.
+		\item \textbf{Reduction of the number of constraints for each operator:} Review the translation rules to minimize the number of constraints applied to each operator. The goal is to make the compiler as efficient as possible, generating simpler and easier-to-process circuits.
+		
+		\item \textbf{Global restriction count reduction:} Once the final system of restrictions has been built, apply optimizations to avoid duplicate restrictions from different expressions, as well as explore other optimization pathways for the complete system.
 		
 		\item \textbf{Efficiency improvements in verification:} Explore alternative formal verification techniques or environments with greater capacity to validate division and modulo operators.
 		
