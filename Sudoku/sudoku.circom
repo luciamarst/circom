@@ -1,281 +1,135 @@
-pragma circom 2.0.0;
-include "node_modules/circomlib/circuits/comparators.circom";
+pragma circom 2.2.2;
+include "comparators.circom";
 
-
-template igualdadRepetida(val){
-        signal input in;
-        signal output out;
-
-        component cmp = IsEqual();
-        cmp.in[0] <== in;
-        cmp.in[1] <== val;
-        out <== cmp.out;
-}
-
-//=========================================EXTRAS================================================
-template iniciar(){ //Funcion encargada de iniciar cada fila a extraer antes de asignarle su valor real
-    signal output out[9]; //Fila que queremos rellenar
-
-    for(var i = 0; i < 9; i++){
-        out[i] <== 0;
-    }
-}
-
-template sumatorio(){ //Funcion encargada de comprobar si la suma de los numeros que componen cada elemento es 45
+template ValidarGrupo9() {
     signal input array[9];
-    signal output completa;
-
-    var sumatorio = 0;
-
-    for(var i = 0; i < 9; i++){
-        sumatorio += array[i];
-    }
-
-    var cmp = igualdadRepetida(45)(sumatorio);
-    completa <== cmp;
-}
-
-template completas(){ //Funcion encargada de comprobar que de los 9 elementos (fila,columnas,subtablero) lo cumplen todos
-    signal input in;
     signal output out;
 
-    var cmp = igualdadRepetida(9)(in);
-    out <== cmp;
-}
+    component es_igual[9][9];
+    signal cuenta_numero[9];
+    component verig_uno[9];
+    signal grupo_ok[9];
 
-//========================FILAS==================================
-
-template extraerFila(n_fila){ // Función encargada de extraer una fila dada del tablero
-    signal input tablero[9][9];
-    signal output fila[9];
-
-    for(var i = 0; i < 9; i++){ //Columna
-        fila[i] <== tablero[n_fila][i];
-    }
-}
-
-/* FUNCION GENERAL
-    -> Encargada de
-        1. Inicializar la fila a extraer
-        2. Una vez extraida, asignarle dicha variable la fila extraida
-        3. COmprobar que la suma de todos los número de esa fila es 45
-        4. Repetir el proceso anterior 9 veces
-        5. SI en las 9 iteraciones, se cumple que todas esas filas suman 45, entonces las filas cumplen su condicion
-*/
-template filas(){ 
-    //Entradas y salidas del circuito
-    signal input tablero[9][9];
-    signal output out;
-
-    var filas_perfectas = 0; // Número de filas que cumplen las condiciones
-
-    component extraccion[9]; //Para la extraccion de cada fila
-    component comprobar_fila[9]; //Para comprobar que cada fila tiene lo numeros [1..9]
-    component inicializar[9]; //Para iniciar cada fila a 0 antes de extraerlas del tablero
-
-    // Para cada dila que tenemos
-    for(var fila=0; fila < 9; fila++){
-        
-        //Iniciar todos los valores de la fila a 0
-        var fila_completa[9];
-        inicializar[fila] = iniciar();
-        fila_completa = inicializar[fila].out;
-        
-
-        // Del tablero extraemos fila a fila
-        extraccion[fila] = extraerFila(fila);
-        extraccion[fila].tablero <== tablero;
-        
-        // Una vez hemos extraido la fila, queda almacenada en fila_completa
-        fila_completa = extraccion[fila].fila;
-
-        // UNa vez tenemos la fila, comprobamos si ésta cumple las condiciones
-        comprobar_fila[fila] = sumatorio();
-        comprobar_fila[fila].array <== fila_completa;
-
-        filas_perfectas = filas_perfectas + comprobar_fila[fila].completa; //Si contiene todos los números sin repeticiones tendremos una fila mas correcta
-    }
-
-    // Despues de comprobar todas las filas, si filas_perfectas = 9, entonces todas las filas cumplen la condicion
-
-    component comprobacion_condicion_filas = completas(); //Lllamamos a la funcion con in: filas_perfectas
-    comprobacion_condicion_filas.in <== filas_perfectas;
-    out <== comprobacion_condicion_filas.out; //Devolvemos el valor de comprobar si el número de filas que cumplen la condicion es 9
-    
-}
-
-//==============================COLUMNAS=============================================
-template extraerColumna(n_columna){ // Extrae una columna dad del tablero
-    signal input tablero[9][9];
-    signal output columna[9];
-
-    for(var i = 0; i < 9; i++){ //FIla
-        columna[i] <== tablero[i][n_columna];
-    }
-}
-
-/* FUNCION GENERAL
-    -> Encargada de
-        1. Inicializar la columna a extraer
-        2. Una vez extraida, asignarle dicha variable la columna extraida
-        3. COmprobar que la suma de todos los número de esa columna es 45
-        4. Repetir el proceso anterior 9 veces
-        5. SI en las 9 iteraciones, se cumple que todas esas columna suman 45, entonces las columnas cumplen su condicion
-*/
-template columnas(){
-    //Entradas y salidas del circuito
-    signal input tablero[9][9];
-    signal output out;
-
-    var columnas_perfectas = 0; // Número de filas que cumplen las condiciones
-
-    component extraccion[9]; //Para la extraccion de cada fila
-    component comprobar_columna[9]; //Para comprobar que cada fila tiene lo numeros [1..9]
-    component inicializar[9]; //Para iniciar cada fila a 0 antes de extraerlas del tablero
-
-    // Para cada dila que tenemos
-    for(var columna=0; columna < 9; columna++){
-        
-        //Iniciar todos los valores de la fila a 0
-        var columna_completa[9];
-        inicializar[columna] = iniciar();
-        columna_completa = inicializar[columna].out;
-        
-
-        // Del tablero extraemos fila a fila
-        extraccion[columna] = extraerColumna(columna);
-        extraccion[columna].tablero <== tablero;
-        
-        // Una vez hemos extraido la fila, queda almacenada en fila_completa
-        columna_completa = extraccion[columna].columna;
-
-        // UNa vez tenemos la fila, comprobamos si ésta cumple las condiciones
-        comprobar_columna[columna] = sumatorio();
-        comprobar_columna[columna].array <== columna_completa;
-
-        columnas_perfectas = columnas_perfectas + comprobar_columna[columna].completa; //Si contiene todos los números sin repeticiones tendremos una fila mas correcta
-    }
-
-    // Despues de comprobar todas las filas, si filas_perfectas = 9, entonces todas las filas cumplen la condicion
-
-    component comprobacion_condicion_columna = completas(); //Lllamamos a la funcion con in: filas_perfectas
-    comprobacion_condicion_columna.in <== columnas_perfectas;
-    out <== comprobacion_condicion_columna.out; //Devolvemos el valor de comprobar si el número de filas que cumplen la condicion es 9
-}
-
-//==============================SUBTABLEROS=============================================
-template extraerSubtablero(f_s,c_s){ // Extrae un subtablero dado del tablero
-    signal input tablero[9][9];
-    signal output out[9];
-
-    var indice = 0;
-    for(var i = f_s; i < f_s+3; i++){
-        for(var j = c_s; j < c_s+3;j++){
-            out[indice] <== tablero[i][j];
-            indice = indice + 1;
+    for (var num = 1; num <= 9; num++) {
+        var acumulador = 0;
+        for (var i = 0; i < 9; i++) {
+            es_igual[num-1][i] = IsEqual();
+            es_igual[num-1][i].in[0] <== array[i];
+            es_igual[num-1][i].in[1] <== num;
+            acumulador += es_igual[num-1][i].out;
         }
+        cuenta_numero[num-1] <-- acumulador;
+        
+        // Comprobamos si la cuenta es exactamente 1 (devuelve 1 si es correcto, 0 si no)
+        verig_uno[num-1] = IsEqual();
+        verig_uno[num-1].in[0] <== cuenta_numero[num-1];
+        verig_uno[num-1].in[1] <== 1;
+        grupo_ok[num-1] <== verig_uno[num-1].out;
     }
+
+    // Multiplicamos en cascada para ver si los 9 números del grupo aparecieron exactamente 1 vez
+    signal mult_g[8];
+    mult_g[0] <== grupo_ok[0] * grupo_ok[1];
+    for (var i = 1; i < 8; i++) {
+        mult_g[i] <== mult_g[i-1] * grupo_ok[i+1];
+    }
+    out <== mult_g[7];
 }
 
-template subtablero(){
-    //Entradas y salidas del circuito
+template ValidarFilas() {
     signal input tablero[9][9];
     signal output out;
 
-    var subtableros_perfectos = 0; // Número de subtableros que cumplen las condiciones
-    var fila_sub = 0;
-    var columna_sub = 0;
+    component validadores[9];
+    signal fila_ok[9];
 
-    component inicializar[9]; //Para iniciar cada subtablero a 0 antes de extraerlas del tablero
-    component extraccion[9]; //Para la extraccion de cada subtablero
-    component comprobar_subtablero[9]; //Para comprobar que cada subtablero tiene lo numeros [1..9]
+    for (var f = 0; f < 9; f++) {
+        validadores[f] = ValidarGrupo9();
+        for (var c = 0; c < 9; c++) {
+            validadores[f].array[c] <== tablero[f][c];
+        }
+        fila_ok[f] <== validadores[f].out;
+    }
 
-    // Para cada dila que tenemos
-    for(var subtablero=0; subtablero < 9; subtablero++){
-        
-        //Iniciar todos los valores de la fila a 0
-        var subtablero_completo[9];
-        inicializar[subtablero] = iniciar();
-        subtablero_completo = inicializar[subtablero].out;
-        
+    signal mult[8];
+    mult[0] <== fila_ok[0] * fila_ok[1];
+    for (var i = 1; i < 8; i++) {
+        mult[i] <== mult[i-1] * fila_ok[i+1];
+    }
+    out <== mult[7];
+}
 
-        // Del tablero extraemos fila a fila
-        extraccion[subtablero] = extraerSubtablero(fila_sub, columna_sub);
-        extraccion[subtablero].tablero <== tablero;
-        
-        // Una vez hemos extraido la fila, queda almacenada en fila_completa
-        subtablero_completo = extraccion[subtablero].out;
+template ValidarColumnas() {
+    signal input tablero[9][9];
+    signal output out;
 
-        // UNa vez tenemos la fila, comprobamos si ésta cumple las condiciones
-        comprobar_subtablero[subtablero] = sumatorio();
-        comprobar_subtablero[subtablero].array <== subtablero_completo;
+    component validadores[9];
+    signal col_ok[9];
 
-        subtableros_perfectos = subtableros_perfectos + comprobar_subtablero[subtablero].completa; //Si contiene todos los números sin repeticiones tendremos una fila mas correcta
-    
-        //Aumentamos las variables de fila y columna sub
+    for (var c = 0; c < 9; c++) {
+        validadores[c] = ValidarGrupo9();
+        for (var f = 0; f < 9; f++) {
+            validadores[c].array[f] <== tablero[f][c];
+        }
+        col_ok[c] <== validadores[c].out;
+    }
 
-        columna_sub = columna_sub + 3;
+    signal mult[8];
+    mult[0] <== col_ok[0] * col_ok[1];
+    for (var i = 1; i < 8; i++) {
+        mult[i] <== mult[i-1] * col_ok[i+1];
+    }
+    out <== mult[7];
+}
 
-        if(columna_sub == 9){
-            columna_sub = 0;
-            fila_sub = fila_sub + 3;
+template ValidarSubtableros() {
+    signal input tablero[9][9];
+    signal output out;
+
+    component validadores[9];
+    signal sub_ok[9];
+
+    var box = 0;
+    for (var fila_inicio = 0; fila_inicio < 9; fila_inicio += 3) {
+        for (var col_inicio = 0; col_inicio < 9; col_inicio += 3) {
+            
+            validadores[box] = ValidarGrupo9();
+            
+            var idx = 0;
+            for (var f = 0; f < 3; f++) {
+                for (var c = 0; c < 3; c++) {
+                    validadores[box].array[idx] <== tablero[fila_inicio + f][col_inicio + c];
+                    idx++;
+                }
+            }
+            sub_ok[box] <== validadores[box].out;
+            box++;
         }
     }
 
-    // Despues de comprobar todas las filas, si filas_perfectas = 9, entonces todas las filas cumplen la condicion
-
-    component comprobacion_condicion_subtablero = completas(); //Lllamamos a la funcion con in: filas_perfectas
-    comprobacion_condicion_subtablero.in <== subtableros_perfectos;
-    out <== comprobacion_condicion_subtablero.out; //Devolvemos el valor de comprobar si el número de filas que cumplen la condicion es 9
-
+    signal mult[8];
+    mult[0] <== sub_ok[0] * sub_ok[1];
+    for (var i = 1; i < 8; i++) {
+        mult[i] <== mult[i-1] * sub_ok[i+1];
+    }
+    out <== mult[7];
 }
 
-//================================COMPROBACIÓN========================================
-//Comprobar que las 3 condiciones se cumplen
-template comprobarCondicionFinal(){
-    signal input filas;
-    signal input columnas;
-    signal input subtableros;
-    signal output out;
-
-    component cmp = IsEqual();
-    cmp.in[0] <== (filas + columnas + subtableros);
-    cmp.in[1] <== 3;
-
-    out <== cmp.out;
-}
-
-//=================================== SUDOKU ===============================================
-template sudoku () {
-
-    //Representación de un tablero 9x9, que es la entrada 
+template sudoku() {
     signal input tablero[9][9];
-
-    // La salida es si se ha resuelto correctamente
     signal output salida;
 
-    //Una vez tenemos este tablero, tenemos que realizar las siguientes comprobaciones
-    /*
-        1. Cada fila del tablero tiene que tener los numero 1-9, hay que comprobar esto 9 veces
-        2. Cada columna del tablero tiene que tener los numeros 1-9, hay que comprobar esto 9 veces
-        3. Dentro del tablero tenemos 9 subtableros de 3x3, dentro de estos subtableros tenemos que comprobar que tienen los numeros 1-9 exactamente    
-    */
+    component f_val = ValidarFilas();
+    f_val.tablero <== tablero;
 
-    //==============================FILAS======================================================================
-    component filas_funcion = filas();
-    filas_funcion.tablero <== tablero;
+    component c_val = ValidarColumnas();
+    c_val.tablero <== tablero;
 
-    //==============================COLUMNAS======================================================================
-    component columnas_funcion = columnas();
-    columnas_funcion.tablero <== tablero;
+    component s_val = ValidarSubtableros();
+    s_val.tablero <== tablero;
 
-    //==============================SUBTABLEROS======================================================================
-    component subtableros_funcion = subtablero();
-    subtableros_funcion.tablero <== tablero;
-
-    //=========================================SALIDA=======================================================
-    salida <== comprobarCondicionFinal()(filas_funcion.out, columnas_funcion.out, subtableros_funcion.out); //SI s ecumplen las 3 la suma será == 3, por tanto la salida será 1, de lo contrario, salida = 0
-}   
-
+    signal paso_parcial <== f_val.out * c_val.out;
+    salida <== paso_parcial * s_val.out;
+}
 
 component main = sudoku();
