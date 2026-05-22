@@ -1,123 +1,124 @@
 pragma circom 2.2.2;
 
-// función para comprobar la validez de cada estado del automata, básicamente ver que en ningun momenot hay mas canibales que misioneros (asi no se los comen)
-// asi como ver que se cumplen las reglas como que la barca se mueve alternamente, con al menos 1 persona y maximo 2, etc...
-template ValidarTransicion() autocomplete {
-    //estado anterior (actual realmente)
-    signal input m_ant; // misioneros antes
-    signal input c_ant; // canibales antes
-    signal input b_ant; // barca antes: 1->izquierda; 0->dcha
+include "comparators.circom";
 
-    // estado siguiente
-    signal input m_sig;
-    signal input c_sig;
-    signal input b_sig;
-
-    // conocer si se ha resuelto el juego o no
+template ValidarTransicion() {
+    signal input anterior[3]; 
+    signal input siguiente[3];
     signal output out;
 
+    signal m_ant <== anterior[0];
+    signal c_ant <== anterior[1];
+    signal b_ant <== anterior[2];
+
+    signal m_sig <== siguiente[0];
+    signal c_sig <== siguiente[1];
+    signal b_sig <== siguiente[2];
+
+    // que la barca alterne
+    signal barca_ok;
+    barca_ok <-- (b_ant + b_sig == 1) ? 1 : 0;
+    barca_ok === 1; 
+
+    // conocer la diferencia de los que van en el barco
+    signal diff_m <== b_ant * (m_ant - m_sig - (m_sig - m_ant)) + (m_sig - m_ant);
+    signal diff_c <== b_ant * (c_ant - c_sig - (c_sig - c_ant)) + (c_sig - c_ant);
+
+    // 3. 1 <= barco <= 2
+    component viajan_ok = LessThan(4);
+    viajan_ok.in[0] <== diff_m + diff_c;
+    viajan_ok.in[1] <== 3;
+
+    component no_vacia = GreaterThan(4);
+    no_vacia.in[0] <== diff_m + diff_c;
+    no_vacia.in[1] <== 0;
+
     
-    var transicion_valida = 1;
+    component diff_m_pos = GreaterEqThan(4);
+    diff_m_pos.in[0] <== diff_m;
+    diff_m_pos.in[1] <== 0;
 
-    // verificamos que la barca a cambiado de una orilla a otra pasando del estado anterior al siguiente
-    if (b_ant == 1 && b_sig != 0) {
-    	transicion_valida = 0; 
-    }
-    if (b_ant == 0 && b_sig != 1) {
-         transicion_valida = 0; 
-    }
+    component diff_c_pos = GreaterEqThan(4);
+    diff_c_pos.in[0] <== diff_c;
+    diff_c_pos.in[1] <== 0;
 
-    // calcular cuántos se mueven : la diferencia entre una orilla y la otra
-    signal diff_m;
-    signal diff_c;
-    // calculamos la diferencia de misioneros entre 
-    if (b_ant == 1) {
-        diff_m <-- m_ant - m_sig;
-        diff_c <-- c_ant - c_sig;
-    } else {
-        diff_m <-- m_sig - m_ant;
-        diff_c <-- c_sig - c_ant;
-    }
+    // 5. Orilla Izquierda
+    component izq_m_geq_c = GreaterEqThan(4);
+    izq_m_geq_c.in[0] <== m_sig;
+    izq_m_geq_c.in[1] <== c_sig;
 
-    // 0 < barca < 3
-    // 1 <= diff_m + diff_c <= 2
-    var total_viajeros = diff_m + diff_c;
-    if (total_viajeros < 1 || total_viajeros > 2) {
-        transicion_valida = 0; // Viajan más de 2
-    }
+    component izq_m_zero = IsZero();
+    izq_m_zero.in <== m_sig;
+    
+    signal orilla_izq_ok <-- (izq_m_zero.out + izq_m_geq_c.out > 0) ? 1 : 0;
 
-    // no puede haber una diferencia negativa de canibales o misioneros entre un estado y otro
-    if (diff_m < 0) { 
-    	transicion_valida = 0; 
-    }
-    if (diff_c < 0) { 
-    	transicion_valida = 0; 
-    }
+    
+    signal m_der <== 3 - m_sig;
+    signal c_der <== 3 - c_sig;
+    component der_m_geq_c = GreaterEqThan(4);
+    der_m_geq_c.in[0] <== m_der;
+    der_m_geq_c.in[1] <== c_der;
 
-    // para que los canibales no se coman a lo misioneros --> misioneros >= canibales siempre. A no ser que misioneros = 0
-    // orilla izq: si m_sig > 0, entonces m_sig >= c_sig
-    if (m_sig > 0 && m_sig < c_sig) {
-        transicion_valida = 0; // hay misioneros, pero mas canibales que misioneros
-    }
+    component der_m_zero = IsZero();
+    der_m_zero.in <== m_der;
 
-    // orilla dcha:  (3-m_sig): si (3-m_sig) > 0, entonces (3-m_sig) >= (3-c_sig) -> c_sig >= m_sig
-    var m_der = 3 - m_sig;
-    var c_der = 3 - c_sig;
-    if (m_der > 0 && m_der < c_der){
-	transicion_valida = 0; // hay misioneros, pero mas canibales que misioneros
-    }
+    signal orilla_der_ok <-- (der_m_zero.out + der_m_geq_c.out > 0) ? 1 : 0;
 
-    // el umeros de canibales y misionerso tiene que estar entre 0 y 3 (incluidos) 0 <= num <= 3
-    if (m_sig < 0 || m_sig > 3) { transicion_valida = 0; }
+    // 0 <= num <= 3
+    component m_lim_sup = LessEqThan(4);
+    m_lim_sup.in[0] <== m_sig;
+    m_lim_sup.in[1] <== 3;
 
-    if (c_sig < 0 || c_sig > 3) { transicion_valida = 0; }
+    component c_lim_sup = LessEqThan(4);
+    c_lim_sup.in[0] <== c_sig;
+    c_lim_sup.in[1] <== 3;
 
-    // Asignamos el veredicto final a la señal de salida del componente
-    out <-- transicion_valida;
+    // analizar todos lo visto
+    signal mult1 <== viajan_ok.out * no_vacia.out;
+    signal mult2 <== mult1 * diff_m_pos.out;
+    signal mult3 <== mult2 * diff_c_pos.out;
+    signal mult4 <== mult3 * orilla_izq_ok;
+    signal mult5 <== mult4 * orilla_der_ok;
+    signal mult6 <== mult5 * m_lim_sup.out;
+    
+    
+    out <== mult6 * c_lim_sup.out;
 }
 
-template MisionerosCanibales() autocomplete {
-    // el input es la secuencia completa de estados en la orilla izquierda
-    // cada paso estado q tiene: [misioneros, caníbales, barca]
-    // tenemos 12 estados
+template MisionerosCanibales() {
     signal input estados[12][3]; 
-
-    // la salida del circuito: 1 si todo perfecto, 0 si se hubo algun estado incorrecto
     signal output salida;
 
-    // forzar a que el estado 0 sea todos en la orilla izquierda
-    estados[0][0] === 3; // 3 misioneros
-    estados[0][1] === 3; // 3 caníbales
-    estados[0][2] === 1; // barca en la izquierda
+    estados[0][0] === 3; 
+    estados[0][1] === 3; 
+    estados[0][2] === 1; 
 
-    // para cada estado creamos un componente encargado de validar ese estado
     component validador[11];
-    var exito_global = 1;
-
     for(var t = 0; t < 11; t++) {
         validador[t] = ValidarTransicion();
-        
-        // estado.ant
-        validador[t].m_ant <== estados[t][0];
-        validador[t].c_ant <== estados[t][1];
-        validador[t].b_ant <== estados[t][2];
-
-        // estado.sig
-        validador[t].m_sig <== estados[t+1][0];
-        validador[t].c_sig <== estados[t+1][1];
-        validador[t].b_sig <== estados[t+1][2];
-
-        // multiplicamos los éxitos de cada paso, de esta forma con que haya un solo componente estado que no cumple con el juego ya no sirve
-        exito_global = exito_global * validador[t].out;
     }
 
-    // comprobamos que el ultimo estado cumple las restricciones, si el ultimo estado no se cumple algo ha ido mal
-    if (estados[11][0] != 0 || estados[11][1] != 0 || estados[11][2] != 0) {
-        exito_global = 0;
-    } 
+    for(var t = 0; t < 11; t++) {
+	for(var i = 0; i < 3; i++) {
+	    validador[t].anterior[i]  <== estados[t][i];
+	    validador[t].siguiente[i] <== estados[t+1][i];
+	}
+    }
 
-    // forzar a que la salida refleje el éxito global de la ejecución
-    salida <-- exito_global;
+    signal v[11];
+    v[0] <== validador[0].out;
+    for(var t = 1; t < 11; t++) {
+	v[t] <== v[t-1] * validador[t].out;
+    }
+
+    component m_final = IsZero();  m_final.in <== estados[11][0];
+    component c_final = IsZero();  c_final.in <== estados[11][1];
+    component b_final = IsZero();  b_final.in <== estados[11][2];
+
+    signal meta_parcial <== m_final.out * c_final.out;
+    signal meta_ok <== meta_parcial * b_final.out;
+
+    salida <== v[10] * meta_ok;
 }
 
-component main = MisionerosCanibales(); 
+component main = MisionerosCanibales();
