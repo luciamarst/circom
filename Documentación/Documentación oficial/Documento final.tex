@@ -148,6 +148,26 @@ placement=H
 }{
 	\par\vspace{1cm}
 }
+
+\newenvironment{resumen}{%
+	\begin{center}
+		\bfseries\Large Resumen
+	\end{center}
+	\vspace{0.5cm}
+	\noindent 
+}{
+	\par\vspace{1cm}
+}
+
+\newenvironment{abstract_in}{%
+	\begin{center}
+		\bfseries\Large Abstract
+	\end{center}
+	\vspace{0.5cm}
+	\noindent 
+}{
+	\par\vspace{1cm}
+}
 % Lenguaje
 \lstdefinelanguage{Circom}{
 	keywords={template, signal, input, output, component},
@@ -237,8 +257,9 @@ placement=H
 
 
 	
+	\newpage
 	
-	\begin{abstract}
+	\begin{resumen}
 		Este trabajo presenta la implementación de una nueva funcionalidad para el compilador de Circom, diseñada para simplificar la creación de circuitos mediante una traducción automática de operadores de alto nivel a restricciones algebraicas. La complejidad de este lenguaje radica en la necesidad de definir manualmente un sistema de ecuaciones en formato R1CS coherente y seguro, ya que una implementación incompleta o errónea de estas restricciones puede comprometer la integridad del circuito, permitiendo la generación de pruebas falsas. 
 		
 		\vspace{0.2cm}
@@ -252,14 +273,14 @@ placement=H
 		
 		\vspace{0.5cm}
 				
-		\noindent \textbf{Palabras clave}: Circom, compilador, circuitos, R1CS, witness, prueba de conocimiento cero, sistemas de ecuaciones R1CS, circuitos aritméticos 
-	\end{abstract}
+		\noindent \textbf{Palabras clave}: Circom, compilador, witness, prueba de conocimiento cero, sistemas de ecuaciones R1CS, circuitos aritméticos.
+	\end{resumen}
 	
 
 	
 	\cleardoublepage 
 	\renewcommand{\abstractname}{Abstract} 
-	\begin{abstract}
+	\begin{abstract_in}
 		This work presents the implementation of a new functionality for the Circom compiler, designed to simplify circuit creation through the automatic translation of high-level operators into algebraic constraints. The complexity of this language lies in the need to manually define a coherent and secure system of equations in R1CS format, since an incomplete or erroneous implementation of these constraints can compromise the integrity of the circuit, allowing the generation of false proofs.
 		
 		\vspace{0.2cm}
@@ -273,9 +294,10 @@ placement=H
 		
 		\vspace{0.5cm}
 		
-		\noindent \textbf{Keywords}: Circom, compilers, R1CS, witness computation, zero-knowledge proof, R1CS equation systems, arithmetic circuits
-	\end{abstract}
+		\noindent \textbf{Keywords}: Circom, compilers, witness computation, zero-knowledge proof, R1CS equation systems, arithmetic circuits.
+	\end{abstract_in}
 	
+	\newpage 
 	
 	\begin{agradecimientos}
 	 	\noindent A Clara y Alejandro, por la oportunidad de realizar este trabajo con ellos y por introducirme en el mundo de Circom. Un área que era completamente desconocida para mí y que hoy en día se ha convertido en uno de los campos de la informática que más despiertan mi interés.
@@ -790,9 +812,9 @@ placement=H
 		\item Capítulo 2 (Definición del problema): Se definirá el problema y se presentará un ejemplo.
 		\item Capítulo 3 (Desarrollo del problema): Especificación técnica de las modificaciones que se llevarán a cabo en el compilador del lenguaje.
 		\item Capítulo 4 (Implementación): Detalle del desarrollo de las nuevas funcionalidades en el código fuente del compilador.
-		\item Capítulo 5 (Verificación de operadores): Análisis del proceso de validación formal para asegurar que los nuevos operadores generen sistemas de restricciones correctos y equivalentes.
-		\item Capítulo 6 (Experimentos): Evaluación del rendimiento y comportamiento del compilador modificado frente a implementaciones manuales clásicas en diversos escenarios.
-		\item Capítulo 7 ( Conclusiones y Trabajo Futuro): Recapitulación de los resultados obtenidos, valoración del impacto de la solución y propuestas para futuras líneas de investigación.
+		\item Capítulo 5 (Verificación de operadores): Análisis del proceso de comprobación para asegurar que los nuevos operadores generen sistemas de restricciones correctos y equivalentes.
+		\item Capítulo 6 (Experimentos): Evaluación del rendimiento y comportamiento del compilador modificado frente a implementaciones manuales de juegos simples y comparación de los nuevos operadores con los de \texttt{circomlib}.
+		\item Capítulo 7 ( Conclusiones y Trabajo Futuro): Recapitulación de los resultados obtenidos, valoración del impacto de la solución y propuestas para futuras investigaciones.
 	\end{itemize}
 	
 	
@@ -1232,13 +1254,13 @@ placement=H
 	\noindent To achieve the proposed objectives, this document has been structured into the following chapters:
 	
 	\begin{itemize}
-		\item \textbf{Chapter 1 (Introduction to Circom):} \textcolor{black}{Provides the} context regarding the technology addressed in this work and offers an overview of the project's objectives.
-		\item \textbf{Chapter 2 (Problem Definition):} Defines the problem and presents an illustrative example.
-		\item \textbf{Chapter 3 (Problem Development):} Technical specification of the modifications to be carried out within the language compiler.
-		\item \textbf{Chapter 4 (Implementation):} Details the development of the new functionalities within the compiler's source code.
-		\item \textbf{Chapter 5 (Operator Verification):} Analysis of the formal validation process to ensure that the new operators generate correct and equivalent constraint systems.
-		\item \textbf{Chapter 6 (Experiments):} Evaluation of the performance and behavior of the modified compiler compared to traditional manual implementations across various scenarios.
-		\item \textbf{Chapter 7 (Conclusions and Future Work):} Recapitulation of the results obtained, assessment of the solution's impact, and proposals for future lines of research.
+		\item Chapter 1 (Introduction to Circom): \textcolor{black}{Context is introduced} about the technology we are going to deal with and a general overview is offered of what we intend to do with it throughout the work.
+		\item Chapter 2 (Problem definition): The problem will be defined and an example will be presented.
+		\item Chapter 3 (Problem development): Technical specification of the modifications that will be carried out in the language compiler.
+		\item Chapter 4 (Implementation): Detail of the development of the new functionalities in the compiler source code.
+		\item Chapter 5 (Operator verification): Analysis of the verification process to ensure that the new operators generate correct and equivalent constraint systems.
+		\item Chapter 6 (Experiments): Evaluation of the performance and behavior of the modified compiler against manual implementations of simple games and comparison of the new operators with those of \texttt{circomlib}.
+		\item Chapter 7 (Conclusions and Future Work): Recapitulation of the obtained results, assessment of the impact of the solution, and proposals for future research.
 	\end{itemize}
 	
 	
@@ -1968,6 +1990,8 @@ placement=H
 	
 	\vspace{0.3cm}
 	\noindent Para conseguir esta lógica en Circom sin hacer uso de la nueva funcionalidad puede apreciarse que requiere de un diseño aritmético complejo, ya que habría que establecer cada una de las condiciones a mano para simular este comportamiento.
+	
+	\newpage
 	
 	\vspace{0.6cm}
 	\noindent \textbf{Módulo}
@@ -4089,7 +4113,7 @@ placement=H
 	\chapter{Conclusiones y Trabajo Futuro}
 	\section{Conclusiones}
 	
-	\noindent El propósito principal de este trabajo se ha cumplido, consiguiendo de forma exitosa el objetivo de dotar al compilador de \textbf{Circom} de una mayor facilidad en cuanto a su uso, ofreciendo más opciones a la hora tanto de programar como de aprender el lenguaje.
+	\noindent El propósito principal de este trabajo se ha alcanzado con éxito, logrando el objetivo de dotar al compilador de \textbf{Circom} de una mayor facilidad en cuanto a su uso, ofreciendo más opciones a la hora tanto de programar como de aprender el lenguaje.
 		
 	\vspace{0.2cm}
 	\noindent A lo largo del proyecto, se ha conseguido automatizar la generación de restricciones para un gran cantidad de operadores y expresiones que antes de la incorporación de la nueva funcionalidad requerían una implementación manual tediosa y un proceso de adaptación largo, sobre todo en el primer contacto con Circom.
@@ -4105,7 +4129,7 @@ placement=H
 	
 	\vspace{0.2cm}
 	
-	\noindent Un aspecto imprescindible para alcanzar los objetivos propuestos ha sido la verificación formal. Se ha comprobado que las reglas de traducción implementadas son deterministas y que los valores de salida corresponden exactamente con los de la lógica esperada para cada operadores y expresión. Sin embargo, el proceso de verificación mediante \textit{ZK-GENVER} ha expuesto la gran dificultad de los operadores aritméticos de división y módulo. 
+	\noindent Un aspecto imprescindible para alcanzar los objetivos propuestos ha sido la verificación. Se ha comprobado que las reglas de traducción implementadas son deterministas y que los valores de salida corresponden exactamente con los de la lógica esperada para cada operador y expresión. Sin embargo, el proceso de verificación mediante \textit{ZK-GENVER} ha expuesto la gran dificultad de los operadores aritméticos de división y módulo. 
 	
 	\vspace{0.2cm}
 	\noindent Aunque estas funciones fueron implementadas en el compilador y se pudo verificar que son deterministas y que sus valores de salida son los esperados, la comprobación de equivalencia tuvo como resultado \textit{timeout}, lo que impidió verificar formalmente su equivalencia con los códigos de referencia que fueron desarrollados haciendo uso de funciones propias de la \texttt{circomlib} [\ref{sec:ver-modulo}].
@@ -4136,7 +4160,11 @@ placement=H
 	\chapter{Conclusions and Future Work}
 	\section{Conclusions}
 	
-	\noindent The development of this work has fulfilled the main objective of providing the \textbf{Circom} compiler with greater expressivity, offering more options for both programming and learning the language. Throughout the project, the generation of constraints has been successfully automated for a wide range of functionalities that, until now, required a much more tedious manual implementation and adaptation process, especially during the initial contact with Circom.
+	\noindent The main purpose of this work has been successfully achieved, fulfilling the objective of providing the \textbf{Circom} compiler with greater ease of use, offering more options both when programming and learning the language.
+	
+	\vspace{0.2cm}
+	\noindent
+	 Throughout the project, the generation of constraints has been successfully automated for a wide range of functionalities that, until now, required a much more tedious manual implementation and adaptation process, especially during the initial contact with Circom.
 	
 	\vspace{0.2cm}
 	
@@ -4150,7 +4178,7 @@ placement=H
 	
 	\vspace{0.2cm}
 	
-	\noindent A critical aspect in achieving the proposed objectives has been formal verification. It has been confirmed that the implemented translation rules are deterministic and that the output values correspond exactly to the expected logic for each operator and expression. However, the verification process using \textit{ZK-GENVER} exposed the significant difficulty posed by the arithmetic operators for division and modulo.
+	\noindent A critical aspect in achieving the proposed objectives has been verification. It has been confirmed that the implemented translation rules are deterministic and that the output values correspond exactly to the expected logic for each operator and expression. However, the verification process using \textit{ZK-GENVER} exposed the significant difficulty posed by the arithmetic operators for division and modulo.
 	
 	\vspace{0.2cm}
 	\noindent Although these functions were implemented in the compiler and verified to be deterministic with the expected output values, the equivalence check resulted in a \textit{timeout}. This prevented formal verification of their equivalence with the reference codes developed using standard \texttt{circomlib} functions [\ref{sec:ver-modulo}].
