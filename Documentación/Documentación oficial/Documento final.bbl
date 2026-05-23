@@ -4,24 +4,20 @@
 Wikipedia. (2026).
 \newblock \emph{Prueba de conocimiento cero}.
 \newblock \url{https://es.wikipedia.org/wiki/Prueba_de_conocimiento_cero}.
-\newblock Accedido: 04-04-2026.
 
 \bibitem{nervos_zkp}
 Nervos Network. (2024).
 \newblock \emph{Pruebas de conocimiento cero (zero knowledge proofs)}.
 \newblock \url{https://www.nervos.org/es/knowledge-base/zero_knowledge_proofs_(explainCKBot)}.
-\newblock Accedido: 02-04-2026.
 
 \bibitem{binance_academy_zk}
 Binance Academy. (2024). 
 \newblock \emph{ZK-SNARKs y ZK-STARKs explicados}. 
 \newblock \url{https://www.binance.com/es/academy/articles/zk-snarks-and-zk-starks-explained}.
-\newblock Accedido: 09-04-2026.
 
 \bibitem{thesis_clara}
 Rodríguez Nuñez, C. (2024). 
 \newblock \emph{Propiedades de corrección y seguridad en tecnologías blockchain}.
-\newblock Accedido: 04-04-2026.
 
 \bibitem{R1CS_cita}
 Buterin, V. (2016).
@@ -33,96 +29,93 @@ Buterin, V. (2016).
 Wikipedia. (s. f.).
 \newblock \emph{Cuerpo finito}.
 \newblock \url{https://es.wikipedia.org/wiki/Cuerpo_finito}.
-\newblock Accedido: 17-04-2026.
+
 
 \bibitem{circom_articulo_clara}
 Bellés-Muñoz, M., Isabel, M., Muñoz-Tapia, J. L., Rubio, A. y Baylina, J. (2023). 
 \newblock CIRCOM: A Circuit Description Language for Building Zero-Knowledge Applications. 
 \newblock \emph{IEEE Software/Journal}.
 \newblock \url{https://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=10002421}.
-\newblock Accedido: 02-04-2026.
 
 \bibitem{battlezips_circom}
 BattleZips Team. (2022).
-\newblock \emph{BattleZips-Circom: Zero-knowledge Battleship engine} [Software].
+\newblock \emph{BattleZips-Circom: Zero-knowledge Battleship engine} .
 \newblock \url{https://github.com/BattleZips/BattleZips-Circom}.
-\newblock Accedido: 03-04-2026.
+
 
 \bibitem{darkforest_circuits_2021}
 Dark Forest Team. (2021).
 \newblock \emph{Dark Forest Circuits}.
 \newblock \url{https://github.com/darkforest-eth/circuits}.
-\newblock Accedido: 09-04-2026.
+
 
 \bibitem{iden3_multiplexer_2023}
 Iden3. (2023).
 \newblock \emph{Circuits/multiplexer.circom}.
 \newblock \url{https://github.com/iden3/circomlib/blob/master/circuits/multiplexer.circom}.
-\newblock Accedido: 09-04-2026.
 
 \bibitem{rps_circom}
 Martínez, L. (2026).
-\newblock \emph{zk-rock-paper-scissors: A Zero-Knowledge implementation in Circom} [Software].
-\newblock \url{https://github.com/luciamarst/zk-rock-paper-scissors}.
-\newblock Accedido: 03-04-2026.
+\newblock \emph{Implementación de juegos simples con Circom}.
+\newblock \url{https://github.com/luciamarst/circom/tree/Juegos}.
+
 
 \bibitem{studocu_division_entera}
 Studocu. (s. f.).
 \newblock \emph{Teorema de la división entera}. Universitat Politècnica de València.
 \newblock \url{https://www.studocu.com/es/document/universitat-politecnica-de-valencia/matematicas/teorema-de-la-division-entera/59857285}.
-\newblock Accedido: 18-04-2026.
+
 
 \bibitem{circomlib_comparators}
 Iden3. (s. f.). 
-\newblock \emph{Circuits/comparators.circom} [Código fuente]. GitHub. 
+\newblock \emph{Circuits/comparators.circom}. 
 \newblock \url{https://github.com/iden3/circomlib/blob/master/circuits/comparators.circom}
 
 \bibitem{iden3_circomlib_bitify}
 Iden3. (s. f.). 
-\newblock \emph{Circuits/bitify.circom} [Código fuente]. GitHub. 
+\newblock \emph{Circuits/bitify.circom}. 
 \newblock \url{https://github.com/iden3/circomlib/blob/master/circuits/bitify.circom}
 
 \bibitem{costa_group_zkgenver}
 Costa Group. (2024).
-\newblock \emph{ZK-GENVER: A tool for zero-knowledge circuit generation and verification} [Software].
+\newblock \emph{ZK-GENVER: A tool for zero-knowledge circuit generation and verification}.
 \newblock \url{https://github.com/costa-group/ZK-GENVER}.
-\newblock Accedido: 19-04-2026.
+
 
 \bibitem{iden3_circomlib}
 Iden3. (2023).
-\newblock \emph{circomlib: Library of basic circuits for Circom} [Software].
+\newblock \emph{circomlib: Library of basic circuits for Circom}.
 \newblock \url{https://github.com/iden3/circomlib}.
-\newblock Accedido: 19-04-2026.
+
 
 \bibitem{iden3_gates_circom}
 Iden3. (s. f.).
-\newblock \emph{Circuits/gates.circom} [Código fuente]. GitHub.
+\newblock \emph{Circuits/gates.circom}.
 \newblock \url{https://github.com/iden3/circomlib/blob/master/circuits/gates.circom}.
-\newblock Accedido: 19-04-2026.
+
 
 \bibitem{rust_lang}
 Rust Foundation. (2025).
 \newblock \emph{Rust: Un lenguaje que empodera a todos para crear software fiable y eficiente}.
 \newblock \url{https://www.rust-lang.org/es/}.
-\newblock Accedido: 23-04-2026.
+
 
 \bibitem{wikipedia_ast}
 Wikipedia. (2024).
 \newblock \emph{Árbol de sintaxis abstracta}.
 \newblock Wikipedia, La enciclopedia libre. \url{https://es.wikipedia.org/wiki/%C3%81rbol_de_sintaxis_abstracta}.
-\newblock Accedido: 23-04-2026.
+
 
 
 \bibitem{circom_autocomplete}
 Martínez, L. (2025).
 \newblock \emph{Circom autocomplete: zkSnark circuit compiler}.
-\newblock GitHub. \url{https://github.com/luciamarst/circom_autocomplete}.
-\newblock Accedido: 22-04-2026.
+\newblock \url{https://github.com/luciamarst/circom_autocomplete}.
+
 
 \bibitem{geeknetic_binario}
 Geeknetic. (2023).
 \newblock \emph{Cómo convertir binario en decimal paso a paso}.
 \newblock Geeknetic. \url{https://www.geeknetic.es/Guia/2667/Como-convertir-binario-en-decimal-paso-a-paso.html}.
-\newblock Accedido: 25-04-2026.
 
 \end{thebibliography}

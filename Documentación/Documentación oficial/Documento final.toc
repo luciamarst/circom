@@ -43,22 +43,25 @@
 \contentsline {subsection}{\numberline {6.1.4}Operadores de Desplazamiento}{65}{subsection.6.1.4}%
 \contentsline {chapter}{\numberline {7}Experimentos}{66}{chapter.7}%
 \contentsline {section}{\numberline {7.1}Aplicación de la generación automática sobre juegos simples}{66}{section.7.1}%
-\contentsline {section}{\numberline {7.2}Aplicación de la generación automática sobre circomlib y comparación de constraints}{66}{section.7.2}%
-\contentsline {section}{\numberline {7.3}Caso de uso, verificación y búsqueda de bugs}{66}{section.7.3}%
-\contentsline {chapter}{\numberline {8}Conclusiones y Trabajo Futuro}{67}{chapter.8}%
-\contentsline {section}{\numberline {8.1}Conclusiones}{67}{section.8.1}%
-\contentsline {section}{\numberline {8.2}Trabajo Futuro}{68}{section.8.2}%
-\contentsline {chapter}{\numberline {9}Conclusions and Future Work}{69}{chapter.9}%
-\contentsline {section}{\numberline {9.1}Conclusions}{69}{section.9.1}%
-\contentsline {section}{\numberline {9.2}Future Work}{70}{section.9.2}%
-\contentsline {chapter}{\numberline {A}Problemática de los números negativos}{73}{appendix.Alph1}%
-\contentsline {chapter}{\numberline {B}Verificación de operadores}{74}{appendix.Alph2}%
-\contentsline {section}{\numberline {B.1}Operadores Aritméticos}{74}{section.Alph2.1}%
-\contentsline {subsection}{\numberline {B.1.1}División}{74}{subsection.Alph2.1.1}%
-\contentsline {subsection}{\numberline {B.1.2}Módulo}{75}{subsection.Alph2.1.2}%
-\contentsline {section}{\numberline {B.2}Operadores lógicos}{75}{section.Alph2.2}%
-\contentsline {subsection}{\numberline {B.2.1}AND binario}{75}{subsection.Alph2.2.1}%
-\contentsline {subsection}{\numberline {B.2.2}OR binario}{76}{subsection.Alph2.2.2}%
-\contentsline {section}{\numberline {B.3}Operadores de desplazamiento}{77}{section.Alph2.3}%
-\contentsline {subsection}{\numberline {B.3.1}Desplazamiento a la izquierda}{77}{subsection.Alph2.3.1}%
-\contentsline {subsection}{\numberline {B.3.2}Desplazamiento a la derecha}{78}{subsection.Alph2.3.2}%
+\contentsline {subsection}{\numberline {7.1.1}Piedra, Papel y Tijera}{66}{subsection.7.1.1}%
+\contentsline {subsection}{\numberline {7.1.2}Caníbales y misioneros}{67}{subsection.7.1.2}%
+\contentsline {subsection}{\numberline {7.1.3}Tres en raya}{69}{subsection.7.1.3}%
+\contentsline {subsection}{\numberline {7.1.4}Sudoku}{70}{subsection.7.1.4}%
+\contentsline {section}{\numberline {7.2}Aplicación de la generación automática sobre circomlib y comparación de constraints}{72}{section.7.2}%
+\contentsline {chapter}{\numberline {8}Conclusiones y Trabajo Futuro}{74}{chapter.8}%
+\contentsline {section}{\numberline {8.1}Conclusiones}{74}{section.8.1}%
+\contentsline {section}{\numberline {8.2}Trabajo Futuro}{75}{section.8.2}%
+\contentsline {chapter}{\numberline {9}Conclusions and Future Work}{76}{chapter.9}%
+\contentsline {section}{\numberline {9.1}Conclusions}{76}{section.9.1}%
+\contentsline {section}{\numberline {9.2}Future Work}{77}{section.9.2}%
+\contentsline {chapter}{\numberline {A}Problemática de los números negativos}{80}{appendix.Alph1}%
+\contentsline {chapter}{\numberline {B}Verificación de operadores}{81}{appendix.Alph2}%
+\contentsline {section}{\numberline {B.1}Operadores Aritméticos}{81}{section.Alph2.1}%
+\contentsline {subsection}{\numberline {B.1.1}División}{81}{subsection.Alph2.1.1}%
+\contentsline {subsection}{\numberline {B.1.2}Módulo}{82}{subsection.Alph2.1.2}%
+\contentsline {section}{\numberline {B.2}Operadores lógicos}{82}{section.Alph2.2}%
+\contentsline {subsection}{\numberline {B.2.1}AND binario}{82}{subsection.Alph2.2.1}%
+\contentsline {subsection}{\numberline {B.2.2}OR binario}{83}{subsection.Alph2.2.2}%
+\contentsline {section}{\numberline {B.3}Operadores de desplazamiento}{84}{section.Alph2.3}%
+\contentsline {subsection}{\numberline {B.3.1}Desplazamiento a la izquierda}{84}{subsection.Alph2.3.1}%
+\contentsline {subsection}{\numberline {B.3.2}Desplazamiento a la derecha}{85}{subsection.Alph2.3.2}%
