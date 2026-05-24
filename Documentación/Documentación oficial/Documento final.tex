@@ -803,6 +803,9 @@ placement=H
 		\item Desarrollo de la memoria para recoger todo lo anterior y analizar los resultados del trabajo
 	\end{enumerate}
 	
+	\vspace{0.2cm}
+	\noindent Con el fin de facilitar la consulta y revisión de este trabajo, todo el código desarrollado se encuentra disponible en el \href{https://github.com/luciamarst/circom_autocomplete}{\textbf{\textcolor{black}{repositorio oficial}}} \cite{circom_autocomplete}.
+	
 	\subsection{Estructura del trabajo}
 	
 	\noindent Para alcanzar los objetivos propuestos, este documento se ha estructurado en los siguientes capítulos:
@@ -1248,6 +1251,9 @@ placement=H
 		\item Application of the new functionality to real-world cases
 		\item Development of the report to document the above and analyze the results of the work
 	\end{enumerate}
+	
+	\vspace{0.2cm}
+	\noindent In order to facilitate the consultation and review of this work, all the developed code is available in the \href{https://github.com/luciamarst/circom_autocomplete}{\textbf{\textcolor{black}{official repository}}} \cite{circom_autocomplete}.
 	
 	\subsection{Work Structure}
 	
@@ -3234,8 +3240,10 @@ placement=H
 	\vspace{0.2cm}
 	\noindent Cada nodo tiene su implementación dentro del compilador, que corresponde con las reglas de traducción especificadas en el capítulo anterior para cada operador.
 	
+
 	\vspace{0.2cm}
-	\noindent Debido al tamaño que ocuparía la explicación de las implementaciones de cada uno de los operadores, explicaremos únicamente la implementación de uno de ellos, dejando como referencia el repositorio con la implementación si fuera preciso consultarlo	\cite{circom_autocomplete}.
+	\noindent Debido al tamaño que ocuparía la explicación de las implementaciones de cada uno de los operadores, explicaremos únicamente la implementación de uno de ellos, dejando como referencia el \href{https://github.com/luciamarst/circom_autocomplete}{\textbf{\textcolor{black}{repositorio}}} con la implementación si fuera preciso consultarlo \cite{circom_autocomplete}.
+
 	
 	
 	\section{Ejemplo de implementación}
@@ -3746,7 +3754,7 @@ placement=H
 	\chapter{Experimentos}
 	
 	\section{Aplicación de la generación automática sobre juegos simples}
-	\noindent Los juegos simples sobre los que se han realizado estos experimentos corresponden a \textit{Piedra, Papel y Tijera}, \textit{Caníbales y misioneros}, \textit{Tres en raya} y el \textit{Sudoku}.
+	\noindent En esta sección, hemos probado el modo autocomplete con varios juegos simples, entre ellos \textit{Piedra, Papel y Tijera}, \textit{Caníbales y misioneros}, \textit{Tres en raya} y \textit{Sudoku}.
 	
 	\vspace{0.2cm}
 	\noindent Las implementaciones completas pueden ser consultadas en su respectivo repositorio \cite{rps_circom}.
@@ -3867,11 +3875,7 @@ placement=H
 	
 	
 	\vspace{0.2cm}
-	\noindent Por otro lado, en cuanto al número de restricciones lineales y no lineales generadas por ambos códigos. 
-	
-	
-	\vspace{0.2cm}
-	\noindent Para ello, durante la compilación utilizaremos los niveles de optimización \texttt{O0} y \texttt{O2}, correspondientes a la optimización desactivada y al nivel máximo respectivamente, obteniendo los siguientes resultados:
+	\noindent Por otro lado, en cuanto al número de restricciones lineales y no lineales generadas por ambos códigos, realizaremos la compilación utilizando los niveles de optimización \texttt{O0} y \texttt{O2}, correspondientes a la optimización desactivada y al nivel máximo respectivamente, obteniendo los siguientes resultados:
 	
 	\vspace{0.2cm}
     \begingroup 
@@ -3889,9 +3893,8 @@ placement=H
     \end{longtable}
     \endgroup
     
-    \vspace{0.2cm}
-    \noindent Tras realizar estas compilaciones, se observa que, en ambos niveles de optimización, la implementación sin \texttt{autocomplete} es más eficiente que la versión con \texttt{autocomplete}, ya que genera un menor número de restricciones no lineales.
-    
+    \vspace{0.3cm}
+    \noindent Tras realizar estas compilaciones, se observa que, en ambos niveles de optimización, la implementación sin \texttt{autocomplete} es más eficiente que la versión con \texttt{autocomplete}, ya que genera un menor número de restricciones no lineales. El motivo de estos resultados se discutirá en la \hyperref[s:analisis-resultados]{\textbf{Sección \ref{s:analisis-resultados}}}.
 	
 	\subsection{Caníbales y misioneros}
 	\vspace{0.2cm}
@@ -3907,7 +3910,7 @@ placement=H
 	\noindent El incumplimiento de cualquiera de estas restricciones en al menos un estado resultaría en una solución incorrecta.
 	
 	\vspace{0.2cm}
-	\noindent Con el fin de estructurar esta lógica, a continuación se presenta la definición de las señales de entrada y salida utilizadas en el circuito de Circom:
+	\noindent Para organizar esta lógica, se detallan a continuación las diferentes señales de entrada y salida que componen el circuito de Circom:
 	
 	\vspace{0.3cm}
 	\begin{lstlisting}[
@@ -3929,8 +3932,7 @@ placement=H
 	\end{lstlisting}
 
 	\vspace{0.4cm}
-	\noindent Para verificar el comportamiento de esta implementación, se define la siguiente configuración dentro del archivo \texttt{input.json}:
-	
+	\noindent Con el objetivo de validar el funcionamiento de este circuito, se ha preparado el siguiente caso de prueba dentro del archivo \texttt{input.json}:
 	
 	\begingroup
 	\lstset{
@@ -4079,10 +4081,7 @@ placement=H
 	\noindent Del mismo modo, se modificaron los valores de la matriz \texttt{estados} en el archivo de entrada para comprobar que la salida es igual a 0 al utilizar configuraciones de estados diferentes a la expuesta, concluyendo así que la lógica es correcta para las distintas situaciones posibles.
 	
 	\vspace{0.2cm}
-	\noindent Por otro lado, en cuanto al número de restricciones lineales y no lineales generadas por ambos códigos. 
-	
-	\vspace{0.2cm}
-	\noindent Para ello, evaluaremos de nuevo el comportamiento del circuito bajo los niveles de optimización \texttt{-O0} y \texttt{-O2}, obteniendo los siguientes resultados:
+	\noindent Por otra parte, respecto al número de restricciones lineales y no lineales que genera cada código, se ha analizado el comportamiento del circuito aplicando los niveles de optimización \texttt{-O0} y \texttt{-O2}. Los resultados de dicha comparativa se presentan a continuación:
 	
 	\vspace{0.2cm}
 	\begingroup 
@@ -4101,7 +4100,7 @@ placement=H
 	\endgroup
 	
 	\vspace{0.2cm}
-	\noindent Tras realizar estas compilaciones, se observa que, en ambos niveles de optimización, la implementación sin \texttt{autocomplete} es más eficiente que la versión con \texttt{autocomplete}, ya que genera un menor número de restricciones no lineales.
+	\noindent Tras realizar estas compilaciones, se observa que, en ambos niveles de optimización, la implementación sin \texttt{autocomplete} es más eficiente que la versión con \texttt{autocomplete}, ya que genera un menor número de restricciones no lineales. La razón detrás de estos resultados se analizará en detalle en la \hyperref[s:analisis-resultados]{\textbf{Sección \ref{s:analisis-resultados}}}.
 	
 	\subsection{Tres en raya}
 	\vspace{0.2cm}
@@ -4111,7 +4110,7 @@ placement=H
 	\noindent Si se cumple alguna de estas condiciones, el circuito determina quién es el ganador. De lo contrario, detectará si la partida ha terminado en empate.
 	
 	\vspace{0.2cm}
-	\noindent Con el fin de estructurar esta lógica, a continuación se presenta la definición de las señales de entrada y salida utilizadas en el circuito de Circom:
+	\noindent Con el objetivo de aclarar el funcionamiento de este bloque, la siguiente lista muestra las señales de entrada y salida definidas en el circuito de Circom:
 	
 	\vspace{0.2cm}
 	\begin{lstlisting}[
@@ -4128,7 +4127,7 @@ placement=H
 	\end{lstlisting}
 	
 	\vspace{0.4cm}
-	\noindent Para verificar el correcto comportamiento de esta interfaz, se define la siguiente configuración inicial de prueba dentro del archivo \texttt{input.json}:
+	\noindent Para evaluar el comportamiento de esta lógica, se definen a continuación los datos de entrada utilizados para la prueba en el archivo \texttt{input.json}:
 	
 	\begingroup
 	\lstset{
@@ -4204,10 +4203,7 @@ placement=H
 	\noindent Del mismo modo, se modificaron los valores de la matriz \texttt{tablero} en el archivo de entrada para comprobar que la señal toma los valores correctos en escenarios con un ganador diferente o en situaciones de empate, concluyendo así que la lógica es correcta para las distintas situaciones posibles.
 	
 	\vspace{0.2cm}
-	\noindent Por otro lado, en cuanto al número de restricciones lineales y no lineales generadas por ambos códigos. 
-	
-	\vspace{0.2cm}
-	\noindent Para ello, evaluaremos de nuevo el comportamiento del circuito bajo los niveles de optimización \texttt{-O0} y \texttt{-O2}, obteniendo los siguientes resultados:
+	\noindent Asimismo, para estudiar el impacto de ambos códigos en el número de restricciones lineales y no lineales, se ha evaluado el circuito utilizando tanto la optimización desactivada (\texttt{-O0}) como la máxima (\texttt{-O2}), dando lugar a los siguientes resultados:
 	
 	\vspace{0.2cm}
 	\begingroup 
@@ -4226,7 +4222,7 @@ placement=H
 	\endgroup
 	
 	\vspace{0.2cm}
-	\noindent Tras realizar estas compilaciones, se observa que, en ambos niveles de optimización, la implementación sin \texttt{autocomplete} es más eficiente que la versión con \texttt{autocomplete}, ya que genera un menor número de restricciones no lineales.
+	\noindent Tras realizar estas compilaciones, se observa que, en ambos niveles de optimización, la implementación sin \texttt{autocomplete} es más eficiente que la versión con \texttt{autocomplete}, ya que genera un menor número de restricciones no lineales. La justificación de este comportamiento se tratará posteriormente en la \hyperref[s:analisis-resultados]{\textbf{Sección \ref{s:analisis-resultados}}}.
 	
 	\subsection{Sudoku}
 	\noindent La lógica de esta implementación se basa en verificar que la matriz del tablero represente una solución válida según las reglas del juego. Para ello, el circuito comprueba tres condiciones: 
@@ -4258,7 +4254,7 @@ placement=H
 	\end{lstlisting}
 	
 	\vspace{0.4cm}
-	\noindent Para verificar el correcto comportamiento de esta interfaz, se define la siguiente configuración inicial de prueba dentro del archivo \texttt{input.json}:
+	\noindent Para comprobar la salida de este circuito, se detallan a continuación los valores de entrada configuradas en el archivo \texttt{input.json}:
 	
 	\begingroup
 	\lstset{
@@ -4357,10 +4353,7 @@ placement=H
 	\noindent Del mismo modo, se modificaron los valores de la matriz \texttt{tablero} en el archivo de entrada para comprobar que la salida es igual a 0 al utilizar configuraciones que rompen las reglas, así como el comportamiento con otros tableros que sí las cumplen, concluyendo así que la lógica es correcta para las distintas situaciones posibles.
 	
 	\vspace{0.2cm}
-	\noindent Por otro lado, en cuanto al número de restricciones lineales y no lineales generadas por ambos códigos. 
-	
-	\vspace{0.2cm}
-	\noindent Para ello, evaluaremos de nuevo el comportamiento del circuito bajo los niveles de optimización \texttt{-O0} y \texttt{-O2}, obteniendo los siguientes resultados:
+	\noindent En lo que respecta a la cantidad de restricciones lineales y no lineales de ambas implementaciones, el circuito se ha sometido de nuevo a los niveles de optimización \texttt{-O0} y \texttt{-O2}. A partir de este procedimiento, se han obtenido los siguientes resultados:
 	
 	\vspace{0.2cm}
 	\begingroup 
@@ -4379,7 +4372,7 @@ placement=H
 	\endgroup
 	
 	\vspace{0.2cm}
-	\noindent Tras realizar estas compilaciones, se observa que, en ambos niveles de optimización, la implementación sin \texttt{autocomplete} es más eficiente que la versión con \texttt{autocomplete}, ya que genera un menor número de restricciones no lineales.
+	\noindent Tras realizar estas compilaciones, se observa que, en ambos niveles de optimización, la implementación sin \texttt{autocomplete} es más eficiente que la versión con \texttt{autocomplete}, ya que genera un menor número de restricciones no lineales. La explicación de estos resultados se trata en la \hyperref[s:analisis-resultados]{\textbf{sección \ref{s:analisis-resultados}}}.
 	
 	\section{Aplicación de la generación automática sobre circomlib y comparación de constraints}
 	\vspace{0.2cm}
@@ -4456,11 +4449,15 @@ placement=H
 	
 	
 	\section{Análisis de resultados}
+	\label{s:analisis-resultados}
 	\vspace{0.2cm}
 	\noindent Tras realizar todos los experimentos anteriores y analizarlos detalladamente, se puede observar claramente que, de forma general, los circuitos grandes implementados con la nueva funcionalidad generan un mayor número de restricciones en comparación con las versiones que no la utilizan.
 	
 	\vspace{0.2cm}
-	\noindent Uno de los motivos de estos resultados se debe a que algunos de los operadores añadidos generan más restricciones a nivel atómico que los operadores nativos de Circom. Por ello, al construir circuitos de mayor tamaño haciendo uso de estos nuevos operadores, el número de restricciones individual de cada operador se va acumulando y desencadena en un crecimiento del número total de restricciones.
+	\noindent Uno de los motivos de estos resultados se debe a que algunos de los operadores añadidos generan más restricciones a nivel atómico que los operadores nativos de \textit{circomlib} y Circom. Esta diferencia surge porque nuestra nueva funcionalidad añade comprobaciones previas. Específicamente, en los operadores lógicos (\texttt{AND} y \texttt{OR}), se fuerza explícitamente a que ambos operandos sean estrictamente binarios ($0$ o $1$), lo que genera tres restricciones en comparación con la única restricción que utiliza \texttt{circomlib} al omitir dicha comprobación. Por otro lado, en los operadores de comparación (\texttt{<}, \texttt{<=}, \texttt{>} y \texttt{>=}), el incremento se debe a la necesidad de verificar mediante la transformación de decimal a binario que los operandos sean valores positivos.
+
+	\vspace{0.2cm}
+	\noindent Por ello, al construir circuitos de mayor tamaño haciendo uso de estos nuevos operadores, el número de restricciones individual de cada operador se va acumulando y desencadena en un crecimiento del número total de restricciones.
 	
 	\vspace{0.2cm}
 	\noindent Por otro lado, el otro motivo de peso es que no se ha incluido una fase simplificación en el circuito. Esto hace que se puedan generar restricciones idénticas en diferentes partes del código de forma independiente, las cuales podrían reducirse si el sistema revisara el circuito completo al final para eliminar las restricciones duplicadas.
@@ -4484,7 +4481,7 @@ placement=H
 	
 	\vspace{0.2cm}
 	
-	\noindent Un aspecto imprescindible para alcanzar los objetivos propuestos ha sido la verificación. Se ha comprobado que las reglas de traducción implementadas son deterministas y que los valores de salida corresponden exactamente con los de la lógica esperada para cada operador y expresión. Sin embargo, el proceso de verificación mediante \textit{ZK-GENVER} ha expuesto la gran dificultad de los operadores aritméticos de división y módulo. 
+	\noindent Un aspecto imprescindible para alcanzar los objetivos propuestos ha sido la verificación de los operadores. Se ha comprobado que las reglas de traducción implementadas son deterministas y que los valores de salida corresponden exactamente con los de la lógica esperada para cada operador y expresión. Sin embargo, el proceso de verificación mediante \textit{ZK-GENVER} ha expuesto la gran dificultad de los operadores aritméticos de división y módulo. 
 	
 	\vspace{0.2cm}
 	\noindent Aunque estas funciones fueron implementadas en el compilador y se pudo verificar que son deterministas y que sus valores de salida son los esperados, la comprobación de equivalencia tuvo como resultado \textit{timeout}, lo que impidió verificar formalmente su equivalencia con los códigos de referencia que fueron desarrollados haciendo uso de funciones propias de la \texttt{circomlib} [\ref{sec:ver-modulo}].
