@@ -3749,7 +3749,7 @@ placement=H
 	\noindent Los juegos simples sobre los que se han realizado estos experimentos corresponden a \textit{Piedra, Papel y Tijera}, \textit{Caníbales y misioneros}, \textit{Tres en raya} y el \textit{Sudoku}.
 	
 	\vspace{0.2cm}
-	\noindent Las implementaciones pueden ser consultadas en su respectivo repositorio, donde también podrán verse los archivos \texttt{input.json} y \texttt{witness.json} \cite{rps_circom}.
+	\noindent Las implementaciones completas pueden ser consultadas en su respectivo repositorio \cite{rps_circom}.
 	
 	\subsection{Piedra, Papel y Tijera}
 	\noindent La lógica de este juego fue explicada en la sección \hyperref[s:ex-ppt]{\textbf{Ejemplo: Piedra, Papel y Tijera}}. 
@@ -3765,6 +3765,29 @@ placement=H
 	
 	\vspace{0.2cm}
 	\noindent Por tanto, al contener el valor de todas las señales, es posible verificar si el resultado de la señal de salida del programa es el esperado.
+	
+	\vspace{0.2cm}
+	\noindent Con el fin de estructurar esta lógica, a continuación se presenta la definición de las señales de entrada y salida utilizadas en el circuito de Circom:
+	
+	\vspace{0.3cm}
+	\begin{lstlisting}[
+		language=Circom,
+		basicstyle=\scriptsize\ttfamily, 
+		lineskip=-2pt,                  
+		aboveskip=5pt,                  
+		belowskip=5pt,                  
+		xleftmargin=10pt
+		]
+		//Piedra -> 0, Papel-> 1, Tijera->2
+		signal input jugador1;//Representa el estado del jugador 1 (0, 1 o 2)
+		signal input jugador2;//Representa el estado del jugador 2 (0, 1 o 2)
+		
+		signal output ganador;//Representa cual de los dos jugadores ha ganado, 0-> jugador1 ; 1->jugador2, 2 -> empate
+		
+	\end{lstlisting}
+	
+	\vspace{0.4cm}
+	\noindent Para verificar el comportamiento de esta implementación, se define la siguiente configuración dentro del archivo \texttt{input.json}:
 	
 	\begingroup
 		\lstset{
@@ -3783,9 +3806,6 @@ placement=H
 		}
 	
 	\vspace{0.2cm}
-	\noindent Para realizar esta comprobación, el archivo \texttt{input.json} utilizado para estudiar el valor que toman las señales es el siguiente:
-	
-	\vspace{0.2cm}
 	\begin{lstlisting}
 		{
 			"jugador1": 1,
@@ -3793,14 +3813,54 @@ placement=H
 		}
 	\end{lstlisting}
 	
-	\vspace{0.2cm}
-	\noindent A la hora de implementar el circuito, las señales de entrada \texttt{jugador1} y \texttt{jugador2} representan la elección de cada jugador, donde el número 0 representa la piedra, el 1 el papel y el 2 la tijera. Por otro lado, para la señal de salida \texttt{ganador}, el valor 0 indica la victoria del jugador 1, el 1 la del jugador 2 y el 2 representa un empate.
+	\endgroup
 	
 	\vspace{0.2cm}
-	\noindent De esta manera, acorde a esta asignación de valores, el jugador 1 ha sacado papel y el jugador 2 tijera, por tanto el resultado de la señal \texttt{ganador} debería ser 1, indicando que el jugador 2 ha ganado.
+	\noindent A la hora de implementar el circuito, las señales de entrada \texttt{jugador1} y \texttt{jugador2} representan la elección de cada jugador, donde el número 0 representa la piedra, el 1 el papel y el 2 la tijera. Por otro lado, para la señal de salida \texttt{ganador}, el valor 0 indica la victoria del jugador 1, el 1 la del jugador 2 y el 2 representa un empate. 
+	
+	
+	\vspace{0.3cm}
+	\noindent De esta manera, con una configuración donde el jugador 1 ha seleccionado papel y el jugador 2 tijera, se evalúa el comportamiento del circuito. Acorde a estos valores de entrada, el programa debería resolver que la señal \texttt{ganador} tome el valor 1 (indicando la victoria del jugador 2) al procesar la lógica de expresiones condicionales que se detalla a continuación:
+	
+	\vspace{0.3cm}
+	\begin{lstlisting}[
+		language=Circom,
+		basicstyle=\scriptsize\ttfamily, 
+		lineskip=-2pt,                  
+		aboveskip=5pt,                  
+		belowskip=5pt,                  
+		xleftmargin=10pt
+		]
+		
+		if(jugador1 == jugador2){ //Empate
+			ganador <-- 2;
+		}
+		else if(jugador2 == 0 && jugador1 == 2){ //Gana jugador 2 con piedra
+			ganador <--1;
+		}
+		else if(jugador1 == 0 && jugador2 == 2){ // Gana jugador 1 con piedra
+			ganador <--0;
+		}
+		else if(jugador2 == 2 && jugador1 == 1){ //Gana jugadpr 2 con tijera
+			ganador <--1;
+		}
+		else if(jugador1 == 2 && jugador2 == 1){ //Gana jugador 1 con tijera
+			ganador <-- 0;
+		}
+		else if(jugador2 == 1 && jugador1 == 0){ //Gana jugador 2 ocn papel
+			ganador <--1;
+		}
+		else if(jugador1 == 1 && jugador2 == 0){ // Gana jugador 1 con papel
+			ganador <-- 0;
+		}
+		else{
+			ganador <-- 1; //Valor no valido
+		}
+		
+	\end{lstlisting}
 	
 	\vspace{0.2cm}
-	\noindent Tras aplicar dichos valores a las señales de entrada y estudiar el \texttt{witness.json}, el valor de la señal \texttt{ganador} es 1 para ambas implementaciones.
+	\noindent Una vez definida la lógica del juego, se procede a la compilación tanto de la implementación sin la nueva funcionalidad como de la implementación con la nueva funcionalidad (la especificada anteriormente). Tras aplicar los valores de prueba mencionados a las señales de entrada y estudiar los ficheros \texttt{witness.json} resultantes, se concluyo que el valor asignado a la señal \texttt{ganador} es 1 en ambas implementaciones, validando así la correcta ejecución de la lógica del juego.
 	
 	\vspace{0.2cm}
 	\noindent Del mismo modo, se modificaron los valores de \texttt{jugador1} y \texttt{jugador2} en el archivo de entrada para comprobar los escenarios correspondientes a \texttt{ganador = 0} y \texttt{ganador = 2}, concluyendo así que la lógica es correcta para las tres situaciones posibles.
@@ -3846,9 +3906,47 @@ placement=H
 	\vspace{0.2cm}
 	\noindent El incumplimiento de cualquiera de estas restricciones en al menos un estado resultaría en una solución incorrecta.
 	
-
 	\vspace{0.2cm}
-	\noindent Al igual que hicimos en el experimento anterior, utilizaremos el archivo de salida del \texttt{witness} para comprobar que todo funciona. Para ello, definimos en el \texttt{input.json} la siguiente secuencia de estados:
+	\noindent Con el fin de estructurar esta lógica, a continuación se presenta la definición de las señales de entrada y salida utilizadas en el circuito de Circom:
+	
+	\vspace{0.3cm}
+	\begin{lstlisting}[
+		language=Circom,
+		basicstyle=\scriptsize\ttfamily, 
+		lineskip=-2pt,                  
+		aboveskip=5pt,                  
+		belowskip=5pt,                  
+		xleftmargin=10pt
+		]
+		// El input es la secuencia completa de estados en la orilla izquierda
+		// Cada paso estado q tiene: [misioneros, canibales, barca]
+		// Tenemos 12 estados
+		signal input estados[12][3]; 
+		
+		// La salida del circuito: 1 si todo perfecto, 0 si se hubo algun estado incorrecto
+		signal output salida;
+		
+	\end{lstlisting}
+
+	\vspace{0.4cm}
+	\noindent Para verificar el comportamiento de esta implementación, se define la siguiente configuración dentro del archivo \texttt{input.json}:
+	
+	
+	\begingroup
+	\lstset{
+		basicstyle=\ttfamily\small,
+		numbers=left,
+		numberstyle=\tiny\color{gray},
+		stepnumber=1,
+		numbersep=8pt,
+		backgroundcolor=\color{gray!5}, 
+		frame=single,
+		rulecolor=\color{gray!30},   
+		tabsize=2,
+		breaklines=true,
+		xleftmargin=15pt,  
+		framexleftmargin=15pt
+	}
 	
 	\vspace{0.2cm}
 	\begin{lstlisting}
@@ -3870,8 +3968,11 @@ placement=H
 		}
 	\end{lstlisting}
 	
+	\endgroup
+	
 	\vspace{0.2cm}
 	\noindent A la hora de diseñar el circuito, se ha optado por un enfoque basado en un autómata. La señal de entrada \texttt{estados[12][3]} representa la secuencia de estados por los que pasan los personajes para cruzar el río.
+	
 	
 	\vspace{0.2cm}
 	\noindent Cada uno de los 12 estados contiene tres valores correspondientes al número de misioneros, al número de caníbales y a la posición de la barca (donde 1 representa la orilla inicial y 0 la orilla final). 
@@ -3879,11 +3980,100 @@ placement=H
 	\vspace{0.2cm}
 	\noindent Por otro lado, para la señal de salida \texttt{salida}, el valor 1 indica que la secuencia de movimientos sigue las reglas del juego, mientras que el valor 0 señala que se ha cometido una infracción y, por tanto, la solución propuesta no es la correcta.
 	
-	\vspace{0.2cm}
-	\noindent De esta manera, acorde a esta asignación de valores, la secuencia introducida representa la solución al acertijo, cualquier modificación sobre esta configuración resultaría en \texttt{salida = 0}. Por tanto, el resultado para la actual configuración debería ser \texttt{salida = 1}.
+
+	
+	\vspace{0.3cm}
+	\noindent De esta manera, con una configuración de valores donde la secuencia introducida representa la solución exacta al problema de los misioneros y caníbales, se evalúa el comportamiento ante este caso. Bajo estos valores de entrada, el programa debería resolver que la señal \texttt{salida} tome el valor 1 (indicando que la solución es válida), puesto que cualquier modificación o movimiento inválido resultaría en un valor de 0. 
+	
+	\vspace{0.3cm}
+	\noindent Para ver cómo funciona esta validación con los nuevos operadores, a continuación se muestra un extracto con las partes principales de la lógica de transición del autómata. Por simplicidad, se han omitido los bloques de código que son muy similares o repetitivos, pero se puede consultar el archivo completo en el repositorio del proyecto \cite{rps_circom}:
 	
 	\vspace{0.2cm}
-	\noindent Tras aplicar dichos valores a las señales de entrada y estudiar el \texttt{witness.json}, el valor de la señal de salida es 1 para ambas implementaciones.
+	\begin{lstlisting}[
+	language=Circom,
+	basicstyle=\scriptsize\ttfamily, 
+	lineskip=-2pt,                  
+	aboveskip=5pt,                  
+	belowskip=5pt,                  
+	xleftmargin=10pt
+	]
+		template ValidarTransicion() autocomplete {
+			//Estado anterior (actual realmente)
+			signal input m_ant; // misioneros antes
+			signal input c_ant; // canibales antes
+			signal input b_ant; // barca antes: 1->izquierda; 0->dcha
+			
+			// Estado siguiente
+			signal input m_sig;
+			signal input c_sig;
+			signal input b_sig;
+			
+			// Conocer si se ha resuelto el juego o no
+			signal output out;
+			
+			signal v0;
+			signal v1;
+			signal v2;
+			signal v3;
+			signal v6;
+			signal v7; // senales intermedias reducidas por brevedad en el extracto
+			
+			// El estado inicial de la transicion arranca como valido
+			v0 <-- 1;
+			
+			// Verificamos que la barca ha cambiado de una orilla a otra pasando del estado anterior al siguiente
+			if (b_ant == 1 && b_sig != 0) {
+				v1 <-- 0; 
+			} else {
+				v1 <-- v0;
+			}
+			
+			if (b_ant == 0 && b_sig != 1) {
+				v2 <-- 0; 
+			} else {
+				v2 <-- v1;
+			}
+			
+			// Calcular cuantos se mueven : la diferencia entre una orilla y la otra
+			signal diff_m;
+			signal diff_c;
+			
+			diff_m <-- b_ant * (m_ant - m_sig) + (1 - b_ant) * (m_sig - m_ant);
+			diff_c <-- b_ant * (c_ant - c_sig) + (1 - b_ant) * (c_sig - c_ant);
+			
+			// 0 < barca < 3
+			// 1 <= diff_m + diff_c <= 2
+			var total_viajeros = diff_m + diff_c;
+			if (total_viajeros <_(2) 1 || total_viajeros >_(2) 2) {
+				v3 <-- 0; // Viajan mas de 2 o la barca va vacia
+			} else {
+				v3 <-- v2;
+			}
+			
+			// Para que los canibales no se coman a lo misioneros --> misioneros >= canibales siempre. A no ser que misioneros = 0
+			// orilla izq: si m_sig > 0, entonces m_sig >= c_sig
+			if (m_sig >_(2) 0 && m_sig <_(2) c_sig) {
+				v6 <-- 0; // hay misioneros, pero mas canibales que misioneros
+			} else {
+				v6 <-- v3; // Enlace adaptado para la continuidad del extracto
+			}
+			
+			// Orilla dcha:  (3-m_sig): si (3-m_sig) > 0, entonces (3-m_sig) >= (3-c_sig) -> c_sig >= m_sig
+			var m_der = 3 - m_sig;
+			var c_der = 3 - c_sig;
+			if (m_der >_(2) 0 && m_der <_(2) c_der) {
+				v7 <-- 0; // hay misioneros, pero mas canibales que misioneros
+			} else {
+				v7 <-- v6;
+			}
+			
+			out <-- v7;
+		}	
+	
+	\end{lstlisting}
+	
+	\vspace{0.2cm}
+	\noindent Una vez definida la lógica del juego, se procede a la compilación tanto de la implementación sin la nueva funcionalidad como de la implementación con la nueva funcionalidad (la especificada anteriormente). Tras aplicar los valores de prueba mencionados a las señales de entrada y estudiar los ficheros \texttt{witness.json} resultantes, se concluyó que el valor de la señal de salida es efectivamente 1 para ambas implementaciones, validando así la correcta ejecución de la lógica del juego.
 	
 	\vspace{0.2cm}
 	\noindent Del mismo modo, se modificaron los valores de la matriz \texttt{estados} en el archivo de entrada para comprobar que la salida es igual a 0 al utilizar configuraciones de estados diferentes a la expuesta, concluyendo así que la lógica es correcta para las distintas situaciones posibles.
@@ -3921,7 +4111,40 @@ placement=H
 	\noindent Si se cumple alguna de estas condiciones, el circuito determina quién es el ganador. De lo contrario, detectará si la partida ha terminado en empate.
 	
 	\vspace{0.2cm}
-	\noindent Al igual que hicimos en los experimentos anteriores, utilizaremos el archivo de salida del \texttt{witness} para comprobar que todo funciona. Para ello, definimos en el \texttt{input.json} la siguiente configuración para el tablero:
+	\noindent Con el fin de estructurar esta lógica, a continuación se presenta la definición de las señales de entrada y salida utilizadas en el circuito de Circom:
+	
+	\vspace{0.2cm}
+	\begin{lstlisting}[
+		language=Circom,
+		basicstyle=\scriptsize\ttfamily, 
+		lineskip=-2pt,                  
+		aboveskip=5pt,                  
+		belowskip=5pt,                  
+		xleftmargin=10pt
+		]
+		signal input tablero[3][3]; 
+		signal output ganador; 
+		
+	\end{lstlisting}
+	
+	\vspace{0.4cm}
+	\noindent Para verificar el correcto comportamiento de esta interfaz, se define la siguiente configuración inicial de prueba dentro del archivo \texttt{input.json}:
+	
+	\begingroup
+	\lstset{
+		basicstyle=\ttfamily\small,
+		numbers=left,
+		numberstyle=\tiny\color{gray},
+		stepnumber=1,
+		numbersep=8pt,
+		backgroundcolor=\color{gray!5}, 
+		frame=single,
+		rulecolor=\color{gray!30},   
+		tabsize=2,
+		breaklines=true,
+		xleftmargin=15pt,  
+		framexleftmargin=15pt
+	}
 	
 	\vspace{0.2cm}
 	\begin{lstlisting}
@@ -3934,14 +4157,48 @@ placement=H
 		}
 	\end{lstlisting}
 	
+	\endgroup
+	
 	\vspace{0.2cm}
 	\noindent La señal de entrada \texttt{tablero[n][n]} representa el estado actual de la partida, donde el número 0 representa los círculos, el 1 las cruces y el 2 indica que la casilla está vacía. Por otro lado, para la señal de salida \texttt{ganador}, el valor asignado será 1 si ganan los círculos, el 2 si ganan las cruces y el 0 en caso de empate.
 	
-	\vspace{0.2cm}
-	\noindent De esta manera, acorde a esta asignación de valores, la secuencia introducida en el ejemplo muestra una línea diagonal completa de círculos, por tanto el resultado para la actual configuración debería ser \texttt{ganador = 1}.
 	
 	\vspace{0.2cm}
-	\noindent Tras aplicar dichos valores a las señales de entrada y estudiar el \texttt{witness.json}, el valor de la señal de salida refleja el resultado esperado para ambas implementaciones.
+	\noindent De esta manera, con una configuración donde la secuencia introducida en el ejemplo muestra una línea diagonal completa de círculos, se evalúa el comportamiento del circuito ante un caso donde el jugador de los círculos es el ganador. Bajo estos valores de entrada, el programa debería resolver que la señal \texttt{ganador} tome el valor 1 (indicando la victoria de los círculos) al procesar la lógica de expresiones condicionales que se detalla a continuación:
+	
+	\vspace{0.2cm}
+	\begin{lstlisting}[
+		language=Circom,
+		basicstyle=\scriptsize\ttfamily, 
+		lineskip=-2pt,                  
+		aboveskip=5pt,                  
+		belowskip=5pt,                  
+		xleftmargin=10pt
+		]
+		
+		template VerificarLinea() autocomplete {
+			signal input casilla[3]; 
+			signal output resultado;
+			
+			var c1 = casilla[0];
+			var c2 = casilla[1];
+			var c3 = casilla[2];
+			
+			if (c1 == 0 && c2 == 0 && c3 == 0) {
+				resultado <-- 1; //  Circulo
+			} else {
+				if (c1 == 1 && c2 == 1 && c3 == 1) {
+					resultado <-- 2; //  Cruz
+				} else {
+					resultado <-- 0; // Nadie
+				}
+			}
+		}
+		
+	\end{lstlisting}
+	
+	\vspace{0.2cm}
+	\noindent Una vez definida la lógica del juego, se procede a la compilación tanto de la implementación sin la nueva funcionalidad como de la implementación con la nueva funcionalidad (la especificada anteriormente). Tras aplicar dichos valores a las señales de entrada y estudiar el \texttt{witness.json}, el valor de la señal de salida refleja el resultado esperado para ambas implementaciones.
 	
 	\vspace{0.2cm}
 	\noindent Del mismo modo, se modificaron los valores de la matriz \texttt{tablero} en el archivo de entrada para comprobar que la señal toma los valores correctos en escenarios con un ganador diferente o en situaciones de empate, concluyendo así que la lógica es correcta para las distintas situaciones posibles.
@@ -3984,7 +4241,40 @@ placement=H
 	\noindent El incumplimiento de cualquiera de estas restricciones resultaría en una solución incorrecta.
 	
 	\vspace{0.2cm}
-	\noindent Al igual que hicimos en los experimentos anteriores, utilizaremos el archivo de salida del \texttt{witness} para comprobar que todo funciona. Para ello, definimos en el \texttt{input.json} la siguiente configuración de tablero resuelto:
+	\noindent Con el fin de estructurar esta lógica, a continuación se presenta la definición de las señales de entrada y salida utilizadas en el circuito de Circom:
+	
+	\vspace{0.2cm}
+	\begin{lstlisting}[
+		language=Circom,
+		basicstyle=\scriptsize\ttfamily, 
+		lineskip=-2pt,                  
+		aboveskip=5pt,                  
+		belowskip=5pt,                  
+		xleftmargin=10pt
+		]
+		signal input tablero[3][3]; 
+		signal output ganador; 
+		
+	\end{lstlisting}
+	
+	\vspace{0.4cm}
+	\noindent Para verificar el correcto comportamiento de esta interfaz, se define la siguiente configuración inicial de prueba dentro del archivo \texttt{input.json}:
+	
+	\begingroup
+	\lstset{
+		basicstyle=\ttfamily\small,
+		numbers=left,
+		numberstyle=\tiny\color{gray},
+		stepnumber=1,
+		numbersep=8pt,
+		backgroundcolor=\color{gray!5}, 
+		frame=single,
+		rulecolor=\color{gray!30},   
+		tabsize=2,
+		breaklines=true,
+		xleftmargin=15pt,  
+		framexleftmargin=15pt
+	}
 	
 	\vspace{0.2cm}
 	\begin{lstlisting}
@@ -4003,14 +4293,65 @@ placement=H
 		}
 	\end{lstlisting}
 	
+	\endgroup
+	
 	\vspace{0.2cm}
 	\noindent La señal de entrada \texttt{tablero[9][9]} representa la solución dada por el usuario, donde cada posición acepta valores comprendidos entre el 1 y el 9. Por otro lado, para la señal de salida \texttt{salida}, el valor 1 indica que el tablero es válido al cumplir todas las reglas del juego, mientras que el valor 0 indica que se ha incumplido al menos una regla y la solución propuesta es no es correcta.
 	
-	\vspace{0.2cm}
-	\noindent De esta manera, acorde a esta asignación de valores, la configuración introducida representa un sudoku resuelto correctamente. Cualquier modificación sobre esta distribución que lleve a duplicar la presencia de números en filas, columnas o subtableros resultaría en \texttt{salida = 0}. Por tanto, el resultado para la actual configuración debería ser \texttt{salida = 1}.
+	\vspace{0.4cm}
+	\noindent De esta manera, con una configuración donde la secuencia introducida representa un sudoku resuelto correctamente, se incluye a continuación el fragmento encargado de verificar que todos los números de una fila, columna o subtablero (en función de la línea que reciba la función) sean diferentes, es decir, comprueba que no existan elementos repetidos y que únicamente haya una aparición de cada cifra del 1 al 9. 
+	
+	\vspace{0.4cm}
+	\noindent Cualquier modificación sobre esta distribución que lleve a duplicar la presencia de números en filas, columnas o subtableros resultaría en \texttt{salida = 0}. Por tanto, el resultado para la actual configuración debería ser \texttt{salida = 1}, tal y como se procesa en las expresiones condicionales que se detallan a continuación:
 	
 	\vspace{0.2cm}
-	\noindent Tras aplicar dichos valores a las señales de entrada y estudiar el \texttt{witness.json}, el valor de la señal de salida es 1 para ambas implementaciones.
+	\begin{lstlisting}[
+		language=Circom,
+		basicstyle=\scriptsize\ttfamily, 
+		lineskip=-2pt,                  
+		aboveskip=5pt,                  
+		belowskip=5pt,                  
+		xleftmargin=10pt
+		]
+		
+		template different_numbers() autocomplete{
+			signal input in[9];
+			
+			signal is_valid[9][9]; // Todas las combinaciones posibles
+			
+			// Comprobamos que todas las combinaciones de senales son diferentes o 0 
+			for (var i = 0; i < 9; i++){
+				for (var j = 0; j < i; j++){     
+					if (in[i] == in[j]){
+						if (in[i] == 0){
+							// if they are 0 it is ok
+							is_valid[i][j] <-- 1;
+						} else{
+							is_valid[i][j] <-- 0;
+						}
+						
+					} else{
+						// son diferentes -> ok
+						is_valid[i][j] <-- 1;
+					}
+				}
+			} 
+			
+			// Comprobamos que is_valid es 1 siempre
+			var total_number = 0;
+			var total_valid = 0;
+			for (var i = 0; i < 9; i++){
+				for (var j = 0; j < i; j++){
+					total_number += 1;
+					total_valid += is_valid[i][j];
+				}
+			}
+			signal output out <-- total_number == total_valid;
+		}
+	\end{lstlisting}
+	
+	\vspace{0.2cm}
+	\noindent Una vez definida la lógica del juego, se procede a la compilación tanto de la implementación sin la nueva funcionalidad como de la implementación con la nueva funcionalidad (la especificada anteriormente). Tras aplicar dichos valores a las señales de entrada y estudiar el \texttt{witness.json}, el valor de la señal de salida es 1 para ambas implementaciones.
 	
 	\vspace{0.2cm}
 	\noindent Del mismo modo, se modificaron los valores de la matriz \texttt{tablero} en el archivo de entrada para comprobar que la salida es igual a 0 al utilizar configuraciones que rompen las reglas, así como el comportamiento con otros tableros que sí las cumplen, concluyendo así que la lógica es correcta para las distintas situaciones posibles.
@@ -4040,7 +4381,6 @@ placement=H
 	\vspace{0.2cm}
 	\noindent Tras realizar estas compilaciones, se observa que, en ambos niveles de optimización, la implementación sin \texttt{autocomplete} es más eficiente que la versión con \texttt{autocomplete}, ya que genera un menor número de restricciones no lineales.
 	
-	\endgroup
 	\section{Aplicación de la generación automática sobre circomlib y comparación de constraints}
 	\vspace{0.2cm}
 	\noindent Durante el capítulo anterior, para verificar el determinismo y la equivalencia de los operadores implementados, se realizaron comparaciones con las funciones de la librería oficial \texttt{circomlib}.
@@ -4059,7 +4399,6 @@ placement=H
 		\textbf{Operador Individual} & \textbf{Restricciones No Lineales\newline Sin \texttt{autocomplete} (O2)} & \textbf{Restricciones No Lineales\newline Con \texttt{autocomplete} (O2)} \\
 		\hline
 		
-		\hline
 		\rowcolor{gray!10} \multicolumn{3}{|l|}{\textbf{Operadores Aritméticos}} \\
 		\hline
 		Suma (+) & 0 & 0 \\
@@ -4073,6 +4412,8 @@ placement=H
 		Módulo (\%) & 0 & 20 \\
 		\hline
 		
+		
+		\hline
 		\rowcolor{gray!10} \multicolumn{3}{|l|}{\textbf{Operadores Lógicos y de Bits}} \\
 		\hline
 		AND lógico (\&\&) & 1 & 3 \\
@@ -4109,6 +4450,13 @@ placement=H
 		\hline
 	\end{longtable}
 	\endgroup
+	
+	\section{Análisis de resultados}
+	\vspace{0.2cm}
+	\noindent Tras realizar todos los experimentos anteriores y analizarlos detalladamente, se puede observar claramente que, de forma general, los circuitos grandes implementados con la nueva funcionalidad generan un mayor número de restricciones en comparación con las versiones que no la utilizan.
+	
+	\vspace{0.2cm}
+	\noindent El motivo de estos resultados se debe a que algunos de los operadores añadidos generan más restricciones a nivel atómico que los operadores nativos de Circom. Por ello, al construir circuitos de mayor tamaño haciendo uso de estos nuevos operadores, el número de restricciones individual de cada operador se va acumulando y desencadena en un crecimiento del número total de restricciones.
 	
 	\chapter{Conclusiones y Trabajo Futuro}
 	\section{Conclusiones}
