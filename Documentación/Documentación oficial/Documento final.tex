@@ -4407,9 +4407,9 @@ placement=H
 		\hline
 		Multiplicación (*) & 1 & 1 \\
 		\hline
-		División (/) & 38 & 11 \\
+		División (/) & 4 & 4 \\
 		\hline
-		Módulo (\%) & 0 & 20 \\
+		Módulo (\%) & 4 & 4 \\
 		\hline
 		
 		
@@ -4451,12 +4451,19 @@ placement=H
 	\end{longtable}
 	\endgroup
 	
+	\vspace{0.3cm}
+	\noindent \textit{Observación}: La evaluación del número de restricciones se ha realizado limitando el tamaño de los operandos a un bit en todos los casos.
+	
+	
 	\section{Análisis de resultados}
 	\vspace{0.2cm}
 	\noindent Tras realizar todos los experimentos anteriores y analizarlos detalladamente, se puede observar claramente que, de forma general, los circuitos grandes implementados con la nueva funcionalidad generan un mayor número de restricciones en comparación con las versiones que no la utilizan.
 	
 	\vspace{0.2cm}
-	\noindent El motivo de estos resultados se debe a que algunos de los operadores añadidos generan más restricciones a nivel atómico que los operadores nativos de Circom. Por ello, al construir circuitos de mayor tamaño haciendo uso de estos nuevos operadores, el número de restricciones individual de cada operador se va acumulando y desencadena en un crecimiento del número total de restricciones.
+	\noindent Uno de los motivos de estos resultados se debe a que algunos de los operadores añadidos generan más restricciones a nivel atómico que los operadores nativos de Circom. Por ello, al construir circuitos de mayor tamaño haciendo uso de estos nuevos operadores, el número de restricciones individual de cada operador se va acumulando y desencadena en un crecimiento del número total de restricciones.
+	
+	\vspace{0.2cm}
+	\noindent Por otro lado, el otro motivo de peso es que no se ha incluido una fase simplificación en el circuito. Esto hace que se puedan generar restricciones idénticas en diferentes partes del código de forma independiente, las cuales podrían reducirse si el sistema revisara el circuito completo al final para eliminar las restricciones duplicadas.
 	
 	\chapter{Conclusiones y Trabajo Futuro}
 	\section{Conclusiones}
@@ -4623,15 +4630,14 @@ placement=H
 				
 				// Comprobamos que b!=0
 				component is_zero = IsZero();
-				is_zero.in<==b;
-				is_zero.out === 0;
+				signal inv_b;
+				inv_b <-- b == 0 ? 0 : 1 / b;
+				b * inv_b === 1; 
 				
 				// Comprobamos que 0<=r<|b|; 0 <= r no hace falta porque al estar en campo finito se entiende
-				// r < |b|
-				component lt = LessThan(2);
-				lt.in[0] <== r;
-				lt.in[1] <== b;
-				lt.out === 1;
+				// r < |b| --> r <= b -1 --> 0 <= b -r - 1
+				component check_positivo = Num2Bits(n);
+				check_positivo.in <== b - r - 1;
 				
 				// Una vez hecho eso, comprobamos que se cumple a === b*q+r
 				a === b*q +r;
